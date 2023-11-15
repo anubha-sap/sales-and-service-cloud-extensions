@@ -10,7 +10,7 @@ This sample demonstrates side by side extension on SSC v2 for vehicle service sc
 
 ## Reference Scenario
 ### Scenario
-Please find the details of reference scenario in this section.\
+Please find the details of reference scenario in this section.
 
 Case is created by Service Advisor(CNS user) in Sales are Service Cloud, when customer requests for vehicle service.The case is created with custom case type, in this example- “Vehicle Service Case Type”.  Service Advisor captures information like- Individual customer, registered product(standard fields), along with milometer reading of vehicle(this is extension field in case). Registered product is also extended by adding vehicle Number(VIN) extension field.
 ![Case ExtensionField ](./Images/CaseExtension1.png "Case fields") 
