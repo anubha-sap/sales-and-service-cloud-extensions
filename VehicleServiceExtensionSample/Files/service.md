@@ -5,7 +5,7 @@ In this document, you will find details on how to download and deploy the sample
 ## Download and deploy service in Kyma
 Please follow below steps to download and deploy service in Kyma.
 
-1. Create XSUAA/destination service instances
+1. Create XSUAA/destination service instances\
 Since our application uses destination to connect to services in CNS, we need to create service instance and service binding for both destination and xsuaa. (XSUAA will be used to fetch credentials required to connect to the destination service)
 Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-service-bindings-on-kyma-runtime/) to understand how services - destination service and xsuaa service are consumed in an application in kyma.
   * add the SERVICE_BINDING_ROOT env variable into your deployment: https://github.tools.sap/fp-stakeholder-management/xsuaa-approuter/blob/main/approuter/helm/app1-app/templates/deployment.yaml#L91
@@ -32,22 +32,22 @@ Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-serv
    * This will create a Kubernetes secret from where we can get the details required to connect to the DB
 4. Create Kubernetes secrets
     * Create a Kubernetes secret file(with the name <application-name>-secrets) to store sensitive data like db username/password and other application specific data.
-    * The secret should contain the following:
-    case_status_booked: <Status code when case status is booked>
-    case_status_closed: <Status code when case status is closed>
-    case_status_completed: <Status code when case status is completed>
-    case_status_service_completed: <Status code when case status service completed>
-    case_status_service_in_process: <Status code when case status is service in process>
-    db_password: <Database password. This is available in the secret that’s created in the above step>
-    db_user: <Database username. This is available in the secret that’s created in the above step>
-    destination: <Destination to which the application connects>
-    dropSchema: <Drops the schema each time connection is being established. This option is useful during debug and development>
-    extension_field_jobcard_id: <Job Card ID extension field>
-    extension_field_milometer: <Milometer extension field>
-    extension_field_service_form_id: <Service Form ID extension field>
-    extension_field_vehicle_number: <Vehicle Number extension field>
-    logLevel: <Sets the log level of the application>
-    synchronize: <Indicates if database schema should be auto created on every application launch. This option is useful during debug and development >
+    * The secret should contain the following:\
+    case_status_booked: \<*Status code when case status is booked*>\
+    case_status_closed: \<*Status code when case status is closed*>\
+    case_status_completed: \<*Status code when case status is completed*>\
+    case_status_service_completed: \<*Status code when case status service completed*>\
+    case_status_service_in_process: \<*Status code when case status is service in process*>\
+    db_password: \<*Database password. This is available in the secret that’s created in the above step*>\
+    db_user: \<*Database username. This is available in the secret that’s created in the above step*>\
+    destination: \<*Destination to which the application connects*>\
+    dropSchema: \<*Drops the schema each time connection is being established. This option is useful during debug and development*>\
+    extension_field_jobcard_id: \<*Job Card ID extension field*>\
+    extension_field_milometer: \<*Milometer extension field*>\
+    extension_field_service_form_id: \<*Service Form ID extension field*>\
+    extension_field_vehicle_number: \<*Vehicle Number extension field*>\
+    logLevel: \<*Sets the log level of the application*>\
+    synchronize: \<*Indicates if database schema should be auto created on every application launch. This option is useful during debug and development*>
     * You will notice this secrets contains IDs for configurations done in sales and service cloud like extension fields, Case status. The reason being different IDs which is generated when fields are created. In our service code, we are refering to IDs maintained here in business logic.
 
 5. Clone the service from - *git clone url*
@@ -58,8 +58,10 @@ Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-serv
    NOTE: In API Rule, we have configured an access strategy to restrict access to the application. We will be using the JWT access strategy to protect endpoint(s) from unsolicited access.
 
 7. Download kubeconfig file for kyma from your BTP account: 
-    * Go to your BTP Subaccount: 
-    * Go to Kyma Environment -> click on kubeconfigURL. This will download the kubeconfig file:
+    * Go to your BTP Subaccount:\
+    ![BTP SubAccount Page](../Images/subaccount.png "BTP SubAccount")
+    * Go to Kyma Environment -> click on kubeconfigURL. This will download the kubeconfig file:\
+    ![Link to Kubeconfig file](../Images/kubeconfig.png "Link to KubeConfig file")
     * Rename the downloaded file to “config” (without any extension) and depending on the operating system, place the file in the following location:  \
     Mac OS: $HOME/.kube/ (Create .kube directory if not present already)\
     Windows: C:\Users\<user-name>\.kube\ (Create .kube directory if not present already) 
@@ -67,6 +69,8 @@ Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-serv
 This is a script which does two things:
 - Build the application
 - Deploy to Kyma cluster using scaffold\
+
+   Run the command “bash deploy.sh”
 
 Alternatively, please follow the steps below to deploy your service to Kyma:
 * Build the application
@@ -101,28 +105,47 @@ To create an XSUAA instance, follow https://help.sap.com/docs/btp/sap-business-t
 
 ## Running backend API using postman
 Please follow below steps to run the APIs
-
+ * Before testing the APIs, a case of type "Vehicle Service Case Type" needs to be created. In this case, a registered product needs to be added. Also, the extension field "Milometer" should be filled. This is mandatory else the ServiceForm API will fail.\
+ Once this case is created, get the caseId. To get the caseId:
+   * Open Developer Tools
+   * Go to network tab
+   * Filter by "case"
+   * Open a case that satisfies the above conditions
+   * The first network call will have the ID:\
+   ![Get CaseID from network calls](../Images/caseId.png "Case ID from network calls")
  *  Get the host of your deployed application: 
-    * Go to your BTP subaccount: 
-    * Go to kyma dashboard: 
-    * Select your namespace: 
+    * Go to your BTP subaccount:\
+    ![BTP SubAccount Page](../Images/subaccount.png "BTP SubAccount") 
+    * Go to kyma dashboard:\
+    ![Link to Kyma Dashboard](../Images/link_to_kyma_dashboard.png "Link to Kyma Dashboard") 
+    * Select your namespace:\
+    ![Select the namespace from the dropdown](../Images/select_namespace.png "Namespace") 
     * Go to ApiRule -> select the host for your application:
+    ![Go to Api Rule Defenition to get the host of the application](../Images/api_rule.png "Api Rule defenition")
 * Running APIs
-  * Download the postman collection from here *add postman collection* . The sample application’s API is protected. This means that a valid JWT token is expected in the request. In postman you can set this authentication. In postman follow below steps.
+  * Download the postman collection from [here](../Files/postmanCollection/ExFs.postman_collection.json). This JSON file needs to downloaded and imported to postman.\
+   The sample application’s API is protected. This means that a valid JWT token is expected in the request. In postman you can set this authentication by following the below steps.
   * Go to collection level authorization and add the following configuration-\
-  Type:  "OAuth 2.0"<br>
-  grant type - "Authorization Code" <br>
-  callback url - https://<subdomain>.launchpad.cfapps.<region>.hana.ondemand.com/login/ <br>
-  auth url -  https://<subdomain>.launchpad.cfapps.<region>.hana.ondemand.com /oauth/authorize?redirect_uri=auth url -  https://<subdomain>.launchpad.cfapps.<region>.hana.ondemand.com /oauth/authorize?redirect_uri=<br>
-  access token url -  https://<subdomain>.launchpad.cfapps.<region>.hana.ondemand.com /oauth/token<br>
-  client ID, client Secret: You will get these details under the section “Download and Deploy reference scenario in Kyma”  
-  * Create the following variables in the collection. Use the host from the previous step. No need to fill the other variables.
-  * Create Inspection Item(Any number of inspection items can be created) 
-  * Create Services(Any number of services can be created) 
-  * Create ServiceForm: 
-  * Update Service Form status to “Z02”(Booked) and select few related services and inspection items(by setting the field “isSelected” to true). Only for booked service forms with few selected services, we can create job card.
+  ![Postman collection level authorization configuration](../Images/collection_level_authorization.png "Postman Authorization Configuration")
+      * Type:  "OAuth 2.0"<br>
+      * grant type - "Authorization Code" <br>
+      * callback url - https://<*subdomain*>.launchpad.cfapps.<*region*>.hana.ondemand.com/login/ <br>
+      * auth url -  https://<*subdomain*>.launchpad.cfapps.<*region*>.hana.ondemand.com /oauth/authorize?redirect_uri=auth url -  https://<*subdomain*>.launchpad.cfapps.<*region*>.hana.ondemand.com /oauth/authorize?redirect_uri=<br>
+      * access token url -  https://<*subdomain*>.launchpad.cfapps.<*region*>.hana.ondemand.com /oauth/token<br>
+      * client ID, client Secret: You will get these details in step 1 under [this](#download-and-deploy-service-in-kyma) section  
+  * Create the following variables in the collection. Use the host from the previous step. No need to fill the other variables.\
+  ![Variables in postman](../Images/postman_variables.png "Variables in Postman")
+  * Create Inspection Item(Any number of inspection items can be created)\
+  ![POST request to create an Inspection Item](../Images/create_inspection_item.png "Inspection Item POST request") 
+  * Create Services(Any number of services can be created)
+   ![POST request to create a Service](../Images/create_service.png "Service POST request")  
+  * Create ServiceForm (Use the caseId from the case created above): 
+   ![POST request to create a Service Form](../Images/create_service_form.png "Service POST request")
+  * Update Service Form status to “Z02”(Booked) and select few related services and inspection items(by setting the field “isSelected” to true). Only for booked service forms with few selected services, we can create job card.\
+  ![Service Form PATCH request](../Images/update_service_form.png "Service Form Patch request")
   * Create Job Card. Here 
-  sourceid is the id of the serviceform created in the previous step. sourceType is service-form
+  sourceid is the id of the serviceform created in the previous step. sourceType is service-form\
+  ![Create Job Card](../Images/create_job_card.png "Create Job Card")
 
 ## Code Folder Structure
 This section will help in understanding the code structure and important methods of service.

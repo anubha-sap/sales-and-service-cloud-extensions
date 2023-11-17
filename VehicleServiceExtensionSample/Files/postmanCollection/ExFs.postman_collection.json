@@ -1,0 +1,1592 @@
+{
+	"info": {
+		"_postman_id": "a4ee6e8f-a90b-4caf-80cb-29831b35a4d8",
+		"name": "ExFs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27918662"
+	},
+	"item": [
+		{
+			"name": "InspectionItems",
+			"item": [
+				{
+					"name": "inspection-items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"inspectionItemId\", responseJson.id);",
+									"",
+									"",
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"isSelected field is set to false\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.isSelected).to.be.false;",
+									"});",
+									"",
+									"",
+									"pm.test(\"The id field is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Description field is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"adminData contains the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.adminData).to.exist;",
+									"    pm.expect(responseData.adminData.createdOn).to.exist;",
+									"    pm.expect(responseData.adminData.updatedOn).to.exist;",
+									"    pm.expect(responseData.adminData.createdBy).to.exist;",
+									"    pm.expect(responseData.adminData.updatedBy).to.exist;",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"createdBy\": \"Check for toolkits\",\r\n    \"description\": \"udpate\",\r\n    \"asd\":\"asd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/vehicle-service/inspection-items/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"inspection-items",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getall-inspection-items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"inspectionItemId\", responseJson[0].id);",
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response should be an array\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('array');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Each object in the array should have all required fields\", function () {",
+									"    pm.response.json().forEach(function (item) {",
+									"        pm.expect(item).to.have.property('id');",
+									"        pm.expect(item).to.have.property('description');",
+									"        pm.expect(item).to.have.property('isSelected');",
+									"        pm.expect(item).to.have.property('createdOn');",
+									"        pm.expect(item).to.have.property('updatedOn');",
+									"        pm.expect(item).to.have.property('createdBy');",
+									"        pm.expect(item).to.have.property('updatedBy');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/inspection-items/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"inspection-items",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getone-inspection-item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"isSelected field is a boolean\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.isSelected).to.be.a('boolean');",
+									"});",
+									"",
+									"",
+									"pm.test(\"The id field should be a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Description field is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.description).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"AdminData object has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.adminData).to.exist.and.to.be.an('object');",
+									"    pm.expect(responseData.adminData.createdOn).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.adminData.updatedOn).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.adminData.createdBy).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.adminData.updatedBy).to.exist.and.to.be.a('string');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/inspection-items/{{inspectionItemId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"inspection-items",
+								"{{inspectionItemId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "inspection-items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"id should be a non-empty string\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Description is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.description).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"adminData is an object\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.adminData).to.be.an('object');",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"createdBy\": \"Check for toolkits\",\n    \"description\": \"Check for toolkits\",\n    \"asd\": \"asd\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/vehicle-service/inspection-items/{{inspectionItemId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"inspection-items",
+								"{{inspectionItemId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "inspection-items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('raw');",
+									"    pm.expect(responseData).to.have.property('affected');",
+									"});",
+									"",
+									"",
+									"pm.test(\"raw is an array\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.raw).to.be.an('array');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Affected is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.affected).to.exist;",
+									"    pm.expect(responseData.affected).to.be.a('number');",
+									"    pm.expect(responseData.affected).to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verify that the 'raw' array is empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.raw).to.be.an('array').that.is.empty;",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/inspection-items/{{inspectionItemId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"inspection-items",
+								"{{inspectionItemId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Services",
+			"item": [
+				{
+					"name": "services",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"serviceId\", responseJson.id);",
+									"",
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.isSelected).to.exist;",
+									"    pm.expect(responseData.id).to.exist;",
+									"    pm.expect(responseData.service).to.exist;",
+									"    pm.expect(responseData.price).to.exist;",
+									"    pm.expect(responseData.minMileage).to.exist;",
+									"    pm.expect(responseData.maxMileage).to.exist;",
+									"    pm.expect(responseData.adminData).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"pm.test(\"minMileage should be a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.minMileage).to.exist.and.to.be.a('number');",
+									"    pm.expect(responseData.minMileage).to.be.at.least(0);",
+									"});",
+									"",
+									"pm.test(\"maxMileage should be a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.maxMileage).to.exist.and.to.be.a('number');",
+									"    pm.expect(responseData.maxMileage).to.be.at.least(0);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"service\": \"Change Filter\",\r\n    \"minMileage\": 0,\r\n    \"maxMileage\": 5000,\r\n    \"price\": \"499\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/vehicle-service/services/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"services",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getall-services",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"serviceId\", responseJson[0].id);",
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response body is an array\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Each object in the response array has all the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('array');",
+									"",
+									"    responseData.forEach(function (service) {",
+									"        pm.expect(service).to.have.property('id');",
+									"        pm.expect(service).to.have.property('service');",
+									"        pm.expect(service).to.have.property('price');",
+									"        pm.expect(service).to.have.property('minMileage');",
+									"        pm.expect(service).to.have.property('maxMileage');",
+									"        pm.expect(service).to.have.property('isSelected');",
+									"        pm.expect(service).to.have.property('createdOn');",
+									"        pm.expect(service).to.have.property('updatedOn');",
+									"        pm.expect(service).to.have.property('createdBy');",
+									"        pm.expect(service).to.have.property('updatedBy');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/services/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"services",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getone-services",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"isSelected is a boolean value\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.isSelected).to.be.a('boolean');",
+									"});",
+									"",
+									"",
+									"pm.test(\"The id must be a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Service is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.service).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response contains all the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.have.property('isSelected');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('service');",
+									"    pm.expect(responseData).to.have.property('price');",
+									"    pm.expect(responseData).to.have.property('minMileage');",
+									"    pm.expect(responseData).to.have.property('maxMileage');",
+									"    pm.expect(responseData).to.have.property('adminData');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/vehicle-service/services/{{serviceId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"services",
+								"{{serviceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "services",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"The id field should not be empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.id).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"Service field should not be empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.service).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"Price field is not empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.price).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"All fields are present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.have.property('isSelected');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('service');",
+									"    pm.expect(responseData).to.have.property('price');",
+									"    pm.expect(responseData).to.have.property('minMileage');",
+									"    pm.expect(responseData).to.have.property('maxMileage');",
+									"    pm.expect(responseData).to.have.property('adminData');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"minMileage\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/vehicle-service/services/{{serviceId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"services",
+								"{{serviceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "services",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate response body structure\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('raw');",
+									"    pm.expect(responseData).to.have.property('affected');",
+									"});",
+									"",
+									"",
+									"pm.test(\"The 'raw' array should be empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.raw).to.be.an('array').that.is.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"The 'affected' value should be 1\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.affected).to.equal(1);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/services/{{serviceId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"services",
+								"{{serviceId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ServiceForm",
+			"item": [
+				{
+					"name": "service-form",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"sfId\", responseJson.id);",
+									"",
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.keys('id', 'displayId', 'caseId', 'caseDisplayId', 'registeredProduct', 'customerComplaints', 'milometer', 'servicesProposed', 'inspectionItems', 'notes', 'status', 'adminData', 'statusDescription');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.id).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"",
+									"pm.test(\"displayId should be a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.displayId).to.exist.and.to.be.a('number', \"displayId should be a number\");",
+									"    pm.expect(responseData.displayId).to.be.at.least(0, \"displayId should be a non-negative integer\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "ar",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"caseId\": \"529b98d2-62b7-11ee-a0ef-07c86a59c79a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/vehicle-service/service-forms/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"service-forms",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getone-service-form",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"displayId is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.displayId).to.exist.and.to.be.a('number').and.to.satisfy(function (displayId) {",
+									"        return displayId >= 0;",
+									"    }, \"displayId should be a non-negative integer\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response contains all required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('displayId');",
+									"    pm.expect(responseData).to.have.property('caseId');",
+									"    pm.expect(responseData).to.have.property('caseDisplayId');",
+									"    pm.expect(responseData).to.have.property('registeredProduct');",
+									"    pm.expect(responseData).to.have.property('customerComplaints');",
+									"    pm.expect(responseData).to.have.property('milometer');",
+									"    pm.expect(responseData).to.have.property('servicesProposed');",
+									"    pm.expect(responseData).to.have.property('inspectionItems');",
+									"    pm.expect(responseData).to.have.property('notes');",
+									"    pm.expect(responseData).to.have.property('status');",
+									"    pm.expect(responseData).to.have.property('adminData');",
+									"    pm.expect(responseData).to.have.property('statusDescription');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/service-forms/{{sfId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"service-forms",
+								"{{sfId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getall-service-forms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"sfId\", responseJson[0].id);",
+									"",
+									"// Test to check if the response status code is 200",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test to check if the response is an array",
+									"pm.test(\"Response is an array\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('array');",
+									"});",
+									"",
+									"// Test to check if each object in the array has all the required fields",
+									"pm.test(\"Each object in the array has all the required fields\", function () {",
+									"    pm.response.json().forEach(function (form) {",
+									"        pm.expect(form).to.have.property('id');",
+									"        pm.expect(form).to.have.property('displayId');",
+									"        pm.expect(form).to.have.property('caseId');",
+									"        pm.expect(form).to.have.property('caseDisplayId');",
+									"        pm.expect(form).to.have.property('registeredProduct');",
+									"        pm.expect(form.registeredProduct).to.have.property('vehicleNumber');",
+									"        pm.expect(form.registeredProduct).to.have.property('dateOfPurchase');",
+									"        pm.expect(form.registeredProduct).to.have.property('model');",
+									"        pm.expect(form).to.have.property('customerComplaints');",
+									"        pm.expect(form).to.have.property('milometer');",
+									"        pm.expect(form).to.have.property('servicesProposed');",
+									"        pm.expect(form).to.have.property('inspectionItems');",
+									"        pm.expect(form).to.have.property('notes');",
+									"        pm.expect(form).to.have.property('status');",
+									"        pm.expect(form).to.have.property('adminData');",
+									"        pm.expect(form.adminData).to.have.property('createdOn');",
+									"        pm.expect(form.adminData).to.have.property('updatedOn');",
+									"        pm.expect(form.adminData).to.have.property('createdBy');",
+									"        pm.expect(form.adminData).to.have.property('updatedBy');",
+									"        pm.expect(form).to.have.property('statusDescription');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/service-forms/?$filter=caseId eq 'b867087f-f3ba-11ed-95b1-4f6d461bbdcd' ",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"service-forms",
+								""
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "caseId eq 'b867087f-f3ba-11ed-95b1-4f6d461bbdcd' "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "service-form",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response body has all the required fields\", function () {",
+									"    var responseJSON = pm.response.json();",
+									"",
+									"    pm.expect(responseJSON).to.have.property('id');",
+									"    pm.expect(responseJSON).to.have.property('displayId');",
+									"    pm.expect(responseJSON).to.have.property('caseId');",
+									"    pm.expect(responseJSON).to.have.property('caseDisplayId');",
+									"    pm.expect(responseJSON).to.have.property('registeredProduct');",
+									"    pm.expect(responseJSON).to.have.property('customerComplaints');",
+									"    pm.expect(responseJSON).to.have.property('milometer');",
+									"    pm.expect(responseJSON).to.have.property('servicesProposed');",
+									"    pm.expect(responseJSON).to.have.property('inspectionItems');",
+									"    pm.expect(responseJSON).to.have.property('notes');",
+									"    pm.expect(responseJSON).to.have.property('status');",
+									"    pm.expect(responseJSON).to.have.property('adminData');",
+									"    pm.expect(responseJSON).to.have.property('statusDescription');",
+									"});",
+									"",
+									"pm.test(\"Fields in response are equal to fields in request body\", function () {",
+									"    var responseJSON = pm.response.json();",
+									"    var requestBody = JSON.parse(pm.request.body.raw);",
+									"    pm.expect(responseJSON.servicesProposed).to.eql(requestBody.servicesProposed);",
+									"    pm.expect(responseJSON.inspectionItems).to.eql(requestBody.inspectionItems);",
+									"    pm.expect(responseJSON.status).to.eql(requestBody.status);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"Z02\",\n    \"servicesProposed\": [\n        {\n            \"id\": \"ff106a0b-7b94-4d30-8d82-6f1e0507e2ad\",\n            \"service\": \"Brake pad replacement\",\n            \"price\": \"3450\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"ec3be6b5-9543-4e49-9fd3-71523868d3ef\",\n            \"service\": \"Transmission fluid change\",\n            \"price\": \"5450\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"5de7e8b2-9911-4799-9b1d-458e2300b463\",\n            \"service\": \"Brake pad replacement1\",\n            \"price\": \"89.99\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"86d5fe06-3111-4094-b101-887cad41d808\",\n            \"service\": \"Air filter replacement\",\n            \"price\": \"999\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"e58c85d7-1a04-4288-bd31-2ebd44fcab6e\",\n            \"service\": \"Change Filter\",\n            \"price\": \"499\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"1b15a507-c8a4-4150-b863-1edcf2d6009c\",\n            \"service\": \"Change Filter\",\n            \"price\": \"499\",\n            \"isSelected\": true\n        }\n    ],\n    \"inspectionItems\": [\n        {\n            \"id\": \"0b6c61f3-d586-402e-b712-177fe7a36416\",\n            \"description\": \"Check engine oil level and condition\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"0916c7a0-265a-4a0c-8550-2abde9588179\",\n            \"description\": \"Inspect windshield washer fluid level\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"df30287c-3328-46cb-a799-5b9208cf586a\",\n            \"description\": \"Check brake pads and rotors for wear\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"d9a7c6c8-f42b-47e6-af48-79aff4c24319\",\n            \"description\": \"Test headlights, taillights, brake lights, and turn signals\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"138886ea-054b-4115-b0a6-5c6cd502804d\",\n            \"description\": \" Safety and Electrical Systems\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"e6e8f6be-d0d3-4516-b495-3c5e43ff3123\",\n            \"description\": \"Test headlights, taillights, brake lights, and turn signals\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"0a6475fe-d0ac-4f3c-83ad-f24205831b2d\",\n            \"description\": \"Test the operation of the ignition system\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"0bb447ff-eb9e-48f2-991f-b32f488479f6\",\n            \"description\": \"Examine the condition of the coolant and recommend a flush if necessary\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"4fc9b078-db0d-412f-8fc5-cb54a9c5d54d\",\n            \"description\": \"Check for toolkits\",\n            \"isSelected\": true\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/vehicle-service/service-forms/{{sfId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"service-forms",
+								"{{sfId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "service-form",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate that the 'raw' array is present and is empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.raw).to.exist.and.to.be.an('array').that.is.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"The 'affected' field is present in the response and is equal to 1\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.affected).to.exist.and.to.equal(1);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/service-forms/{{sfId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"service-forms",
+								"{{sfId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "JobCard",
+			"item": [
+				{
+					"name": "job-card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"jcId\", responseJson.id);",
+									"pm.collectionVariables.set(\"jcsId\", responseJson.servicesSelected[0].id);",
+									"",
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"The id should be a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"",
+									"pm.test(\"displayId is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.displayId).to.exist.and.to.be.a('number');",
+									"    pm.expect(responseData.displayId).to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response body has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('displayId');",
+									"    pm.expect(responseData).to.have.property('caseId');",
+									"    pm.expect(responseData).to.have.property('caseDisplayId');",
+									"    pm.expect(responseData).to.have.property('registeredProduct');",
+									"    pm.expect(responseData).to.have.property('customerComplaints');",
+									"    pm.expect(responseData).to.have.property('milometer');",
+									"    pm.expect(responseData).to.have.property('servicesSelected');",
+									"    pm.expect(responseData).to.have.property('status');",
+									"    pm.expect(responseData).to.have.property('estimatedCompletionDate');",
+									"    pm.expect(responseData).to.have.property('adminData');",
+									"    pm.expect(responseData).to.have.property('statusDescription');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/vehicle-service/job-cards/?sourceid=e7e18e25-d278-4ba6-b4b4-13689f5642bb&sourceType=service-form",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"job-cards",
+								""
+							],
+							"query": [
+								{
+									"key": "sourceid",
+									"value": "e7e18e25-d278-4ba6-b4b4-13689f5642bb"
+								},
+								{
+									"key": "sourceType",
+									"value": "service-form"
+								},
+								{
+									"key": "sourceType",
+									"value": "asdasd",
+									"disabled": true
+								},
+								{
+									"key": "serviceAdvisor",
+									"value": "Sandra Webbera",
+									"disabled": true
+								},
+								{
+									"key": "displayId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "caseId",
+									"value": "2bfdd60f-da14-11ed-bf97-bb732c681de4",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getone-job-card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.id).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"displayId is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.displayId).to.exist.and.to.be.a('number');",
+									"    pm.expect(responseData.displayId).to.be.at.least(0, \"Value should be non-negative\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has all required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    // Check if all fields are present",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('displayId');",
+									"    pm.expect(responseData).to.have.property('caseId');",
+									"    pm.expect(responseData).to.have.property('caseDisplayId');",
+									"    pm.expect(responseData).to.have.property('registeredProduct');",
+									"    pm.expect(responseData).to.have.property('customerComplaints');",
+									"    pm.expect(responseData).to.have.property('milometer');",
+									"    pm.expect(responseData).to.have.property('servicesSelected');",
+									"    pm.expect(responseData).to.have.property('status');",
+									"    pm.expect(responseData).to.have.property('serviceAdvisor');",
+									"    pm.expect(responseData).to.have.property('customerDetails');",
+									"    pm.expect(responseData).to.have.property('estimatedCompletionDate');",
+									"    pm.expect(responseData).to.have.property('adminData');",
+									"    pm.expect(responseData).to.have.property('statusDescription');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/job-cards/{{jcId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"job-cards",
+								"{{jcId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getall-job-card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"jcId\", responseJson[0].id);",
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"The 'id' field should be a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('array');",
+									"",
+									"    responseData.forEach(function (jobCard) {",
+									"        pm.expect(jobCard.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Each job card in the response has all the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    responseData.forEach(function (jobCard) {",
+									"        pm.expect(jobCard).to.have.property('id');",
+									"        pm.expect(jobCard).to.have.property('displayId');",
+									"        pm.expect(jobCard).to.have.property('caseId');",
+									"        pm.expect(jobCard).to.have.property('caseDisplayId');",
+									"        pm.expect(jobCard).to.have.property('registeredProduct');",
+									"        pm.expect(jobCard).to.have.property('customerComplaints');",
+									"        pm.expect(jobCard).to.have.property('milometer');",
+									"        pm.expect(jobCard).to.have.property('servicesSelected');",
+									"        pm.expect(jobCard).to.have.property('status');",
+									"        pm.expect(jobCard).to.have.property('serviceAdvisor');",
+									"        pm.expect(jobCard).to.have.property('customerDetails');",
+									"        pm.expect(jobCard).to.have.property('estimatedCompletionDate');",
+									"        pm.expect(jobCard).to.have.property('adminData');",
+									"        pm.expect(jobCard).to.have.property('statusDescription');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/job-cards/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"job-cards",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "job-card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate that the 'raw' array is present in the response and is empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.raw).to.exist.and.to.be.an('array').that.is.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the 'affected' field is present and equal to 1\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.affected).to.exist.and.to.equal(1);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/job-cards/{{jcId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"job-cards",
+								"{{jcId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "job-card service",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"technician\": \"Peter\",\n    \"status\": \"Z22\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/vehicle-service/job-cards/{{jcId}}/services/{{jcsId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"job-cards",
+								"{{jcId}}",
+								"services",
+								"{{jcsId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "validations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vZXh0ZXJuYWwtZnVuYy1zZXJ2aWNlcy5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTIxMDA1NDMxMDIiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiM1BXYzJBcExMTjhrVWZodjgwN2NZazIvdjdnZnhUTnZrOTdyVXhqanpvYz0ifQ.eyJqdGkiOiJmYmQwZGYxOTliOTg0YTcxODNjYTlmNThlNGE3Y2Q1YyIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiJiNWFkYTllOC02NjY1LTQ3NGEtOGU5NC1hZjYxMzU4NTkwZGQiLCJ6ZG4iOiJleHRlcm5hbC1mdW5jLXNlcnZpY2VzIn0sInN1YiI6InNiLXZlaGljbGUtc2VydmljZSF0MTczOTE4IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi12ZWhpY2xlLXNlcnZpY2UhdDE3MzkxOCIsImNpZCI6InNiLXZlaGljbGUtc2VydmljZSF0MTczOTE4IiwiYXpwIjoic2ItdmVoaWNsZS1zZXJ2aWNlIXQxNzM5MTgiLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjIwZTNlOTc5IiwiaWF0IjoxNjk3NTMxNTg4LCJleHAiOjE2OTc1NzQ3ODgsImlzcyI6Imh0dHBzOi8vZXh0ZXJuYWwtZnVuYy1zZXJ2aWNlcy5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiYjVhZGE5ZTgtNjY2NS00NzRhLThlOTQtYWY2MTM1ODU5MGRkIiwiYXVkIjpbInVhYSIsInNiLXZlaGljbGUtc2VydmljZSF0MTczOTE4Il19.Qb5LwWv99z1wrAC1DyoUBYIz31Fq1kEorspiinyM957LfPm-8Aqva303YN9HE3J7boSPgG-GfCSZE38XKBlP1aViqG2z741xFNtAeVhIg-6uQgLYgdAclUWzbNomcCYsPIvwrinPxtf-DEWv_3paVoR5D4xTcMQy-ueEcEJHYbX9iDqhqUYPIPuU9xq6t_zPBHxokSDDAwSeUlDnm8nMA_76Jbxj15f-TyRIuBxXC4ocVOxes7WQoo9Z8UkMaAs1Oj64UmdqtAfT8P7Ec34_TU53tuAco6M8_uuaCSmSAB8dmLq7BUkV-ZsCRtjQOfkwMCCb7MwNduWD8gk4h_A_sA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"entity\": \"sap.crm.caseservice.entity.case\",\n    \"currentImage\": \"{\\\"id\\\":\\\"9c65e162-043e-11ee-b91a-71a8c681c084\\\",\\\"subject\\\":\\\"sbsws test vehicle case\\\",\\\"priority\\\":\\\"03\\\",\\\"origin\\\":\\\"MANUAL_DATA_ENTRY\\\",\\\"caseType\\\":\\\"ZVSR\\\",\\\"statusSchema\\\":\\\"Z1\\\",\\\"status\\\":\\\"05\\\",\\\"escalationStatus\\\":\\\"NOT_ESCALATED\\\",\\\"isRecommendedCommunicationLanguage\\\":false,\\\"processor\\\":{\\\"id\\\":\\\"9c65e162-043e-11ee-b91a-71a8c681c084\\\",\\\"displayId\\\":\\\"8000000009\\\",\\\"isDeleted\\\":false,\\\"partyRoleCategory\\\":\\\"PROCESSOR\\\",\\\"partyRole\\\":\\\"40\\\",\\\"addressId\\\":\\\"11eccc06-510c-6c3e-afdb-81c341010a00\\\",\\\"determinationMethodCode\\\":13,\\\"isMain\\\":true,\\\"partyType\\\":\\\"EMPLOYEE\\\"},\\\"reporter\\\":{\\\"id\\\":\\\"9c65e162-043e-11ee-b91a-71a8c681c084\\\",\\\"displayId\\\":\\\"8000000010\\\",\\\"isDeleted\\\":false,\\\"partyRoleCategory\\\":\\\"REPORTER\\\",\\\"partyRole\\\":\\\"214\\\",\\\"addressId\\\":\\\"11eccc65-79af-aa3e-afdb-81c341010a00\\\",\\\"determinationMethodCode\\\":3,\\\"isMain\\\":true,\\\"partyType\\\":\\\"EMPLOYEE\\\"},\\\"timePoints\\\":{\\\"reportedOn\\\":\\\"2023-06-21T11:58:00Z\\\",\\\"assignedToProcessorOn\\\":\\\"2023-06-21T11:58:47.608522760Z\\\"},\\\"isRecommendedCategory\\\":false,\\\"isEndOfPurpose\\\":false,\\\"isDepersonalized\\\":false,\\\"isRead\\\":false,\\\"isIrrelevant\\\":false,\\\"accessControlEntries\\\":[\\\"9c65e162-043e-11ee-b91a-71a8c681c084\\\",\\\"9c65e162-043e-11ee-b91a-71a8c681c084\\\",\\\"9808336e-cc65-11ec-980b-7f14df82f69b\\\",\\\"9c65e162-043e-11ee-b91a-71a8c681c084\\\"],\\\"adminData\\\":{\\\"createdOn\\\":\\\"2023-06-21T11:58:46.985179524Z\\\",\\\"createdBy\\\":\\\"9808336e-cc65-11ec-980b-7f14df82f69b\\\",\\\"updatedOn\\\":\\\"2023-06-21T11:58:46.985179524Z\\\",\\\"updatedBy\\\":\\\"9808336e-cc65-11ec-980b-7f14df82f69b\\\"}}\",\n    \"beforeImage\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/vehicle-service/job-cards/validations",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"job-cards",
+								"validations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/vehicle-service/healthz",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"vehicle-service",
+						"healthz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GenerateInvoice",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/vehicle-service/generate-invoice/?$filter=caseId eq '9c65e162-043e-11ee-b91a-71a8c681c084'",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"vehicle-service",
+						"generate-invoice",
+						""
+					],
+					"query": [
+						{
+							"key": "$filter",
+							"value": "caseId eq '9c65e162-043e-11ee-b91a-71a8c681c084'"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "clientSecret",
+				"value": "9e702377-8cce-4159-a628-bd6b3a3c973b$Z2TMEIzAFAm9sAj01Td5eDE6-7nPXq0pQARaUJ0kvJY=",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "sb-vehicle-service!t173918",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://external-func-services.authentication.eu10.hana.ondemand.com/oauth/authorize?redirect_uri=https://external-func-services.launchpad.cfapps.eu10.hana.ondemand.com/login/",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://external-func-services.authentication.eu10.hana.ondemand.com/oauth/token",
+				"type": "string"
+			},
+			{
+				"key": "refreshRequestParams",
+				"value": [],
+				"type": "any"
+			},
+			{
+				"key": "tokenRequestParams",
+				"value": [],
+				"type": "any"
+			},
+			{
+				"key": "authRequestParams",
+				"value": [],
+				"type": "any"
+			},
+			{
+				"key": "tokenName",
+				"value": "sToken",
+				"type": "string"
+			},
+			{
+				"key": "challengeAlgorithm",
+				"value": "S256",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "tony.mathew@sap.com",
+				"type": "string"
+			},
+			{
+				"key": "redirect_uri",
+				"value": "https://external-func-services.launchpad.cfapps.eu10.hana.ondemand.com/login/",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "12June@1995",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "client_authentication",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "https://vehicle-service.c7faf5c.kyma.ondemand.com",
+			"type": "string"
+		},
+		{
+			"key": "sToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "id",
+			"value": ""
+		},
+		{
+			"key": "inspectionItemId",
+			"value": ""
+		},
+		{
+			"key": "sfId",
+			"value": ""
+		},
+		{
+			"key": "jcId",
+			"value": ""
+		},
+		{
+			"key": "serviceId",
+			"value": ""
+		},
+		{
+			"key": "jcsId",
+			"value": ""
+		}
+	]
+}
