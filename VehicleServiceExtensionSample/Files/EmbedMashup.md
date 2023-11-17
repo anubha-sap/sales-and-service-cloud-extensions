@@ -1,5 +1,5 @@
-### Add external application UI via mashup in SSC
-**Step 1:** Go to CNS Application  
+### Add external application UI via mashup in Sales and Service Cloud (SSC)
+**Step 1:** Go to SSC Application  
  
 **Step 2:** In the settings, navigate to "Mashup Authoring" and create a new mashup (Service Form). 
  ![Case ExtensionField ](../Images/SBA5.png "Case fields")
