@@ -43,7 +43,7 @@ For creating similar sample , below are the prerequisites along with link where 
 * Users in both SSC and BTP respectively
 * HANA DB Account in BTP. 
 
-## Refernce Scenario
+## Reference Scenario
 Details of sample reference scenario is mentioned [here](./Files/scenario.md).
 
 ## Running the application
