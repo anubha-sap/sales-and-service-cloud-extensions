@@ -6,9 +6,9 @@
 -->
 
 ## Description
-This sample demonstrates side by side extension on SSC v2 for vehicle service scenario. Please refer to below section "Reference Scenario" for scenario details.
+This sample demonstrates side by side extension on SSC v2 for vehicle service scenario. Complete scenario details is mentioned in section - "Reference Scenario".
 
-In rhis external application, service is developed using nestJS/node.js and is interacting with SAP sales and Service cloud using SAP Cloud SDK. Service is deployed in BTP Kyma instance. UI is developed using SAP BuildApps which is no code low tool.
+We have created external application- service and UI respectively. Service is developed using nestJS/node.js and is interacting with SAP sales and Service cloud using SAP Cloud SDK. Service is deployed in BTP Kyma instance. UI is developed using SAP BuildApps which is no code low tool.
 External UI is embedded in SSC via mashups
 
 
