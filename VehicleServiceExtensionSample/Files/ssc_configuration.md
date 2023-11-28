@@ -21,11 +21,12 @@ Before running this application, there are some configurations that needs to be 
   * For this reference implementation – “vehicle service Case Type” case type needs to be created.
   * [Refer](https://help.sap.com/docs/CX_NG_SVC/56436b4e8fa84dc8b4408c7795a012c4/016d3122e3d347feb329a3523b537ff3.html?locale=en-US&q=case%20type) to know how to create custom case type.
 * Create custom case status
-  * create these three custom status for case - Service Booked , service In Progress and Service Completed respectively for custom case type - "vehicle service case type".
+   * create these three custom status for case - Service Booked , service In Progress and Service Completed respectively for custom case type - "vehicle service case type".
 
 ![Case ExtensionField ](../Images/SSC5.png "Case fields") 
 
-  * In reference scenario, when job card is created,case status is updated to Service Booked.When technician starts the service, case status is updated to service in progress.When technician completes the service, case status is updated to service completed. This logic is written in external service.
-  * [Refer](https://help.sap.com/docs/CX_NG_SVC/56436b4e8fa84dc8b4408c7795a012c4/be263fba54584ed6af0a670b4bfaafc2.html?locale=en-US&q=case%20status) to know how to create custom status.
+   * In reference scenario, when job card is created,case status is updated to Service Booked.When technician starts the service, case status is updated to service in progress.When technician completes the service, case status is updated to service completed. This logic is written in external service.
+   * [Refer](https://help.sap.com/docs/CX_NG_SVC/56436b4e8fa84dc8b4408c7795a012c4/be263fba54584ed6af0a670b4bfaafc2.html?locale=en-US&q=case%20status) for more details on 
+    how to create custom status.
 
 **Please make note of IDs of extension fields and custom status, as these will be used in service.**
