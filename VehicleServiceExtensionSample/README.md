@@ -21,10 +21,15 @@ The key extension features covered in this implementation are -
 
 ## Prerequisites
 For creating similar sample , below are the prerequisites along with link where you can learn more about them-
+* SAP BuildApps set up in BTP Account. Helpful links for setup
+   * https://discovery-center.cloud.sap/serviceCatalog/sap-build-apps/?region=all
+   * https://help.sap.com/docs/build-apps/service-guide/setup-sap-build-apps-with-sap-sales-cloud-version-2?locale=en-US
+* [Configure IDP in Sales and Service Cloud](https://help.sap.com/docs/CX_NG_SVC/2c87cece32844c91836e535aef8f9642/0606508068724fea9b3ae9e2cd39f2e2.html?locale=en-US)
 * Account and subaccount in SAP BTP , Kyma Instance runtime.
    * Refer [here](https://help.sap.com/docs/sap-hana-spatial-services/onboarding/introduction) to create account in BTP
    * Refer [here](https://discovery-center.cloud.sap/missiondetail/3019/3016/) to learn BTP
    * Refer [here](https://github.com/SAP-samples/kyma-runtime-extension-samples/tree/main/prerequisites#kyma) to know more about Kyma
+* Users in both SSC and BTP respectively
 * Kubectl - Install kubectl from below link
    * [Windows](https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/)
    * [MacOS](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
@@ -35,12 +40,8 @@ For creating similar sample , below are the prerequisites along with link where 
    * Run - "kubectl krew install oidc-login"
 * Install [Skaffold](https://skaffold.dev/docs/install/)
 * Install Docker
-* SAP BuildApps set up in BTP Account. Helpful links for setup
-   * https://discovery-center.cloud.sap/serviceCatalog/sap-build-apps/?region=all
-   * https://www.sap.com/india/products/technology-platform/low-code-app-builder.html
 * NodeJS and NestJS Framework
 * Cloud SDK. Learn from [here](https://sap.github.io/cloud-sdk/)
-* Users in both SSC and BTP respectively
 * HANA DB Account in BTP. 
 
 ## Reference Scenario
