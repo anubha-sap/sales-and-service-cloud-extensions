@@ -29,7 +29,7 @@ For creating similar sample , below are the prerequisites along with link where 
    * Refer [here](https://help.sap.com/docs/sap-hana-spatial-services/onboarding/introduction) to create account in BTP
    * Refer [here](https://discovery-center.cloud.sap/missiondetail/3019/3016/) to learn BTP
    * Refer [here](https://github.com/SAP-samples/kyma-runtime-extension-samples/tree/main/prerequisites#kyma) to know more about Kyma
-* Users in both SSC and BTP respectively
+* Users in both SSC and BTP respectively. Few things already covered in above links. [Here](./Files/user.md) is quick guide.
 * Kubectl - Install kubectl from below link
    * [Windows](https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/)
    * [MacOS](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
