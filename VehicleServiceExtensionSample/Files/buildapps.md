@@ -1,5 +1,5 @@
 ## Running SAP Build Apps application
-By following these documented instructions, users will be able to download the reference buildapps application , deploy and run. \
+By following these documented instructions, users will be able to download the reference SAP Build Apps application , deploy and run. \
 Please click the link to download the below SAP Build Apps sample application   
  
 -  Service form  
