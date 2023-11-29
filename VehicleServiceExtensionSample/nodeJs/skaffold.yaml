@@ -1,0 +1,12 @@
+apiVersion: skaffold/v4beta5
+kind: Config
+metadata:
+  name: vehicle-service
+build:
+  artifacts:
+    - image: <docker-image> #Place holder for the docker image
+      docker:
+        dockerfile: Dockerfile
+manifests:
+  rawYaml:
+    - k8s/vehicle-service.yaml
