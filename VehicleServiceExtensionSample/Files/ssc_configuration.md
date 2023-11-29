@@ -1,4 +1,4 @@
-### Configurations in sales and service cloud
+### Configurations in SAP Sales and Service Cloud
 Before running this application, there are some configurations that needs to be done in SAP Sales and Service Cloud.
 * Create and Add below extension fields
    * Vehicle Number (VIN Number) – Created for Registered Product entity
