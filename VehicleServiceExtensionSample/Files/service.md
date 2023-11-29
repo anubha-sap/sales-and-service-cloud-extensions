@@ -68,7 +68,7 @@ Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-serv
    NOTE: In API Rule, we have configured an access strategy to restrict access to the application. We will be using the JWT access strategy to protect endpoint(s) from unsolicited access.
 
 9. Access to a container registry:\
-To store the application image, access to a container registry(eg Docker hub) is required. The docker-image name has to be filled in the files "skaffold.yaml" and "k8s/vehicle-service.yaml"(Placeholders are provided in the files)
+To store the application image, access to a container registry(eg Docker hub) is required. The docker-image name has to be filled in the files "VehicleServiceExtensionSample/nodeJs/skaffold.yaml" and "VehicleServiceExtensionSample/nodeJs/k8s/vehicle-service.yaml"(Placeholders are provided in the files)
 
 10. Install dependencies:\
 Do ```npm install``` in root directory
@@ -92,7 +92,7 @@ If you are using docker hub to store the image we created in the previous step:
    * Log in to Docker using this command: docker login -u <docker-id> -p <password>
    * Push the local image into the Docker Hub using command : docker push <docker-hub-account>/<image-name>:v1
    * Deploy the application using the deployment description file created in step 5:\
-kubectl -n dev apply -f k8s-deployment-backend.yaml
+kubectl -n dev apply -f k8s/vehicle-service.yaml
 
 ## Add Authentication 
 This section will explain how to enable authentication for service and how user propagation between SSC and external application is acheived.
