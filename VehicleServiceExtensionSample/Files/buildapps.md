@@ -1,15 +1,15 @@
-## Running Build Apps application
+## Running SAP Build Apps application
 By following these documented instructions, users will be able to download the reference buildapps application , deploy and run. \
-Please click the link to download the below build apps sample application   
+Please click the link to download the below SAP Build Apps sample application   
  
 -  Service form  
 -  JobCard 
 -  Job Portal  
 
 ### How to start
-**Step 1:** Open the build apps dashboard to import the downloaded  attachment.
+**Step 1:** Open the SAP Build Apps dashboard to import the downloaded  attachment.
 
-Begin by launching the Build Apps Dashboard to initiate the process of importing the downloaded attachment. 
+Begin by launching the SAP Build Apps Dashboard to initiate the process of importing the downloaded attachment. 
  
 **Step 2:** Click the "Import" button to import the downloaded .mtar file. 
  
@@ -18,7 +18,7 @@ In this step, you can easily import the downloaded .mtar file. This allows users
 
 **Step 3:** Open the imported Build app application (service Form ). 
  
-In this step, users have the option to either open an already imported Build Apps application (Service Form) or create a brand new Build Apps application. This flexibility empowers users to design application forms, pages, and more using a diverse range of components, layouts, and elements such as buttons, links, input fields, and more. This allows users to tailor their applications to their specific needs and preferences. 
+In this step, users have the option to either open an already imported SAP Build Apps application (Service Form) or create a brand new SAP Build Apps application. This flexibility empowers users to design application forms, pages, and more using a diverse range of components, layouts, and elements such as buttons, links, input fields, and more. This allows users to tailor their applications to their specific needs and preferences. 
 
 ![Case ExtensionField ](../Images/SBA1.png "Case fields")
 
