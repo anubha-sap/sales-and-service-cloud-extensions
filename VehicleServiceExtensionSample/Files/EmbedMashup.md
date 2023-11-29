@@ -1,4 +1,4 @@
-### Add external application UI via mashup in Sales and Service Cloud (SSC)
+### Add external application UI via mashup in SAP Sales and Service Cloud
 **Step 1:** Go to SSC Application  
  
 **Step 2:** In the settings, navigate to "Mashup Authoring" and create a new mashup (Service Form). 
