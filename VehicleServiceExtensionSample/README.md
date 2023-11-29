@@ -6,15 +6,15 @@
 -->
 
 ## Description
-This sample demonstrates side by side extension on SSC v2 for vehicle service scenario. Complete scenario details is mentioned in section - "Reference Scenario".
+This sample demonstrates side by side extension on Sales and Service Cloud for vehicle service scenario. Complete scenario details is mentioned in section - "Reference Scenario".
 
-We have created external application- service and UI respectively. Service is developed using nestJS/node.js and is interacting with SAP sales and Service cloud using SAP Cloud SDK. Service is deployed in BTP Kyma instance. UI is developed using SAP BuildApps which is no code low tool.
-External UI is embedded in SSC via mashups
+We have created external application- service and UI respectively. Service is developed using Node.js and is interacting with SAP Sales and Service cloud using SAP Cloud SDK. Service is deployed in BTP Kyma instance. UI is developed using SAP Build Apps which is no code low code tool.
+External UI is embedded in Sales and Service Cloud via mashups
 
 
 ## Key Features
 The key extension features covered in this implementation are - 
-* Embedding external application in SAP sales and service cloud via mashup
+* Embedding external application in SAP Sales and Service Cloud via mashup
 * External custom logic (validations/determinations) implementation using external hooks
 * Few basic Extension configurations in SAP Sales and Service Cloud 
 * User propagation across different applications
@@ -29,7 +29,7 @@ For creating similar sample , below are the prerequisites along with link where 
    * Refer [here](https://help.sap.com/docs/sap-hana-spatial-services/onboarding/introduction) to create account in BTP
    * Refer [here](https://discovery-center.cloud.sap/missiondetail/3019/3016/) to learn BTP
    * Refer [here](https://github.com/SAP-samples/kyma-runtime-extension-samples/tree/main/prerequisites#kyma) to know more about Kyma
-* Users in both SSC and BTP respectively. Few things already covered in above links. [Here](./Files/user.md) is quick guide.
+* Users in both Sales and Service Cloud and BTP respectively . Few things already covered in above links. [Here](./Files/user.md) is quick guide.
 * Kubectl - Install kubectl from below link
    * [Windows](https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/)
    * [MacOS](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
@@ -49,7 +49,7 @@ Details of sample reference scenario is mentioned [here](./Files/scenario.md).
 
 ## Running the application
 Please follow below mentioned steps to run this application. 
-* [Configurations in sales and service cloud](./Files/ssc_configuration.md)
+* [Configurations in SAP Sales and Service cloud](./Files/ssc_configuration.md)
 
 * [Run Backend service](./Files/service.md)
    * [Download and Deploy node JS application](./Files/service.md#download-and-deploy-service-in-kyma)
