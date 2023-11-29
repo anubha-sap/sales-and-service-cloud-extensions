@@ -21,7 +21,7 @@ The key extension features covered in this implementation are -
 
 ## Prerequisites
 For creating similar sample , below are the prerequisites along with link where you can learn more about them-
-* SAP BuildApps set up in BTP Account. Helpful links for setup
+* SAP Build Apps set up in BTP Account. Helpful links for setup
    * https://discovery-center.cloud.sap/serviceCatalog/sap-build-apps/?region=all
    * https://help.sap.com/docs/build-apps/service-guide/setup-sap-build-apps-with-sap-sales-cloud-version-2?locale=en-US
 * [Configure IDP in Sales and Service Cloud](https://help.sap.com/docs/CX_NG_SVC/2c87cece32844c91836e535aef8f9642/0606508068724fea9b3ae9e2cd39f2e2.html?locale=en-US)
@@ -57,7 +57,7 @@ Please follow below mentioned steps to run this application.
    * [Run service API using postman](./Files/service.md#running-backend-api-using-postman)
    * [Code structure details](./Files/service.md#code-folder-structure)
 
-* [Run BuildApps application](./Files/buildapps.md)
+* [Run SAP Build Apps application](./Files/buildapps.md)
 * [Embed external UI application via mashup](./Files/EmbedMashup.md)
 * [Custom logic implementation using external hooks](./Files/externalHooks.md)
 
