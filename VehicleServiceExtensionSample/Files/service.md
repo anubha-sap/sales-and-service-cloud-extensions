@@ -25,39 +25,39 @@ Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-serv
 
 4. Create Destinations in BTP:\
   There will be two Destinations -
-    * First, used by buildapps to connect the application in kyma:\
+    * First, used by buildapps to connect the application in kyma:
 
-    ![Case ExtensionField ](../Images/K1.png "Case fields") 
-      Type: HTTP\
-      URL: Application URL\
-      Authentication: OAuth2JWTBearer\
-      ClientId, ClientSecret, Token Service URL: You will get this info from the xsuaa instance secret created in the previous step. OAuth2JWTBearer destination type can help exchange the user JWT token into an OAuth2 bearer access token with the required scopes
+    ![Case ExtensionField ](../Images/K1.png "Case fields")  
+      * **Type**: HTTP
+      * **URL**: Application URL
+      * **Authentication**: OAuth2JWTBearer
+      * **ClientId, ClientSecret, Token Service URL**: You will get this info from the xsuaa instance secret created in the previous step. OAuth2JWTBearer destination type can help exchange the user JWT token into an OAuth2 bearer access token with the required scopes
 
    To allow an application to call another application, passing the user context, and fetch resources, the caller application(In our case, this is the build apps application) must pass an access token. In this authorization flow, the initial user token is passed to the OAuth server as input data. This process is performed automatically by the Destination service, which helps simplifying the application development: You only have to construct the right request to the target URL, by using the outcome (another access token) of the service-side automation.
   * Second, Used by the application in kyma to connect to service in CNS:
-  ![Case ExtensionField ](../Images/K2.png "Case fields")
+  ![Case ExtensionField ](../Images/K2.png "Case fields") \
    OAuth2SAMLBearerAssertion authorisation flow allows for propagation of a user’s identity from our application deployed in kyma to the service we are trying to connect in Sales and Cloud Service.
 5. Create Hana DB to instance
    * Follow [this](https://blogs.sap.com/2022/12/15/consuming-sap-hana-cloud-from-the-kyma-environment/) to consume HANA DB in Kyma
    * **This will create a Kubernetes secret from where we can get the details required to connect to the DB**
 6. Create Kubernetes secrets
     * Create a Kubernetes secret file(with the name **vehicle-service-secrets**) to store sensitive data like db username/password and other application specific data.
-    * The secret should contain the following:\
-    case_status_booked: \<*Status code when case status is booked*>\
-    case_status_closed: \<*Status code when case status is closed*>\
-    case_status_completed: \<*Status code when case status is completed*>\
-    case_status_service_completed: \<*Status code when case status service completed*>\
-    case_status_service_in_process: \<*Status code when case status is service in process*>\
-    db_password: \<*Database password. This is available in the secret that’s created in the above step*>\
-    db_user: \<*Database username. This is available in the secret that’s created in the above step*>\
-    destination: \<*Destination to which the application connects*>\
-    dropSchema: \<*Drops the schema each time connection is being established. This option is useful during debug and development*>\
-    extension_field_jobcard_id: \<*Job Card ID extension field*>\
-    extension_field_milometer: \<*Milometer extension field*>\
-    extension_field_service_form_id: \<*Service Form ID extension field*>\
-    extension_field_vehicle_number: \<*Vehicle Number extension field*>\
-    logLevel: \<*Sets the log level of the application*>\
-    synchronize: \<*Indicates if database schema should be auto created on every application launch. This option is useful during debug and development*>
+    * The secret should contain the following:
+      * **case_status_booked**: \<*Status code when case status is booked*>
+      * **case_status_closed**: \<*Status code when case status is closed*>
+      * **case_status_completed**: \<*Status code when case status is completed*>
+      * **case_status_service_completed**: \<*Status code when case status service completed*>
+      * **case_status_service_in_process**: \<*Status code when case status is service in process*>
+      * **db_password**: \<*Database password. This is available in the secret that’s created in the above step*>
+      * **db_user**: \<*Database username. This is available in the secret that’s created in the above step*>
+      * **destination**: \<*Destination to which the application connects*>
+      * **dropSchema**: \<*Drops the schema each time connection is being established. This option is useful during debug and development*>
+      * **extension_field_jobcard_id**: \<*Job Card ID extension field*>
+      * **extension_field_milometer**: \<*Milometer extension field*>
+      * **extension_field_service_form_id**: \<*Service Form ID extension field*>
+      * **extension_field_vehicle_number**: \<*Vehicle Number extension field*>
+      * **logLevel**: \<*Sets the log level of the application*>
+      * **synchronize**: \<*Indicates if database schema should be auto created on every application launch. This option is useful during debug and development*>
     * You will notice this secrets contains IDs for configurations done in sales and service cloud like extension fields, Case status. The reason being different IDs which is generated when fields are created. In our service code, we are refering to IDs maintained here in business logic.
 
 7. Clone the service from - *git clone url*
@@ -76,7 +76,7 @@ Do ```npm install``` in root directory
 11. Use "deploy.sh" (In root directory) to deploy the service to Kyma\
 This is a script which does two things:
 - Build the application
-- Deploy to Kyma cluster using scaffold\
+- Deploy to Kyma cluster using scaffold
 
    Run the command “bash deploy.sh”
 
