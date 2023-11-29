@@ -21,7 +21,7 @@ We have exposed end point like this:
 
 validation logic is written findValidationStatusService method. 
 
-* Once API is created and validation logic is written, create communication system in Sales and Service Cloud
+* Once API is created and validation logic is written, create communication system in SAP Sales and Service Cloud
   * Enter DisplayID 
   * choose outbound configuration
   * Give Host Name. How to get hostname is explained already in "Running backend API using postman" step of "Run Backend service".
