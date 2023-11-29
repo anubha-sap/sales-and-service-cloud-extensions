@@ -16,7 +16,7 @@ Begin by launching the SAP Build Apps Dashboard to initiate the process of impor
 In this step, you can easily import the downloaded .mtar file. This allows users to reference and check the downloaded file while providing the foundation for creating their unique application. 
  
 
-**Step 3:** Open the imported Build app application (service Form ). 
+**Step 3:** Open the imported SAP Build Apps application (service Form ). 
  
 In this step, users have the option to either open an already imported SAP Build Apps application (Service Form) or create a brand new SAP Build Apps application. This flexibility empowers users to design application forms, pages, and more using a diverse range of components, layouts, and elements such as buttons, links, input fields, and more. This allows users to tailor their applications to their specific needs and preferences. 
 
