@@ -4,16 +4,26 @@ In this document, you will find details on how to download and deploy the sample
 
 ## Download and deploy service in Kyma
 Please follow below steps to download and deploy service in Kyma.
+1. Download kubeconfig file for kyma from your BTP account: 
+    * Go to your BTP Subaccount:\
+    ![BTP SubAccount Page](../Images/subaccount.png "BTP SubAccount")
+    * Go to Kyma Environment -> click on kubeconfigURL. This will download the kubeconfig file:\
+    ![Link to Kubeconfig file](../Images/kubeconfig.png "Link to KubeConfig file")
+    * Rename the downloaded file to “config” (without any extension) and depending on the operating system, place the file in the following location:  \
+    Mac OS: $HOME/.kube/ (Create .kube directory if not present already)\
+    Windows: C:\Users\<user-name>\.kube\ (Create .kube directory if not present already) 
 
-1. Create XSUAA/destination service instances\
+2. Create a namespace called "dev"(You can also create namespace with other names. However, if you create a namespace with a different name, kindly make sure the same name is updated in "vehicle-service.yaml" file in the code)
+
+3. Create XSUAA/destination service instances\
 Since our application uses destination to connect to services in CNS, we need to create service instance and service binding for both destination and xsuaa. (XSUAA will be used to fetch credentials required to connect to the destination service)
 Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-service-bindings-on-kyma-runtime/) to understand how services - destination service and xsuaa service are consumed in an application in kyma.
   * add the SERVICE_BINDING_ROOT env variable into your deployment: https://github.tools.sap/fp-stakeholder-management/xsuaa-approuter/blob/main/approuter/helm/app1-app/templates/deployment.yaml#L91
   * create a volume with your dest service binding secret: https://github.tools.sap/fp-stakeholder-management/xsuaa-approuter/blob/main/approuter/helm/app1-app/templates/deployment.yaml#L91
   * create a volume mount with a path to the binding secret: https://github.tools.sap/fp-stakeholder-management/xsuaa-approuter/blob/main/approuter/helm/app1-app/templates/deployment.yaml#L69
-  * NOTE: Once you create XSUAA instance, a secret will be created which will have details like ClientID, clientSecret, tokenURL etc which will be needed in the following steps
+  * NOTE: Once you create XSUAA instance, a secret will be created which will have details like ClientID, clientSecret, tokenURL etc which will be needed in the following steps. **Kindly give the secret names as "destination-service-binding" and "xsuaa-service-binding" for destination and xsuaa services respectively**
 
-2. Create Destinations in BTP:\
+4. Create Destinations in BTP:\
   There will be two Destinations -
     * First, used by buildapps to connect the application in kyma:\
 
@@ -27,11 +37,11 @@ Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-serv
   * Second, Used by the application in kyma to connect to service in CNS:
   ![Case ExtensionField ](../Images/K2.png "Case fields")
    OAuth2SAMLBearerAssertion authorisation flow allows for propagation of a user’s identity from our application deployed in kyma to the service we are trying to connect in Sales and Cloud Service.
-3. Create Hana DB to instance
+5. Create Hana DB to instance
    * Follow [this](https://blogs.sap.com/2022/12/15/consuming-sap-hana-cloud-from-the-kyma-environment/) to consume HANA DB in Kyma
-   * This will create a Kubernetes secret from where we can get the details required to connect to the DB
-4. Create Kubernetes secrets
-    * Create a Kubernetes secret file(with the name <application-name>-secrets) to store sensitive data like db username/password and other application specific data.
+   * **This will create a Kubernetes secret from where we can get the details required to connect to the DB**
+6. Create Kubernetes secrets
+    * Create a Kubernetes secret file(with the name **vehicle-service-secrets**) to store sensitive data like db username/password and other application specific data.
     * The secret should contain the following:\
     case_status_booked: \<*Status code when case status is booked*>\
     case_status_closed: \<*Status code when case status is closed*>\
@@ -50,22 +60,20 @@ Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-serv
     synchronize: \<*Indicates if database schema should be auto created on every application launch. This option is useful during debug and development*>
     * You will notice this secrets contains IDs for configurations done in sales and service cloud like extension fields, Case status. The reason being different IDs which is generated when fields are created. In our service code, we are refering to IDs maintained here in business logic.
 
-5. Clone the service from - *git clone url*
+7. Clone the service from - *git clone url*
 
-6. Prepare Deployment Description File\
+8. Prepare Deployment Description File\
    Based on our application specification, we define the following description file for deployment. This yaml file can be found inside k8s folder.
 
    NOTE: In API Rule, we have configured an access strategy to restrict access to the application. We will be using the JWT access strategy to protect endpoint(s) from unsolicited access.
 
-7. Download kubeconfig file for kyma from your BTP account: 
-    * Go to your BTP Subaccount:\
-    ![BTP SubAccount Page](../Images/subaccount.png "BTP SubAccount")
-    * Go to Kyma Environment -> click on kubeconfigURL. This will download the kubeconfig file:\
-    ![Link to Kubeconfig file](../Images/kubeconfig.png "Link to KubeConfig file")
-    * Rename the downloaded file to “config” (without any extension) and depending on the operating system, place the file in the following location:  \
-    Mac OS: $HOME/.kube/ (Create .kube directory if not present already)\
-    Windows: C:\Users\<user-name>\.kube\ (Create .kube directory if not present already) 
-6. Use "deploy.sh" (In root directory) to deploy the service to Kyma\
+9. Access to a container registry:\
+To store the application image, access to a container registry(eg Docker hub) is required. The docker-image name has to be filled in the files "skaffold.yaml" and "k8s/vehicle-service.yaml"(Placeholders are provided in the files)
+
+10. Install dependencies:\
+Do ```npm install``` in root directory
+
+11. Use "deploy.sh" (In root directory) to deploy the service to Kyma\
 This is a script which does two things:
 - Build the application
 - Deploy to Kyma cluster using scaffold\
@@ -80,7 +88,7 @@ To create docker image we use the following docker file(This DockerFile is avail
 ![Case ExtensionField ](../Images/K3.png "Case fields")
 * Use command - "docker build -t <docker-hub-account>/<image-name>:v1" to build docker image based on the above dockerfile.This   command should be run in the same level where the DockerFile is present
 *  Push the docker image to a container repository.\
-We will be using docker hub to store the image we created in the previous step.
+If you are using docker hub to store the image we created in the previous step:
    * Log in to Docker using this command: docker login -u <docker-id> -p <password>
    * Push the local image into the Docker Hub using command : docker push <docker-hub-account>/<image-name>:v1
    * Deploy the application using the deployment description file created in step 5:\
