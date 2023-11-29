@@ -2,7 +2,7 @@
 ### Scenario
 Please find the details of reference scenario in this section.
 
-As a service advisor, you create a case with the custom case type 'Vehicle Service Case Type' when a customer requests vehicle service. 2.	Update all the information such as Individual Customer, Registered Product (standard fields), along with milometer reading of the vehicle (this is the extension field in case). 
+As a service advisor, you create a case with the custom case type 'Vehicle Service Case Type' when a customer requests vehicle service.	Update all the information such as Individual Customer, Registered Product (standard fields), along with milometer reading of the vehicle (this is the extension field in case). 
 The Registered product is also extended by adding the Vehicle Number (VIN) extension field
 
 ![Case ExtensionField ](../Images/CaseExtension1.png "Case fields") 
@@ -12,7 +12,7 @@ Please see the image below :
 
 ![Case ExtensionField ](../Images/RS2.png "Case fields") 
 
-Here, as you can see, this Service Form shows data from CNS such as- vehicle number, DOP, milometer. 
+Here, as you can see, this Service Form shows data from SAP Sales and Service Cloud such as- vehicle number, DOP, milometer. 
 Now,Create your job card. You can view the job card in one of the custom tabs. This is also created via external UI application using BuildApps. You can also fetch the customer details from the solution.
 
 ![Case ExtensionField ](../Images/RS3.png "Case fields") 
