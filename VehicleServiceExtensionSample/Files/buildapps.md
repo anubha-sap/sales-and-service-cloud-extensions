@@ -2,9 +2,9 @@
 By following these documented instructions, users will be able to download the reference SAP Build Apps application , deploy and run. \
 Please click the link to download the below SAP Build Apps sample application   
  
--  Service form  
--  JobCard 
--  Job Portal  
+-  [Service form](../BuildApps/PROD_Service_Form_NODEJS.mtar)  
+-  [JobCard](../BuildApps/PROD_EXFS-DISPLAY-JOBCARD_NODEJS.mtar)  
+-  [Job Portal](../BuildApps/PROD_EXFS-JobPortal-Service_NODE_Destination.mtar)   
 
 ### How to start
 **Step 1:** Open the SAP Build Apps dashboard to import the downloaded  attachment.
