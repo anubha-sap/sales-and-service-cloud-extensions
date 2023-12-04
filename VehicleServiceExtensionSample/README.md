@@ -6,10 +6,10 @@
 -->
 
 ## Description
-This sample demonstrates side by side extension on Sales and Service Cloud for vehicle service scenario. Complete scenario details is mentioned in section - "Reference Scenario".
+This sample demonstrates side by side extension on Sales and Service Cloud for vehicle service scenario. Complete scenario details are mentioned in the section - [Reference Scenario](#reference-scenario).
 
-We have created external application- service and UI respectively. Service is developed using Node.js and is interacting with SAP Sales and Service cloud using SAP Cloud SDK. Service is deployed in BTP Kyma instance. UI is developed using SAP Build Apps which is no code low code tool.
-External UI is embedded in Sales and Service Cloud via mashups
+We have created external application- service and UI respectively. Service is developed using Node.js and is interacting with SAP Sales and Service cloud using SAP Cloud SDK. Service is deployed in BTP Kyma instance. UI is developed using SAP Build Apps which is a no-code/low-code tool.
+External UI is embedded in Sales and Service Cloud via mashups.
 
 
 ## Key Features

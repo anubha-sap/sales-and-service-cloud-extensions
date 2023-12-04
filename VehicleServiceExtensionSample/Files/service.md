@@ -1,6 +1,6 @@
 ## Node JS Service
 
-In this document, you will find details on how to download and deploy the sample node.js application. How authentication is added. You will find details on backend APIs and details on code folder structure. 
+This document provides instructions on downloading and deploying the sample Node.js application, covering the addition of authentication. It also includes information about backend APIs and the code folder structure.
 
 ## Download and deploy service in Kyma
 Please follow below steps to download and deploy service in Kyma.
@@ -18,10 +18,10 @@ Please follow below steps to download and deploy service in Kyma.
 3. Create XSUAA/destination service instances\
 Since our application uses destination to connect to services in CNS, we need to create service instance and service binding for both destination and xsuaa. (XSUAA will be used to fetch credentials required to connect to the destination service)
 Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-service-bindings-on-kyma-runtime/) to understand how services - destination service and xsuaa service are consumed in an application in kyma.
-  * add the SERVICE_BINDING_ROOT env variable into your deployment: https://github.tools.sap/fp-stakeholder-management/xsuaa-approuter/blob/main/approuter/helm/app1-app/templates/deployment.yaml#L91
-  * create a volume with your dest service binding secret: https://github.tools.sap/fp-stakeholder-management/xsuaa-approuter/blob/main/approuter/helm/app1-app/templates/deployment.yaml#L91
-  * create a volume mount with a path to the binding secret: https://github.tools.sap/fp-stakeholder-management/xsuaa-approuter/blob/main/approuter/helm/app1-app/templates/deployment.yaml#L69
-  * NOTE: Once you create XSUAA instance, a secret will be created which will have details like ClientID, clientSecret, tokenURL etc which will be needed in the following steps. **Kindly give the secret names as "destination-service-binding" and "xsuaa-service-binding" for destination and xsuaa services respectively**
+  * Add the SERVICE_BINDING_ROOT env variable into your deployment: https://github.tools.sap/fp-stakeholder-management/xsuaa-approuter/blob/main/approuter/helm/app1-app/templates/deployment.yaml#L91
+  * Create a volume with your dest service binding secret: https://github.tools.sap/fp-stakeholder-management/xsuaa-approuter/blob/main/approuter/helm/app1-app/templates/deployment.yaml#L91
+  * Create a volume mount with a path to the binding secret: https://github.tools.sap/fp-stakeholder-management/xsuaa-approuter/blob/main/approuter/helm/app1-app/templates/deployment.yaml#L69 \
+  NOTE: Once you create XSUAA instance, a secret will be created which will have details like ClientID, clientSecret, tokenURL etc which will be needed in the following steps. **Kindly give the secret names as "destination-service-binding" and "xsuaa-service-binding" for destination and xsuaa services respectively**
 
 4. Create Destinations in BTP:\
   There will be two Destinations -
@@ -34,12 +34,12 @@ Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-serv
       * **ClientId, ClientSecret, Token Service URL**: You will get this info from the xsuaa instance secret created in the previous step. OAuth2JWTBearer destination type can help exchange the user JWT token into an OAuth2 bearer access token with the required scopes
 
    To allow an application to call another application, passing the user context, and fetch resources, the caller application(In our case, this is the build apps application) must pass an access token. In this authorization flow, the initial user token is passed to the OAuth server as input data. This process is performed automatically by the Destination service, which helps simplifying the application development: You only have to construct the right request to the target URL, by using the outcome (another access token) of the service-side automation.
-  * Second, Used by the application in kyma to connect to service in CNS:
+    * Second, Used by the application in kyma to connect to service in CNS:
   ![Case ExtensionField ](../Images/K2.png "Case fields") \
    OAuth2SAMLBearerAssertion authorisation flow allows for propagation of a user’s identity from our application deployed in kyma to the service we are trying to connect in Sales and Cloud Service.
-5. Create Hana DB to instance
-   * Follow [this](https://blogs.sap.com/2022/12/15/consuming-sap-hana-cloud-from-the-kyma-environment/) to consume HANA DB in Kyma
-   * **This will create a Kubernetes secret from where we can get the details required to connect to the DB**
+5. Create Hana Database to instance
+   * Follow [this](https://blogs.sap.com/2022/12/15/consuming-sap-hana-cloud-from-the-kyma-environment/) to consume HANA Database in Kyma
+   * **This will create a Kubernetes secret from where we can get the details required to connect to the Database**
 6. Create Kubernetes secrets
     * Create a Kubernetes secret file(with the name **vehicle-service-secrets**) to store sensitive data like db username/password and other application specific data.
     * The secret should contain the following:
@@ -95,32 +95,33 @@ If you are using docker hub to store the image we created in the previous step:
 kubectl -n dev apply -f k8s/vehicle-service.yaml
 
 ## Add Authentication 
-This section will explain how to enable authentication for service and how user propagation between SSC and external application is acheived.
+This section shows how you can enable authentication for service and achieve user propagation between SAP Sales and Service Cloud and external applications.
 * Enable BTP authentication in SAP Buildapps - https://blogs.sap.com/2022/07/01/using-btp-authentication-and-destinations-with-sap-appgyver/
 This will create an xsuaa instance in BTP
 * Create a destination with the following configuration for the build apps to connect: \
 ![Case ExtensionField ](../Images/K4.png "Case fields")
-OAuth2JWTBearer destination type can help exchange the user JWT token into an OAuth2 bearer access token with the required scopes
+OAuth2JWTBearer destination type can help exchange the user JWT token into an OAuth2 bearer access token with the required scopes \
+NOTE:
+To get "Client ID", "Client Secret" and "Token Service URL", an XSUAA instance has to be created.\
+To create an XSUAA instance, follow [this](https://help.sap.com/docs/btp/sap-business-technology-platform/using-sap-btp-services-in-kyma-environment). Once the service binding is created, it will create a Kubernetes secrets which will have the clientid, client secret and token service URL info.
 * To allow an application to call another application, passing the user context, and fetch resources, the caller application(In our case, this is the build apps application) must pass an access token. In this authorization flow, the initial user token is passed to the OAuth server as input data. This process is performed automatically by the Destination service, which helps simplifying the application development: You only have to construct the right request to the target URL, by using the outcome (another access token) of the service-side automation.
 * API rule definition for the service deployed in Kyma-
 API rule CRD(custom resource definition) can offer a number of access strategies to help restrict access to exposed endpoints. In our case, we will be using the JWT access strategy as a way to protect an API rule endpoint(s) from unsolicited access.
 To setup API rule CRD with access strategy:
 ![Case ExtensionField ](../Images/K5.png "Case fields")
 * With this API rule definition, the application hosted in kyma will have access to the user JWT token.\
-NOTE:
-An XSUAA instance must be created whose clientid, client secret we will be using in step 2 above.\
-To create an XSUAA instance, follow https://help.sap.com/docs/btp/sap-business-technology-platform/using-sap-btp-services-in-kyma-environment. Once the service binding is created, it will create a Kubernetes secrets which will have the clientid, client secret info.
+
 
 ## Running backend API using postman
 Please follow below steps to run the APIs
  * Before testing the APIs, a case of type "Vehicle Service Case Type" needs to be created. In this case, a registered product needs to be added. Also, the extension field "Milometer" should be filled. This is mandatory else the ServiceForm API will fail.\
- Once this case is created, get the caseId. To get the caseId:
+ Once this case is created, get the Case ID. To get the Case ID:
    * Open Developer Tools
    * Go to network tab
    * Filter by "case"
    * Open a case that satisfies the above conditions
    * The first network call will have the ID:\
-   ![Get CaseID from network calls](../Images/caseId.png "Case ID from network calls")
+   ![Get Case ID from network calls](../Images/caseId.png "Case ID from network calls")
  *  Get the host of your deployed application: 
     * Go to your BTP subaccount:\
     ![BTP SubAccount Page](../Images/subaccount.png "BTP SubAccount") 
