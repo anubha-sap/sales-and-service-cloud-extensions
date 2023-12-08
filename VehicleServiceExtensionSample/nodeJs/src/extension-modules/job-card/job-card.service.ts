@@ -169,7 +169,7 @@ export class JobCardService {
 
   async findAll(
     query: FindOptionsWhere<JobCard>[] | FindOptionsWhere<JobCard>,
-    getCustomerDetails = true,
+    getCustomerDetails = false,
   ) {
     try {
       const oQuery: FindManyOptions<JobCard> = {
@@ -455,7 +455,7 @@ export class JobCardService {
     let error = [];
     const info = [];
     try {
-      const oCompleteAggregateEntity = JSON.parse(sCompleteAggregateEntity);
+      const oCompleteAggregateEntity = sCompleteAggregateEntity;
       const query = {
         caseId: oCompleteAggregateEntity.id,
       };
@@ -465,7 +465,8 @@ export class JobCardService {
       };
       // Check for valid case with entity name, caseId, caseType and status
       if (
-        entityName === ENTITY_NAME.CASE &&
+        // `.crm.` in the entity name will be replaced by `.ssc`
+        entityName === ENTITY_NAME.CASE.replace('.crm.', '.ssc.') &&
         query.caseId &&
         caseDetails.caseType === CASE_TYPE.VEHICLE_SERVICE_REQUEST &&
         (caseDetails.caseStatus === this.caseStatusCompleted ||

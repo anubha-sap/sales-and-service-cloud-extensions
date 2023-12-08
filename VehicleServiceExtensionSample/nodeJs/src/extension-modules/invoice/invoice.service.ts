@@ -32,7 +32,7 @@ export class InvoiceService {
   async generateInvoice(query): Promise<Buffer> {
     const pdfBuffer: Buffer = await new Promise(async (resolve, reject) => {
       try {
-        const result = await this.jobCardService.findAll(query);
+        const result = await this.jobCardService.findAll(query, true);
         if (!result || result.length === 0) {
           return reject(new Error(MESSAGES.JOBCARD_NOT_FOUND));
         }

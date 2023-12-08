@@ -24,7 +24,6 @@ import { JobCardServiceRepository } from './repository/job-card-services.reposit
 import { JobCardRepository } from './repository/job-card.repository';
 import { JobCardResponseDto } from './dto/job-card/response-job-card.dto';
 import { DataSource } from 'typeorm';
-import { JobCardServices } from './entities/job-card-services.entity';
 import { CustomLogger } from '../../logger/logger.service';
 
 describe('VehicleServiceService', () => {
@@ -150,8 +149,61 @@ describe('VehicleServiceService', () => {
     ];
 
     caseEntity = {
-      entity: ENTITY_NAME.CASE,
-      currentImage: `{"id":"d886b468-ed95-11ed-a6bd-5354a6389ba0","subject":"sbsws test vehicle case","priority":"03","origin":"MANUAL_DATA_ENTRY","caseType":"${CASE_TYPE.VEHICLE_SERVICE_REQUEST}","statusSchema":"Z1","status":"${CASE_STATUS.COMPLETED}","escalationStatus":"NOT_ESCALATED","isRecommendedCommunicationLanguage":false,"processor":{"id":"11eccc06-510b-a8ee-afdb-81c341010a00","displayId":"8000000009","isDeleted":false,"partyRoleCategory":"PROCESSOR","partyRole":"40","addressId":"11eccc06-510c-6c3e-afdb-81c341010a00","determinationMethodCode":13,"isMain":true,"partyType":"EMPLOYEE"},"reporter":{"id":"11eccc65-79ad-fc8e-afdb-81c341010a00","displayId":"8000000010","isDeleted":false,"partyRoleCategory":"REPORTER","partyRole":"214","addressId":"11eccc65-79af-aa3e-afdb-81c341010a00","determinationMethodCode":3,"isMain":true,"partyType":"EMPLOYEE"},"timePoints":{"reportedOn":"2023-06-21T11:58:00Z","assignedToProcessorOn":"2023-06-21T11:58:47.608522760Z"},"isRecommendedCategory":false,"isEndOfPurpose":false,"isDepersonalized":false,"isRead":false,"isIrrelevant":false,"accessControlEntries":["11eccc06-510b-a8ee-afdb-81c341010a00","11eccc65-79ad-fc8e-afdb-81c341010a00","9808336e-cc65-11ec-980b-7f14df82f69b","11eccc65-79ad-fc8e-afdb-81c341010a00"],"adminData":{"createdOn":"2023-06-21T11:58:46.985179524Z","createdBy":"9808336e-cc65-11ec-980b-7f14df82f69b","updatedOn":"2023-06-21T11:58:46.985179524Z","updatedBy":"9808336e-cc65-11ec-980b-7f14df82f69b"}}`,
+      entity: ENTITY_NAME.CASE.replace('.crm.', '.ssc.'),
+      currentImage: {
+        id: 'd886b468-ed95-11ed-a6bd-5354a6389ba0',
+        subject: 'sbsws test vehicle case',
+        priority: '03',
+        origin: 'MANUAL_DATA_ENTRY',
+        caseType: CASE_TYPE.VEHICLE_SERVICE_REQUEST,
+        statusSchema: 'Z1',
+        status: CASE_STATUS.COMPLETED,
+        escalationStatus: 'NOT_ESCALATED',
+        isRecommendedCommunicationLanguage: false,
+        processor: {
+          id: '11eccc06-510b-a8ee-afdb-81c341010a00',
+          displayId: '8000000009',
+          isDeleted: false,
+          partyRoleCategory: 'PROCESSOR',
+          partyRole: '40',
+          addressId: '11eccc06-510c-6c3e-afdb-81c341010a00',
+          determinationMethodCode: 13,
+          isMain: true,
+          partyType: 'EMPLOYEE',
+        },
+        reporter: {
+          id: '11eccc65-79ad-fc8e-afdb-81c341010a00',
+          displayId: '8000000010',
+          isDeleted: false,
+          partyRoleCategory: 'REPORTER',
+          partyRole: '214',
+          addressId: '11eccc65-79af-aa3e-afdb-81c341010a00',
+          determinationMethodCode: 3,
+          isMain: true,
+          partyType: 'EMPLOYEE',
+        },
+        timePoints: {
+          reportedOn: '2023-06-21T11:58:00Z',
+          assignedToProcessorOn: '2023-06-21T11:58:47.608522760Z',
+        },
+        isRecommendedCategory: false,
+        isEndOfPurpose: false,
+        isDepersonalized: false,
+        isRead: false,
+        isIrrelevant: false,
+        accessControlEntries: [
+          '11eccc06-510b-a8ee-afdb-81c341010a00',
+          '11eccc65-79ad-fc8e-afdb-81c341010a00',
+          '9808336e-cc65-11ec-980b-7f14df82f69b',
+          '11eccc65-79ad-fc8e-afdb-81c341010a00',
+        ],
+        adminData: {
+          createdOn: '2023-06-21T11:58:46.985179524Z',
+          createdBy: '9808336e-cc65-11ec-980b-7f14df82f69b',
+          updatedOn: '2023-06-21T11:58:46.985179524Z',
+          updatedBy: '9808336e-cc65-11ec-980b-7f14df82f69b',
+        },
+      },
     };
 
     jobCardServices = [
@@ -521,9 +573,12 @@ describe('VehicleServiceService', () => {
       .mockResolvedValue([jobCards[0]]);
     jest.spyOn(mockCaseService, 'getCaseById').mockResolvedValue(oCase);
     jest.spyOn(mockCaseService, 'getCaseData').mockReturnValue(caseData);
-    const res = await jobCardService.findAll({
-      caseId: 'd886b468-ed95-11ed-a6bd-5354a6389ba0',
-    });
+    const res = await jobCardService.findAll(
+      {
+        caseId: 'd886b468-ed95-11ed-a6bd-5354a6389ba0',
+      },
+      true,
+    );
     expect(res).toEqual([jobCards[0]]);
     expect(mockJobCardRepository.findAllJobCards).toHaveBeenCalled();
   });
@@ -556,9 +611,9 @@ describe('VehicleServiceService', () => {
   it('findValidationStatusService should handle case status is closed', async () => {
     jest.spyOn(mockCaseService, 'getCaseById').mockResolvedValue(oCase);
     jest.spyOn(mockCaseService, 'getCaseData').mockReturnValue(caseData);
-    caseEntity.currentImage = JSON.parse(caseEntity.currentImage);
+    caseEntity.currentImage = caseEntity.currentImage;
     caseEntity.currentImage.status = CASE_STATUS.CLOSED;
-    caseEntity.currentImage = JSON.stringify(caseEntity.currentImage);
+    caseEntity.currentImage = caseEntity.currentImage;
     const res = await jobCardService.findValidationStatusService(caseEntity);
     expect(res).toEqual({
       data: caseEntity.currentImage,
@@ -571,9 +626,9 @@ describe('VehicleServiceService', () => {
   it('findValidationStatusService should handle case status is SERVICE_COMPLETED', async () => {
     jest.spyOn(mockCaseService, 'getCaseById').mockResolvedValue(oCase);
     jest.spyOn(mockCaseService, 'getCaseData').mockReturnValue(caseData);
-    caseEntity.currentImage = JSON.parse(caseEntity.currentImage);
+    caseEntity.currentImage = caseEntity.currentImage;
     caseEntity.currentImage.status = CASE_STATUS.SERVICE_COMPLETED;
-    caseEntity.currentImage = JSON.stringify(caseEntity.currentImage);
+    caseEntity.currentImage = caseEntity.currentImage;
     const res = await jobCardService.findValidationStatusService(caseEntity);
     expect(res).toEqual({
       data: caseEntity.currentImage,
@@ -584,10 +639,10 @@ describe('VehicleServiceService', () => {
   });
 
   it('should return entity data when no case ID', async () => {
-    const oData = JSON.parse(caseEntity.currentImage);
+    const oData = caseEntity.currentImage;
     // No case ID
     oData.id = '';
-    caseEntity.currentImage = JSON.stringify(oData);
+    caseEntity.currentImage = oData;
     const res = await jobCardService.findValidationStatusService(caseEntity);
     expect(res).toEqual({
       data: caseEntity.currentImage,
@@ -609,10 +664,10 @@ describe('VehicleServiceService', () => {
   });
 
   it('should return entity data and error when wrong case ID', async () => {
-    const oData = JSON.parse(caseEntity.currentImage);
+    const oData = caseEntity.currentImage;
     // Wrong case ID
     oData.id = 'd886b468-ed95-11ed-a6bd-4354a6389ba1';
-    caseEntity.currentImage = JSON.stringify(oData);
+    caseEntity.currentImage = oData;
     jest.spyOn(mockJobCardRepository, 'findAllJobCards').mockResolvedValue([]);
     const res = await jobCardService.findValidationStatusService(caseEntity);
     expect(res).toEqual({
