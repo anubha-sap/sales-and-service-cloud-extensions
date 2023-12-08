@@ -13,7 +13,7 @@ External UI is embedded in Sales and Service Cloud via mashups.
 
 
 ## Key Features
-The key extension features covered in this implementation are - 
+The key extension features covered in this implementation are:  
 * Embedding external application in SAP Sales and Service Cloud via mashup
 * External custom logic (validations/determinations) implementation using external hooks
 * Few basic Extension configurations in SAP Sales and Service Cloud 
