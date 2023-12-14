@@ -1,3 +1,5 @@
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/sales-and-service-cloud-extensions)](https://api.reuse.software/info/github.com/SAP-samples/sales-and-service-cloud-extensions)
+
 # Sales and Service Cloud Extensions
 ## Description
 This project contains sample applications for building extensions in Sales and Service Cloud.
