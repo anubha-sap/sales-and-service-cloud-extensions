@@ -74,7 +74,7 @@ To store the application image, access to a container registry(eg Docker hub) is
    * For **Java Service**
      * The docker-image name has to be filled in the files " skaffold.yaml" and "k8s-deployment-backend.yaml"
 
-10. Install dependencies:\
+10. Install dependencies:
     * For **Node Service**
       * Do ```npm install``` in root directory
     * For **Java Service**
