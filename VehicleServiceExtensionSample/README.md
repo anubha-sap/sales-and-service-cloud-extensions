@@ -49,7 +49,7 @@ Details of sample reference scenario is mentioned [here](./Files/scenario.md).
 
 ## Running the application
 Please follow below mentioned steps to run this application. 
-* [Configurations in SAP Sales and Service cloud](./Files/ssc_configuration.md)
+* [Case and Registered Products customizations in SAP Sales and Service cloud](./Files/ssc_configuration.md)
 
 * [Run Backend service](./Files/service.md)
    * [Download and Deploy node JS application](./Files/service.md#download-and-deploy-service-in-kyma)
