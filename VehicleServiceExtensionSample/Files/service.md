@@ -1,10 +1,37 @@
 ## Node JS Service
 
-This document provides instructions on downloading and deploying the sample Node.js application, covering the addition of authentication. It also includes information about backend APIs and the code folder structure.
+This application serves as a vehicle-service management system. With this application, the customer can create service-forms, job-cards and assign technicians to different job-card related services. The customer can see the progress of the services assigned to a technician. When the technician completes all the services assigned to him/her, customer can generate the final invoice.
+
+This application is designed to be used to by three personas -
+1. **Service Advisor** - A Service Advisor is a professional who acts as a liaison between vehicle owners/customers and the service department of an automotive service center or dealership. Their role is to assist customers with their vehicle service needs.
+2. **Service Manager** - A Service Manager is responsible for overseeing and coordinating the operations of the service department. Their roles include assigning the services to technicians, and giving notes to the assigned technicians regarding the service.
+3. **Service Technician** - A Service Technician is a professional responsible for diagnosing, repairing, and maintaining vehicles. A Service Manager assigns services to a technician and the technician can update the service, add observation etc
+
+The application uses NestJs Framework and is written in Typescript. To cater to the above functionalities, the application is divided into the following modules:
+1. **ServiceForm** - A service form is a document used to record and document details about the specific services or maintenance tasks performed on a vehicle. It includes information such as a list of services suggested/selected, vehicle information, inspection items checklist, list of complaints and notes. This module manages creation, updation and deletion of the ServiceForm Entity.
+2. **JobCard** - A Job Card is a document that outlines the scope of work to be done on a vehicle. It serves as a directive for technicians and mechanics, detailing the tasks to be completed during a particular service or repair session. This modules manages the creation, updation and deletion of JobCard Entity. Also manages JobCardService Entity
+3. **Cases** - This module manages the connection between case service in CNS
+4. **Customer** - This module manages the connection between acccount and individual-customer services in CNS
+5. **Registered-products** - This module manages the connection between registered-products service in CNS
+
+Apart from this, we have the following modules which handles all the master data in the application:
+1. **Inspection-Items**: Inspection item is a specific task, check, or examination that needs to be performed during a vehicle inspection or service. This modules manages the creation, updation and deletion of Inspection-items Entity.
+2. **Services**: A Service typically refers to a specific maintenance or repair activity performed on a vehicle to ensure its proper functioning, safety, and longevity. This module manages the creation, updation and deletion of Services Entity
+
+These are the entities used in the service:
+1. Services
+2. InspectionItem
+3. JobCard
+4. JobCardServices
+5. ServiceForm
+
+Database used in the application is [SAP HANA](https://www.sap.com/india/products/technology-platform/hana/what-is-sap-hana.html). We use [Typeorm](https://typeorm.io/) (A Object-Relational Mapping (ORM) library) to simplify database interactions using object-oriented programming techniques rather than traditional SQL queries.
+
+The following sections details out how to setup the application and deploy this to Kyma Environment:
 
 ## Download and deploy service in Kyma
-Please follow below steps to download and deploy service in Kyma.
-1. Download kubeconfig file for kyma from your BTP account: 
+1. **Download kubeconfig file for kyma from your BTP account**:\
+Kubeconfig is a configuration file essential for interacting with Kubernetes clusters. It encapsulates details such as cluster settings, user authentication credentials, and context configurations, enabling users to seamlessly manage multiple clusters. This file facilitates communication between the Kubernetes control plane and nodes, and it is utilized by command-line tools like kubectl to execute commands and switch between clusters. The kubeconfig structure includes sections for clusters, users, contexts, and the currently active context, providing a versatile and user-friendly way to configure and connect to Kubernetes clusters. To download the kubeconfig file:
     * Go to your BTP Subaccount:\
     ![BTP SubAccount Page](../Images/subaccount.png "BTP SubAccount")
     * Go to Kyma Environment -> click on kubeconfigURL. This will download the kubeconfig file:\
@@ -13,7 +40,7 @@ Please follow below steps to download and deploy service in Kyma.
     Mac OS: $HOME/.kube/ (Create .kube directory if not present already)\
     Windows: C:\Users\<user-name>\.kube\ (Create .kube directory if not present already) 
 
-2. Create a namespace called "dev"(You can also create namespace with other names. However, if you create a namespace with a different name, kindly make sure the same name is updated in "vehicle-service.yaml" file in the code)
+2. Create a namespace called "dev"(You can also create namespace with other names. However, if you create a namespace with a different name, kindly make sure the same name is updated in "vehicle-service.yaml" file in the code). We will be deploying our application to this namespace.
 
 3. Create XSUAA/destination service instances\
 Since our application uses destination to connect to services in CNS, we need to create service instance and service binding for both destination and xsuaa. (XSUAA will be used to fetch credentials required to connect to the destination service)
@@ -24,7 +51,7 @@ Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-serv
   NOTE: Once you create XSUAA instance, a secret will be created which will have details like ClientID, clientSecret, tokenURL etc which will be needed in the following steps. **Kindly give the secret names as "destination-service-binding" and "xsuaa-service-binding" for destination and xsuaa services respectively**
 
 4. Create Destinations in BTP:\
-  There will be two Destinations -
+A Destination is a configuration setting used to define how applications or services hosted on the platform can connect to external systems, services, or APIs. In our application, we will be using two destinations:
     * First, used by buildapps to connect the application in kyma:
 
     ![Case ExtensionField ](../Images/K1.png "Case fields")  
@@ -40,24 +67,29 @@ Please refer [this](https://blogs.sap.com/2022/07/12/the-new-way-to-consume-serv
 5. Create Hana Database to instance
    * Follow [this](https://blogs.sap.com/2022/12/15/consuming-sap-hana-cloud-from-the-kyma-environment/) to consume HANA Database in Kyma
    * **This will create a Kubernetes secret from where we can get the details required to connect to the Database**
-6. Create Kubernetes secrets
-    * Create a Kubernetes secret file(with the name **vehicle-service-secrets**) to store sensitive data like db username/password and other application specific data.
-    * The secret should contain the following:
-      * **case_status_booked**: \<*Status code when case status is booked*>
-      * **case_status_closed**: \<*Status code when case status is closed*>
-      * **case_status_completed**: \<*Status code when case status is completed*>
-      * **case_status_service_completed**: \<*Status code when case status service completed*>
-      * **case_status_service_in_process**: \<*Status code when case status is service in process*>
-      * **db_password**: \<*Database password. This is available in the secret that’s created in the above step*>
-      * **db_user**: \<*Database username. This is available in the secret that’s created in the above step*>
-      * **destination**: \<*Destination to which the application connects*>
-      * **dropSchema**: \<*Drops the schema each time connection is being established. This option is useful during debug and development*>
-      * **extension_field_jobcard_id**: \<*Job Card ID extension field*>
-      * **extension_field_milometer**: \<*Milometer extension field*>
-      * **extension_field_service_form_id**: \<*Service Form ID extension field*>
-      * **extension_field_vehicle_number**: \<*Vehicle Number extension field*>
-      * **logLevel**: \<*Sets the log level of the application*>
-      * **synchronize**: \<*Indicates if database schema should be auto created on every application launch. This option is useful during debug and development*>
+6. Create Kubernetes secrets\
+Kubernetes Secrets are a way to manage sensitive information, such as passwords, tokens, and other confidential data, within Kubernetes clusters.
+
+   * To create a secret, go to the Kyma Dashboard and click on secrets:
+   ![Kuberentes Secret](../Images/K6.png "Kuberentes Secrets") 
+   * Create a Kubernetes secret file(with the name **vehicle-service-secrets**)
+   ![Kuberentes Secret](../Images/K7.png "Kuberentes Secrets") 
+   * The secret should contain the following:
+   * **case_status_booked**: \<*Status code when case status is booked*>
+   * **case_status_closed**: \<*Status code when case status is closed*>
+   * **case_status_completed**: \<*Status code when case status is completed*>
+   * **case_status_service_completed**: \<*Status code when case status service completed*>
+   * **case_status_service_in_process**: \<*Status code when case status is service in process*>
+   * **db_password**: \<*Database password. This is available in the secret that’s created in the above step*>
+   * **db_user**: \<*Database username. This is available in the secret that’s created in the above step*>
+   * **destination**: \<*Destination to which the application connects*>
+   * **dropSchema**: \<*Drops the schema each time connection is being established. This option is useful during debug and development*>
+   * **extension_field_jobcard_id**: \<*Job Card ID extension field*>
+   * **extension_field_milometer**: \<*Milometer extension field*>
+   * **extension_field_service_form_id**: \<*Service Form ID extension field*>
+   * **extension_field_vehicle_number**: \<*Vehicle Number extension field*>
+   * **logLevel**: \<*Sets the log level of the application*>
+   * **synchronize**: \<*Indicates if database schema should be auto created on every application launch. This option is useful during debug and development*>
     * You will notice this secrets contains IDs for configurations done in sales and service cloud like extension fields, Case status. The reason being different IDs which is generated when fields are created. In our service code, we are refering to IDs maintained here in business logic.
 
 7. Clone the service from - *git@github.com:SAP-samples/sales-and-service-cloud-extensions.git*
@@ -76,7 +108,7 @@ Do ```npm install``` in root directory
 11. Use "deploy.sh" (In root directory) to deploy the service to Kyma\
 This is a script which does two things:
 - Build the application
-- Deploy to Kyma cluster using scaffold
+- Deploy to Kyma cluster using scaffold(Skaffold is an open-source command-line tool developed by Google for automating the development workflow of Kubernetes applications. It aims to simplify the process of building, pushing, and deploying containerized applications on Kubernetes. Read more about Skaffold [here](https://skaffold.dev/))
 
    Run the command “bash deploy.sh”
 
@@ -144,6 +176,7 @@ Please follow below steps to run the APIs
       * client ID, client Secret: You will get these details in step 1 under [this](#download-and-deploy-service-in-kyma) section  
   * Create the following variables in the collection. Use the host from the previous step. No need to fill the other variables.\
   ![Variables in postman](../Images/postman_variables.png "Variables in Postman")
+  **NOTE: Master data(Inspection Items and Services) has to be created first for the application to work correctly**
   * Create Inspection Item(Any number of inspection items can be created)\
   ![POST request to create an Inspection Item](../Images/create_inspection_item.png "Inspection Item POST request") 
   * Create Services(Any number of services can be created)
