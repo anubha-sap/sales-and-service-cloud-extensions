@@ -90,7 +90,7 @@ Kubernetes Secrets are a way to manage sensitive information, such as passwords,
    * **extension_field_vehicle_number**: \<*Vehicle Number extension field*>
    * **logLevel**: \<*Sets the log level of the application*>
    * **synchronize**: \<*Indicates if database schema should be auto created on every application launch. This option is useful during debug and development*>
-    * You will notice this secrets contains IDs for configurations done in sales and service cloud like extension fields, Case status. The reason being different IDs which is generated when fields are created. In our service code, we are refering to IDs maintained here in business logic.
+   You will notice this secrets contains IDs for configurations done in sales and service cloud like extension fields, Case status. The reason being different IDs which is generated when fields are created. In our service code, we are refering to IDs maintained here in business logic.
 
 7. Clone the service from - *git@github.com:SAP-samples/sales-and-service-cloud-extensions.git*
 
