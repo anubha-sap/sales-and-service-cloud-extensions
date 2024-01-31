@@ -8,8 +8,7 @@
 ## Description
 This sample demonstrates side by side extension on Sales and Service Cloud for vehicle service scenario. Complete scenario details are mentioned in the section - [Reference Scenario](#reference-scenario).
 
-We have created external application- service and UI respectively. Service is developed using Node.js and is interacting with SAP Sales and Service cloud using SAP Cloud SDK. Service is deployed in BTP Kyma instance. UI is developed using SAP Build Apps which is a no-code/low-code tool.
-External UI is embedded in Sales and Service Cloud via mashups.
+We have created external application- service and UI, respectively. The service is developed using both **NodeJs** and **Java** and is interacting with SAP Sales and Service Cloud using SAP Cloud SDK. The service is deployed in a BTP Kyma instance. The UI is developed using SAP Build Apps, which is a no-code/low-code tool. The external UI is embedded in Sales and Service Cloud via mashups.
 
 
 ## Key Features
@@ -40,9 +39,11 @@ For creating similar sample , below are the prerequisites along with link where 
    * Run - "kubectl krew install oidc-login"
 * Install [Skaffold](https://skaffold.dev/docs/install/)
 * Install Docker
-* NodeJS and NestJS Framework
+* For Backend Service
+  * NodeJS and NestJS Framework
+  * Java and SpringBoot Framework
 * Cloud SDK. Learn from [here](https://sap.github.io/cloud-sdk/)
-* HANA DB Account in BTP. 
+* HANA DB Account in BTP.
 
 ## Reference Scenario
 Details of sample reference scenario is mentioned [here](./Files/scenario.md).
@@ -52,7 +53,7 @@ Please follow below mentioned steps to run this application.
 * [Case and Registered Products customizations in SAP Sales and Service cloud](./Files/ssc_configuration.md)
 
 * [Run Backend service](./Files/service.md)
-   * [Download and Deploy node JS application](./Files/service.md#download-and-deploy-service-in-kyma)
+   * [Download and Deploy application](./Files/service.md#download-and-deploy-service-in-kyma)
    * [Add Authentication](./Files/service.md#add-authentication)
    * [Run service API using postman](./Files/service.md#running-backend-api-using-postman)
    * [Code structure details](./Files/service.md#code-folder-structure)
