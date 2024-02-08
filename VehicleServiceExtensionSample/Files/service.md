@@ -1,6 +1,10 @@
-## Node JS Service
+## Node JS Service / Java Service
 
-This application serves as a vehicle-service management system. With this application, the customer can create service-forms, job-cards and assign technicians to different job-card related services. The customer can see the progress of the services assigned to a technician. When the technician completes all the services assigned to him/her, customer can generate the final invoice.
+This application serves as a vehicle-service management system. With this application, the customer can create service-forms, job-cards, and assign technicians to different job-card related services. The customer can see the progress of the services assigned to a technician. When the technician completes all the services assigned to him/her, the customer can generate the final invoice. This service is available in both **Java** and **NodeJs**, allowing users to seamlessly switch between these platforms based on their preferences and requirements.
+
+NodeJs Service can be found here: [NodeJs Service](../nodeJs)
+
+Java Service can be found here: [Java Service](../javaService)
 
 This application is designed to be used to by three personas -
 1. **Service Advisor** - A Service Advisor is a professional who acts as a liaison between vehicle owners/customers and the service department of an automotive service center or dealership. Their role is to assist customers with their vehicle service needs.
@@ -95,36 +99,57 @@ Kubernetes Secrets are a way to manage sensitive information, such as passwords,
 7. Clone the service from - *git@github.com:SAP-samples/sales-and-service-cloud-extensions.git*
 
 8. Prepare Deployment Description File\
-   Based on our application specification, we define the following description file for deployment. This yaml file can be found inside k8s folder.
+   Based on our application specification, we define the following description file for deployment. This yaml file can be found inside 
+   - k8s folder, in case of **Node Service** and 
+   - within root directory, in case of **Java Service**
 
-   NOTE: In API Rule, we have configured an access strategy to restrict access to the application. We will be using the JWT access strategy to protect endpoint(s) from unsolicited access.
+
+      NOTE: In API Rule, we have configured an access strategy to restrict access to the application. We will be using the JWT access strategy to protect endpoint(s) from unsolicited access.
 
 9. Access to a container registry:\
-To store the application image, access to a container registry(eg Docker hub) is required. The docker-image name has to be filled in the files "VehicleServiceExtensionSample/nodeJs/skaffold.yaml" and "VehicleServiceExtensionSample/nodeJs/k8s/vehicle-service.yaml"(Placeholders are provided in the files)
+   To store the application image, access to a container registry(eg Docker hub) is required.
+    * For **Node Service**
+        * The docker-image name has to be filled in the files "VehicleServiceExtensionSample/nodeJs/skaffold.yaml" and "VehicleServiceExtensionSample/nodeJs/k8s/vehicle-service.yaml"(Placeholders are provided in the files)
+    * For **Java Service**
+        * The docker-image name has to be filled in the files " skaffold.yaml" and "k8s-deployment-backend.yaml"
 
-10. Install dependencies:\
-Do ```npm install``` in root directory
+10. Install dependencies:
+    * For **Node Service**
+        * Do ```npm install``` in root directory
+    * For **Java Service**
+        * Do ```mvn clean install```  in root directory
 
-11. Use "deploy.sh" (In root directory) to deploy the service to Kyma\
-This is a script which does two things:
-- Build the application
-- Deploy to Kyma cluster using scaffold(Skaffold is an open-source command-line tool developed by Google for automating the development workflow of Kubernetes applications. It aims to simplify the process of building, pushing, and deploying containerized applications on Kubernetes. Read more about Skaffold [here](https://skaffold.dev/))
+11. Deploy to Kyma cluster using scaffold(Skaffold is an open-source command-line tool developed by Google for automating the development workflow of Kubernetes applications. It aims to simplify the process of building, pushing, and deploying containerized applications on Kubernetes. Read more about Skaffold [here](https://skaffold.dev/))
+    * For **Node Service**
+        * Use "deploy.sh" (In root directory) to deploy the service to Kyma\
+            * This is a script which does two things:
+            * Build the application 
+            * Run the command ```bash deploy.sh```
 
-   Run the command “bash deploy.sh”
+    * For **Java Service**
+      * Deploying the service to Kyma
+          * Build the application – ```mvn clean install```
+          * Deploy to Kyma cluster using scaffold – ```scaffold run```
 
 Alternatively, please follow the steps below to deploy your service to Kyma:
 * Build the application
 *  Build docker image:
 To create docker image we use the following docker file(This DockerFile is available in the root directory of the application):
 
+* For **Node Service**
+
 ![Case ExtensionField ](../Images/K3.png "Case fields")
-* Use command - "docker build -t <docker-hub-account>/<image-name>:v1" to build docker image based on the above dockerfile.This   command should be run in the same level where the DockerFile is present
+
+* For **Java Service**<br><br>
+  ![Case ExtensionField ](../Images/K3Java.png "Case fields")
+
+* Use command - ```docker build -t <docker-hub-account>/<image-name>:v1``` to build docker image based on the above dockerfile.This   command should be run in the same level where the DockerFile is present
 *  Push the docker image to a container repository.\
-If you are using docker hub to store the image we created in the previous step:
-   * Log in to Docker using this command: docker login -u <docker-id> -p <password>
-   * Push the local image into the Docker Hub using command : docker push <docker-hub-account>/<image-name>:v1
-   * Deploy the application using the deployment description file created in step 5:\
-kubectl -n dev apply -f k8s/vehicle-service.yaml
+   If you are using docker hub to store the image we created in the previous step:
+    * Log in to Docker using this command: ```docker login -u <docker-id> -p <password>```
+    * Push the local image into the Docker Hub using command : ```docker push <docker-hub-account>/<image-name>:v1```
+    * Deploy the application using the deployment description file created in step 5:\
+      ```kubectl -n dev apply -f k8s/vehicle-service.yaml```
 
 ## Add Authentication 
 This section shows how you can enable authentication for service and achieve user propagation between SAP Sales and Service Cloud and external applications.
