@@ -1,0 +1,167 @@
+openapi: 3.0.3
+info:
+  title: Document Service
+  version: 1.0.0
+servers:
+  - url: https://sandbox.api.sap.com/servicecloudv2
+  - url: https://{hostname}
+    description: Example of server url is https://my1234567.crm.cloud.sap
+    variables:
+      hostname:
+        default: ''
+components:
+  securitySchemes:
+    basicAuthentication:
+      type: http
+      scheme: basic
+security:
+  - basicAuthentication: []
+paths:
+  /sap/c4c/api/v1/document-service/documents:
+    parameters:
+      - name: x-sap-crm-token
+        in: header
+        required: true
+        schema:
+          type: string
+    post:
+      operationId: createdocumentservicedocument
+      tags:
+        - Document
+      summary: Create Document
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: Document create request
+              type: object
+              properties:
+                category:
+                  type: string
+                fileName:
+                  type: string
+                isSelected:
+                  type: boolean
+                caseType:
+                  type: string
+                type:
+                  type: string
+
+      responses:
+        '201':
+          description: Document created.
+          content:
+            application/json:
+              schema:
+                title: Document post response
+                type: object
+                properties:
+                  value:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      title:
+                        type: string
+                      fileName:
+                        type: string
+                      category:
+                        type: string
+                      status:
+                        type: string
+                      thumbnailStatus:
+                        type: string
+                      type:
+                        type: string
+                      fileSize:
+                        type: string
+                      uploadUrl:
+                        type: string
+                      adminData:
+                        type: object
+                        properties:
+                          createdBy:
+                            type: string
+                            format: uuid
+                          createdOn:
+                            type: string
+                          updatedBy:
+                            type: string
+                            format: uuid
+                          updatedOn:
+                            type: string
+                      hostObjectId:
+                        type: string
+                        format: uuid
+                      hostObjectType:
+                        type: string
+                      icon:
+                        type: string
+                      color:
+                        type: string
+                  info:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      details:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            message:
+                              type: string
+                            target:
+                              type: string
+                            code:
+                              type: string
+                      message:
+                        type: string
+                      target:
+                        type: string
+        '401':
+          description: |-
+            Unauthorized.
+
+            This error is caused when the request has not been applied because there are no valid authentication credentials for the target resource.
+        '403':
+          description: |-
+            Forbidden
+
+            This client error code indicates that the server understood the request but refuses to authorize it.
+        '404':
+          description: Case not found.
+        '500':
+          description: |-
+            Internal Server Error.
+
+            Failed to read the case.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      details:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            message:
+                              type: string
+                            code:
+                              type: string
+                            target:
+                              type: string
+                      message:
+                        type: string
+                      target:
+                        type: string
+
+x-sap-shortText: Manage objects from case service.

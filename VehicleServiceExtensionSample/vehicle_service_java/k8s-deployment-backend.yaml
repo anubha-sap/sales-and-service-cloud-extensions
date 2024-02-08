@@ -1,0 +1,190 @@
+apiVersion: gateway.kyma-project.io/v1beta1
+kind: APIRule
+metadata:
+  name: vehicle-service-java
+  labels:
+    app.kubernetes.io/name: vehicle-service-java
+  annotations: { }
+  namespace: dev
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  rules:
+    - accessStrategies:
+          - config:
+              jwks_urls:
+                - >-
+                  https://external-func-services.authentication.eu10.hana.ondemand.com/token_keys
+              trusted_issuers:
+                - >-
+                  https://external-func-services.authentication.eu10.hana.ondemand.com/oauth/token
+            handler: jwt
+      path: /.*
+      methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - PATCH
+  service:
+    name: vehicle-service-java
+    port: 9800
+  host: vehicle-service-java.c7faf5c.kyma.ondemand.com
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehicle-service-java
+  labels:
+    app: vehicle-service-java
+spec:
+  ports:
+    - name: http
+      port: 9800
+  selector:
+    app: vehicle-service-java
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicle-service-java
+spec:
+  selector:
+    matchLabels:
+      app: vehicle-service-java
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vehicle-service-java
+    spec:
+      containers:
+        - image: anubhajain01037/springbootaop:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9800
+            failureThreshold: 1
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 60
+          name: vehicle-service-java
+          ports:
+            - containerPort: 9800
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9800
+            failureThreshold: 1
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 60
+          env:
+            - name: SERVICE_BINDING_ROOT
+              value: /bindings
+            - name: clientId
+              valueFrom:
+                secretKeyRef:
+                  name: destination-service-binding
+                  key: clientid
+            - name: clientSecret
+              valueFrom:
+                secretKeyRef:
+                  name: destination-service-binding
+                  key: clientsecret
+            - name: tokenUrl
+              valueFrom:
+                secretKeyRef:
+                  name: destination-service-binding
+                  key: url
+            - name: destinationUri
+              valueFrom:
+                secretKeyRef:
+                  name: destination-service-binding
+                  key: uri
+            - name: destination
+              valueFrom:
+                secretKeyRef:
+                  name: vehicle-service-secrets
+                  key: destination
+            - name: db_user
+              valueFrom:
+                secretKeyRef:
+                  name: vehicle-service-secrets
+                  key: db_user
+            - name: db_password
+              valueFrom:
+                secretKeyRef:
+                  name: vehicle-service-secrets
+                  key: db_password
+            - name: hanadb_binding_host
+              valueFrom:
+                secretKeyRef:
+                  name: hanadb-btp-binding
+                  key: host
+            - name: hanadb_binding_port
+              valueFrom:
+                secretKeyRef:
+                  name: hanadb-btp-binding
+                  key: port
+            - name: case_status_booked
+              valueFrom:
+                secretKeyRef:
+                  name: vehicle-service-secrets
+                  key: case_status_booked
+            - name: case_status_closed
+              valueFrom:
+                secretKeyRef:
+                  name: vehicle-service-secrets
+                  key: case_status_closed
+            - name: case_status_completed
+              valueFrom:
+                secretKeyRef:
+                  name: vehicle-service-secrets
+                  key: case_status_completed
+            - name: case_status_service_completed
+              valueFrom:
+                secretKeyRef:
+                  name: vehicle-service-secrets
+                  key: case_status_service_completed
+            - name: case_status_service_in_process
+              valueFrom:
+                secretKeyRef:
+                  name: vehicle-service-secrets
+                  key: case_status_service_in_process
+            - name: extension_field_jobcard_id
+              valueFrom:
+                secretKeyRef:
+                  name: vehicle-service-secrets
+                  key: extension_field_jobcard_id
+            - name: extension_field_milometer
+              valueFrom:
+                secretKeyRef:
+                  name: vehicle-service-secrets
+                  key: extension_field_milometer
+            - name: extension_field_service_form_id
+              valueFrom:
+                secretKeyRef:
+                  name: vehicle-service-secrets
+                  key: extension_field_service_form_id
+            - name: extension_field_vehicle_number
+              valueFrom:
+                secretKeyRef:
+                  name: vehicle-service-secrets
+                  key: extension_field_vehicle_number
+          volumeMounts:
+              - mountPath: /bindings/destination
+                name: destination-volume
+                readOnly: true
+              - mountPath: /bindings/xsuaa
+                name: xsuaa-volume
+                readOnly: true
+      volumes:
+            - name: destination-volume
+              secret:
+                secretName: destination-service-binding
+            - name: xsuaa-volume
+              secret:
+                secretName: xsuaa-service-binding
