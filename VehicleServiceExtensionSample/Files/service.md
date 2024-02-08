@@ -4,7 +4,7 @@ This application serves as a vehicle-service management system. With this applic
 
 NodeJs Service can be found here: [NodeJs Service](../nodeJs)
 
-Java Service can be found here: [Java Service](../java)
+Java Service can be found here: [Java Service](../javaService)
 
 This application is designed to be used to by three personas -
 1. **Service Advisor** - A Service Advisor is a professional who acts as a liaison between vehicle owners/customers and the service department of an automotive service center or dealership. Their role is to assist customers with their vehicle service needs.
