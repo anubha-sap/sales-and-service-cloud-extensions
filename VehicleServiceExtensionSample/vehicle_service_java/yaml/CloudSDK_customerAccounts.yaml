@@ -1,0 +1,163 @@
+openapi: 3.0.3
+info:
+  title: Account Service
+  version: 1.0.0
+servers:
+  - url: https://sandbox.api.sap.com/servicecloudv2
+  - url: https://{hostname}
+    description: Example of server url is https://my1234567.crm.cloud.sap
+    variables:
+      hostname:
+        default: ''
+components:
+  securitySchemes:
+    basicAuthentication:
+      type: http
+      scheme: basic
+security:
+  - basicAuthentication: []
+paths:
+  /elsa/sap/c4c/api/v1/account-service/accounts/{id}:
+    parameters:
+      - name: x-sap-crm-token
+        in: header
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getAccountDetails
+      tags:
+        - Account
+      summary: Read a specific data
+      description: Query the system for a specific Account using the account ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Account ID
+      responses:
+        '200':
+          description: Retrieved Account.
+          content:
+            application/json:
+              schema:
+                title: Account read response
+                type: object
+                properties:
+                  value:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      lifeCycleStatus:
+                        type: string
+                      isProspect:
+                        type: boolean
+                      customerRole:
+                        type: string
+                      formattedName:
+                        type: string
+                      isNaturalPerson:
+                        type: boolean
+                      firstLineName:
+                        type: string
+                      secondLineName:
+                        type: string
+                      displayId:
+                        type: string
+                      adminData:
+                        type: object
+                        properties:
+                          createdBy:
+                            type: string
+                            format: uuid
+                          createdOn:
+                            type: string
+                          updatedBy:
+                            type: string
+                            format: uuid
+                          updatedOn:
+                            type: string
+                      isBusinessPurposeCompleted:
+                        type: boolean
+                      defaultCommunication:
+                        type: object
+                        properties:
+                          eMail:
+                            type: string
+                          phoneFormattedNumber:
+                            type: string
+                          phoneNormalisedNumber:
+                            type: string
+                      lifeCycleStatusDescription:
+                        type: string
+                      customerRoleDescription:
+                        type: string
+                  info:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      details:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            message:
+                              type: string
+                            target:
+                              type: string
+                            code:
+                              type: string
+                      message:
+                        type: string
+                      target:
+                        type: string
+        '401':
+          description: |-
+            Unauthorized.
+
+            This error is caused when the request has not been applied because there are no valid authentication credentials for the target resource.
+        '403':
+          description: |-
+            Forbidden
+
+            This client error code indicates that the server understood the request but refuses to authorize it.
+        '404':
+          description: Account not found.
+        '500':
+          description: |-
+            Internal Server Error.
+
+            Failed to read the Account.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      details:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            message:
+                              type: string
+                            code:
+                              type: string
+                            target:
+                              type: string
+                      message:
+                        type: string
+                      target:
+                        type: string
+
+x-sap-shortText: Manage objects from Account service.

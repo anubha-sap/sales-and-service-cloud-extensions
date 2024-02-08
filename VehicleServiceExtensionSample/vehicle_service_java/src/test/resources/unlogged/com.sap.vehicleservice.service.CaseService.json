@@ -1,0 +1,28 @@
+{
+  "classname" : "com.sap.vehicleservice.service.CaseService",
+  "storedCandidateMap" : { },
+  "declaredMockMap" : {
+    "com.sap.vehicleservice.service.CaseService#getCaseById#(Ljava/util/UUID;)Lcom/sap/cnsmodules/model/CaseReadResponse;" : [ {
+      "id" : "add4ad58-dcb9-41e4-b7d7-10b4c8c62c55",
+      "name" : "mock response caseService.getCaseById",
+      "fieldTypeName" : "com.sap.vehicleservice.service.CaseService",
+      "sourceClassName" : "com.sap.vehicleservice.service.ServiceFormService",
+      "fieldName" : "caseService",
+      "methodName" : "getCaseById",
+      "whenParameter" : [ {
+        "name" : "caseId",
+        "type" : "ANY_OF_TYPE",
+        "value" : "java.util.UUID"
+      } ],
+      "thenParameter" : [ {
+        "returnParameter" : {
+          "declaredMocks" : [ ],
+          "value" : "{\"value\": {\"id\": \"92febb0a-4b76-4946-b2f1-8a51a6235cf6\", \"displayId\": \"string\", \"subject\": \"string\", \"priority\": \"string\", \"priorityDescription\": \"string\", \"origin\": \"string\", \"caseType\": \"string\", \"caseTypeDescription\": \"string\", \"status\": \"string\", \"statusDescription\": \"string\", \"escalationStatus\": \"string\", \"registeredProducts\": [{}], \"functionalLocations\": [{}], \"productInstallPoints\": [{}], \"installedBases\": [{}], \"account\": {}, \"contact\": {}, \"individualCustomer\": {}, \"processor\": {}, \"approvers\": [{}], \"serviceTeam\": {}, \"description\": {}, \"notes\": [{}], \"relatedObjects\": [{}], \"timePoints\": {}, \"categoryLevel1\": {}, \"categoryLevel2\": {}, \"serviceLevelId\": \"09c71313-59f0-4183-a5a2-ac61707e6093\", \"durationTerms\": {}, \"isRead\": \"0\", \"isEndOfPurpose\": \"0\", \"isDepersonalized\": \"0\", \"adminData\": {}, \"extensions\": \"0\", \"cloudSdkCustomFields\": {\"string\": \"0\"}}, \"info\": {\"code\": \"string\", \"details\": [{}], \"message\": \"string\", \"target\": \"string\", \"cloudSdkCustomFields\": {\"string\": \"0\"}}, \"cloudSdkCustomFields\": {\"string\": \"0\"}}",
+          "returnValueType" : "REAL",
+          "className" : "com.sap.cnsmodules.model.CaseReadResponse"
+        },
+        "methodExitType" : "NORMAL"
+      } ]
+    } ]
+  }
+}
