@@ -168,6 +168,7 @@ To setup API rule CRD with access strategy:
 ![Case ExtensionField ](../Images/K5.png "Case fields")
 * With this API rule definition, the application hosted in kyma will have access to the user JWT token.\
 
+## Add Authorization
 
 ## Running backend API using postman
 Please follow below steps to run the APIs
