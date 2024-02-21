@@ -169,6 +169,53 @@ To setup API rule CRD with access strategy:
 * With this API rule definition, the application hosted in kyma will have access to the user JWT token.\
 
 ## Add Authorization
+Authorization is the process of determining what actions or operations a user, application, or system is allowed to perform within a given system or environment. It plays a crucial role in ensuring the security of applications by controlling access to resources and functionalities based on the identity and privileges of the user. [XSUAA](https://www.google.com/search?q=xsuaa&rlz=1C5GCCM_en&oq=xsuaa&gs_lcrp=EgZjaHJvbWUyCQgAEEUYORiABDIGCAEQRRhAMgYIAhBFGDwyBggDEEUYPDIGCAQQRRg8MgYIBRBFGEEyBggGEEUYQTIGCAcQRRhB0gEINTc2N2owajeoAgCwAgA&sourceid=chrome&ie=UTF-8#:~:text=Demystifying%20XSUAA%20in,%E2%80%BA%20ba%2Dp) provides a robust solution for implementing authorization. The `xs-security.json` file is a key component used in XSUAA to define authorization configurations for applications. Within this file, developers can specify various elements such as scopes, role templates and role collections, which collectively determine the access rights granted to users or user groups. By defining these configurations, developers can enforce fine-grained access control within their applications, ensuring that only authorized users can perform specific actions or access certain resources. This centralized approach to authorization management facilitates the implementation of security best practices and helps maintain the integrity and confidentiality of application data. Please check the syntax of `xs-security.json` file [here](https://help.sap.com/docs/btp/sap-business-technology-platform/application-security-descriptor-configuration-syntax).
+
+Here's a general overview of how you can implement authorization using XSUAA:
+
+1. **Define Scopes**: Scopes represent specific permissions or access rights within your application. You define scopes in the XSUAA service instance configuration. For example, you might define scopes like read, write, admin, etc., based on the actions users can perform. For vehicle-service scenario, following scopes are defined:
+  - "uaa.user": This is required by destination service for token exchange
+  - "$XSAPPNAME.CreateJobCard": This scope allows to Create a Job Card
+  - "$XSAPPNAME.ViewJobCard": This scope allows to View Job Card
+  - "$XSAPPNAME.EditJobCardService": Edit a Job Card Service entity. This scope allows to edit all fields in a Job Card Service
+  - "$XSAPPNAME.DeleteJobCard": This scope allows to Delete a Job Card
+  - "$XSAPPNAME.CreateServiceForm": This scope allows to Create a Service Form
+  - "$XSAPPNAME.ViewServiceForm": This scope allows to View Service Form
+  - "$XSAPPNAME.UpdateServiceForm": This scope allows to Update a Service Form
+  - "$XSAPPNAME.DeleteServiceForm": This scope allows to generate invoice
+  - "$XSAPPNAME.EditTask": This scope allows to edit only two fields in JobCardServices entity - observation and notes. If a user has both `EditTask` and `EditJobCardService` scopes, only `EditJobCardService` will be considered
+  - "$XSAPPNAME.MasterData": This scope allows to create, read, update and delete the master data - InspectionItems, Services and Employees
+  - "$XSAPPNAME.GenerateInvoice": This scope allows to generate invoice\
+  NOTE: [xsappname](https://help.sap.com/docs/SAP_HANA_PLATFORM/4505d0bdaf4948449b7f7379d24d0f0d/6d3ed64092f748cbac691abc5fe52985.html#:~:text=allowedproviders%22%3A%20%5B%22useridp1%22%2C%20%22useridp2%22%5D%20%7D%20%0A%7D-,xsappname,-Use%20the%20xsappname) specifies the name of the SAP HANA XS application to which the security settings apply. It acts as a unique identifier, linking the security rules defined in the file to a specific application.
+
+2. **Define Role Templates**: Role templates group together scopes to define a set of permissions. You define role templates in the XSUAA service instance configuration and associate them with the necessary scopes. For instance, a role template named UserRole might include scopes for reading and writing data. For vehicle-service scenario, following scopes are defined:
+  - ServiceAdvisorRole 
+  - ServiceManagerRole
+  - ServiceTechnicianRole
+
+3. **Define Role Collections**: Role collections group role templates together and assign them to users or user groups. You define role collections in the XSUAA service instance configuration and assign the appropriate role templates to them. For example, you might have a role collection named User that includes the UserRole template.
+  - "Service Advisor": The Service Advisor will be able to create, view, update, and delete service forms, view and delete Job Cards, and generate Invoices.
+  - "Service Manager": The Service Manager will be able to: view Job Cards, view Job Card Services, update Job Card Services, perform CRUD operations on Inspection Items, Services, and Employees.
+  - "Service Technician": The Service Technician will be able to view Job Cards and edit their own Job Card Service. A Technician is only authorized to edit specific fields.
+
+4. Add `xs-security.json` file contents as `Instance Parameters` in the xsuua instance. To add instance-parameters:
+      - Go to service instances under Service Management(in dev namespace), click on Edit:
+      ![Edit XSUAA Service Instance ](../Images/K9.png "XSUAA Service Instance")
+      - Add the `xs-security.json` contents created in the previous section under `Instance Parameters`:
+      ![XSUAA Service Instance Parameters](../Images/K8.png "XSUAA Service Instance Parameters")
+      - Click on Update.
+      - Once the instance parameters is updated with xs-security.json contents, the related roles will get updated in the SAP BTP Cockpit
+
+4. **Assign Roles**: After defining role collections, you assign them to users or user groups. This assignment can be done through the SAP BTP Cockpit. Users or user groups with specific roles have the associated permissions granted by the role templates assigned to their role collections. To assign Role Collections to a user:
+    - Go to Users under Security in SAP BTP Cockpit
+    - Search for the user, click on "Assign Role Collection":
+      ![SAP BTP Users](../Images/K10.png "SAP BTP Users")
+    - Search for the Role Collection that you want to assign to the user:
+      ![Assign Role Collection](../Images/K11.png "Assign Role Collection")
+    - Click on "Assign Role Collection"
+
+
+5. **Protect Resources**: In your application code or configuration, you specify which resources require specific roles or scopes for access. This is typically done using authorization mechanisms provided by your application framework or libraries. For more information on how to protect APIs using Guards in Nestjs, check [this](https://docs.nestjs.com/guards).
 
 ## Running backend API using postman
 Please follow below steps to run the APIs
