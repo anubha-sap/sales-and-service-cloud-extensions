@@ -55,6 +55,7 @@ Please follow below mentioned steps to run this application.
 * [Run Backend service](./Files/service.md)
    * [Download and Deploy application](./Files/service.md#download-and-deploy-service-in-kyma)
    * [Add Authentication](./Files/service.md#add-authentication)
+   * [Add Authorization](./Files/service.md#add-authorization)
    * [Run service API using postman](./Files/service.md#running-backend-api-using-postman)
    * [Code structure details](./Files/service.md#code-folder-structure)
 
