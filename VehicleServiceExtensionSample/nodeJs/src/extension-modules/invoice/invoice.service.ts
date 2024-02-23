@@ -88,7 +88,7 @@ export class InvoiceService {
           const arr = [
             index + 1,
             item.service ? item.service : '-',
-            item.technician ? item.technician : '-',
+            item.technician ? item.technician.name : '-',
             item.status ? item.status : '-',
             this.utilService.getDateTime(item.startTime),
             this.utilService.getDateTime(item.endTime),

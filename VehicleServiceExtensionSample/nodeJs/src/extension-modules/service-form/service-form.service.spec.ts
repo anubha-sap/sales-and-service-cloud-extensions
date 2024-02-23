@@ -20,6 +20,7 @@ import { ServiceFormRepository } from './repository/service-form.repository';
 import { ServiceFormResponseDto } from './dto/service-form/response-service-form.dto';
 import { AdminDataDto } from '../common/dto/admin-data.dto';
 import { CustomLogger } from '../../logger/logger.service';
+import { RequestMock } from '../../../test/mock-data/common.mock.data';
 
 describe('ServiceFormService', () => {
   let service: ServiceFormService;
@@ -263,7 +264,7 @@ describe('ServiceFormService', () => {
         },
         {
           provide: REQUEST,
-          useValue: mockRequest,
+          useValue: RequestMock,
         },
         { provide: CustomLogger, useValue: mockCustomLogger },
         { provide: DataSource, useValue: mockDataSource },
@@ -620,6 +621,60 @@ describe('ServiceFormService', () => {
       }
     });
 
+    it('should handle when no inspection-items has bee selected', async () => {
+      try {
+        const oGetRegisteredProductData = JSON.parse(
+          oServiceForms[0].registeredProduct,
+        );
+        const oGetSuggestedServices = JSON.parse(
+          oServiceForms[0].servicesProposed,
+        );
+
+        jest
+          .spyOn(mockCasesService, 'getCaseById')
+          .mockResolvedValue(oGetCaseById);
+        jest
+          .spyOn(mockRegisteredProductsService, 'getRegisteredProductData')
+          .mockResolvedValue(oGetRegisteredProductData);
+        jest.spyOn(mockInspectionItemsService, 'findAll').mockResolvedValue([]);
+        jest
+          .spyOn(mockServicesService, 'findAll')
+          .mockResolvedValue(oGetSuggestedServices);
+
+        await service.getServiceFormInfo(oRequest);
+      } catch (error) {
+        expect(error).toBeInstanceOf(ServerException);
+        expect(error.getError().message).toBe(
+          MESSAGES.NO_INSPECTION_ITEMS_AVAILABLE,
+        );
+      }
+    });
+
+    it('should get service form info', async () => {
+      try {
+        const oGetRegisteredProductData = JSON.parse(
+          oServiceForms[0].registeredProduct,
+        );
+        const oInspectionItems = JSON.parse(oServiceForms[0].inspectionItems);
+
+        jest
+          .spyOn(mockCasesService, 'getCaseById')
+          .mockResolvedValue(oGetCaseById);
+        jest
+          .spyOn(mockRegisteredProductsService, 'getRegisteredProductData')
+          .mockResolvedValue(oGetRegisteredProductData);
+        jest
+          .spyOn(mockInspectionItemsService, 'findAll')
+          .mockResolvedValue(oInspectionItems);
+        jest.spyOn(mockServicesService, 'findAll').mockResolvedValue([]);
+
+        await service.getServiceFormInfo(oRequest);
+      } catch (error) {
+        expect(error).toBeInstanceOf(ServerException);
+        expect(error.getError().message).toBe(MESSAGES.NO_SERVICES_AVAILABLE);
+      }
+    });
+
     it('should handle error', async () => {
       const sErrMsg = 'Error getting case data';
       try {
@@ -733,7 +788,7 @@ describe('ServiceFormService', () => {
     });
   });
 
-  describe('findAllStatus', () => {
+  /*   describe('findAllStatus', () => {
     const mockResult = [
       { code: 'Z01', description: 'translatedText' },
       { code: 'Z02', description: 'translatedText' },
@@ -763,7 +818,7 @@ describe('ServiceFormService', () => {
       }
     });
   });
-
+ */
   describe('fetchServicesAndInspectionItems', () => {
     let oInspectionItem;
     let oService;

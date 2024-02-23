@@ -21,7 +21,7 @@ export class JobCardResponseDto extends JobCardDto {
       registeredProduct: JSON.parse(oJobCard.registeredProduct),
       customerComplaints: JSON.parse(oJobCard.customerComplaints),
       milometer: oJobCard.milometer,
-      servicesSelected: oJobCard.servicesSelected,
+      servicesSelected: this.parseJobCardService(oJobCard),
       status: oJobCard.status,
       estimatedCompletionDate: oJobCard.estimatedCompletionDate,
       adminData: new AdminDataDto({
@@ -31,5 +31,17 @@ export class JobCardResponseDto extends JobCardDto {
         updatedBy: oJobCard.updatedBy,
       }),
     });
+  }
+
+  public static parseJobCardService(oJobCard: JobCard) {
+    if (!oJobCard.servicesSelected) {
+      return oJobCard.servicesSelected;
+    }
+    for (let i = 0; i < oJobCard.servicesSelected.length; i++) {
+      oJobCard.servicesSelected[i].technician = JSON.parse(
+        oJobCard.servicesSelected[i].technician,
+      );
+    }
+    return oJobCard.servicesSelected;
   }
 }

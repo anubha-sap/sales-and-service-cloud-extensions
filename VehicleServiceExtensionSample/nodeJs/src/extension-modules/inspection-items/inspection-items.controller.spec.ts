@@ -1,65 +1,29 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { InspectionItemsController } from './inspection-items.controller';
 import { InspectionItemsService } from './inspection-items.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { InspectionItem } from './entities/inspection-item.entity';
+import {
+  InspectionItemsDTO,
+  InspectionItemsResponse,
+} from '../../../test/mock-data/modules/inspection-items.mock.data';
 
 describe('InspectionItemsController', () => {
   let controller: InspectionItemsController;
-  let mockInspectionItemsService;
-  let oInspectionItems;
-  let mockInspectionRepository;
+  const mockInspectionItemsService = {
+    create: jest.fn(),
+    findAll: jest.fn(),
+    findOne: jest.fn(),
+    update: jest.fn(),
+    replace: jest.fn(),
+    remove: jest.fn(),
+  };
 
   beforeEach(async () => {
-    mockInspectionItemsService = {
-      create: jest.fn(),
-      findAll: jest.fn(),
-      findOne: jest.fn(),
-      update: jest.fn(),
-      replace: jest.fn(),
-      remove: jest.fn(),
-    };
-    oInspectionItems = [
-      {
-        description: 'Check for toolkit',
-        isSelected: false,
-      },
-      {
-        description: 'Check for any dents',
-        isSelected: false,
-      },
-    ];
-    mockInspectionRepository = {
-      find: jest.fn(() => {
-        return oInspectionItems;
-      }),
-      findOne: jest.fn((id) => {
-        return oInspectionItems[0];
-      }),
-      findOneBy: jest.fn(() => {
-        return oInspectionItems[0];
-      }),
-      save: jest.fn().mockImplementation((oInspectionItemDto) => {
-        return Promise.resolve({ id: '123', ...oInspectionItemDto });
-      }),
-      update: jest.fn().mockImplementation((id, oInspectionItemDto) => ({
-        ...id,
-        ...oInspectionItemDto,
-      })),
-      delete: jest.fn().mockImplementation((id) => ({
-        ...id,
-      })),
-    };
     const module: TestingModule = await Test.createTestingModule({
       controllers: [InspectionItemsController],
       providers: [
         {
           provide: InspectionItemsService,
           useValue: mockInspectionItemsService,
-        },
-        {
-          provide: getRepositoryToken(InspectionItem),
-          useValue: mockInspectionRepository,
         },
       ],
     }).compile();
@@ -69,24 +33,13 @@ describe('InspectionItemsController', () => {
     );
   });
 
-  afterEach(async () => {
-    mockInspectionItemsService =
-      oInspectionItems =
-      mockInspectionRepository =
-        undefined;
-  });
-
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
   it('should be able to create new inspection-item', async () => {
-    const oCreateDto = {
-      description: 'Check toolkit',
-      isSelected: false,
-    };
     const spy = jest.spyOn(mockInspectionItemsService, 'create');
-    await controller.create(oCreateDto);
+    await controller.create(InspectionItemsDTO);
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
@@ -104,12 +57,8 @@ describe('InspectionItemsController', () => {
   });
 
   it('should be able to patch a inspection-itemby id', async () => {
-    const sId = 'b9a0af7c-8114-48fb-88eb-f463b0070934';
-    const oPatchBody = {
-      description: 'Check toolkit items',
-    };
     const spy = jest.spyOn(mockInspectionItemsService, 'update');
-    await controller.update(sId, oPatchBody);
+    await controller.update(InspectionItemsResponse.id, InspectionItemsDTO);
     expect(spy).toHaveBeenCalledTimes(1);
   });
 

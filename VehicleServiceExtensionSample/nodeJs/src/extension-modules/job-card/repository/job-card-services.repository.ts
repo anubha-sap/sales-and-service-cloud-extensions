@@ -7,6 +7,7 @@ import { JobCardServicesRepositoryInterface } from './job-card-services.reposito
 import { MESSAGES, SESSION } from '../../../common/constants';
 import { REQUEST } from '@nestjs/core';
 import { CustomLogger } from '../../../logger/logger.service';
+import { JobCardServiceResponseDto } from '../dto/job-card/job-card-service/response-job-card-service.dto';
 
 @Injectable()
 export class JobCardServiceRepository

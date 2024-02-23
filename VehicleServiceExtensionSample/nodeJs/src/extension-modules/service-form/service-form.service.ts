@@ -25,7 +25,7 @@ import {
 import { SFStatus } from '../common/enums';
 import { ServerException } from '../../common/filters/server-exception';
 import { TransactionManager } from '../../database/transaction.manager';
-import { ServiceFormType, CodeList } from '../common/interfaces';
+import { ServiceFormType } from '../common/interfaces';
 import { ServiceFormRepository } from './repository/service-form.repository';
 import { UpdateServiceFormDto } from './dto/service-form/update-service-form.dto';
 import { ServiceFormResponseDto } from './dto/service-form/response-service-form.dto';
@@ -186,14 +186,14 @@ export class ServiceFormService {
       // Getting case. Throws error if case is completed
       const oCase = await this.casesService.getCaseById(sCaseId);
       if (oCase.status === this.caseStatusCompleted) {
-        throw new Error(MESSAGES.CASE_COMPLETED);
+        throw new InternalServerErrorException(MESSAGES.CASE_COMPLETED);
       }
 
       if (!nMilometer) {
         ({ nMilometer } = await this.casesService.getCaseData(oCase));
       }
       if (!nMilometer) {
-        throw new Error(MESSAGES.NO_MILOMETER_IN_CASE);
+        throw new InternalServerErrorException(MESSAGES.NO_MILOMETER_IN_CASE);
       }
 
       // Getting Registered Products. Registered Product Id is taken from case data above
@@ -208,9 +208,17 @@ export class ServiceFormService {
           isSelected: true,
         },
       });
+      if (oInspectionItems.length === 0) {
+        throw new InternalServerErrorException(
+          MESSAGES.NO_INSPECTION_ITEMS_AVAILABLE,
+        );
+      }
 
       // Get a list of suggested services based on the milometer reading of the vehicle
       const oSuggestedServices = await this.getSuggestedServices(nMilometer);
+      if (oSuggestedServices.length === 0) {
+        throw new InternalServerErrorException(MESSAGES.NO_SERVICES_AVAILABLE);
+      }
 
       const oServiceForm: ServiceFormType = {
         caseId: oCase.id,
@@ -257,7 +265,7 @@ export class ServiceFormService {
     return suggestedServices;
   }
 
-  async findAllStatus() {
+  /*   async findAllStatus() {
     const oCodeList: CodeList[] = [];
     try {
       const sLang = this.request[SESSION].language;
@@ -281,7 +289,7 @@ export class ServiceFormService {
       );
     }
     return oCodeList;
-  }
+  } */
 
   async translateServiceFormEntity(
     oServiceFormInstance: ServiceFormResponseDto,

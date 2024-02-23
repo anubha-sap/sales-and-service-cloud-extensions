@@ -26,6 +26,8 @@ import { Services } from './extension-modules/services/entities/service.entity';
 import { ServicesModule } from './extension-modules/services/service.module';
 import { LoggerModule } from './logger/logger.module';
 import { ConfigModule } from '@nestjs/config';
+import { EmployeesModule } from './extension-modules/employees/employees.module';
+import { Employee } from './extension-modules/employees/entities/employee.entity';
 
 @Module({
   imports: [
@@ -42,6 +44,7 @@ import { ConfigModule } from '@nestjs/config';
         JobCardServices,
         InspectionItem,
         ServiceForm,
+        Employee,
       ],
       synchronize: process.env.synchronize === 'true' ? true : false,
       dropSchema: process.env.dropSchema === 'true' ? true : false,
@@ -58,6 +61,7 @@ import { ConfigModule } from '@nestjs/config';
     InvoiceModule,
     UtilsModule,
     LoggerModule,
+    EmployeesModule,
   ],
 })
 export class AppModule implements NestModule {

@@ -4,6 +4,7 @@ import { InvoiceService } from './invoice.service';
 import { UtilsService } from '../../utils/utils.service';
 import { CustomLogger } from '../../logger/logger.service';
 import { REQUEST } from '@nestjs/core';
+import { RequestMock } from '../../../test/mock-data/common.mock.data';
 
 describe('InvoiceController', () => {
   let controller: InvoiceController;
@@ -28,11 +29,7 @@ describe('InvoiceController', () => {
         { provide: UtilsService, useValue: mockUtilsService },
         {
           provide: REQUEST,
-          useValue: {
-            session: {
-              language: 'en',
-            },
-          },
+          useValue: RequestMock,
         },
       ],
     }).compile();

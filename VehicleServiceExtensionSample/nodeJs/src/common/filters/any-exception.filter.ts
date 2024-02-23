@@ -51,7 +51,7 @@ export class AnyExceptionFilter<T> implements ExceptionFilter {
       if (oError instanceof TypeORMError) {
         const sErrMsg =
           oError['sqlState'] === '23000'
-            ? MESSAGES.UNIQUE_KEY_CONSTRAINT_FAILED
+            ? this.extractConstraintKey(oError.message)
             : MESSAGES.DB_ERROR;
         errorResponse.error.message = sErrMsg;
       } else if (!(oError instanceof HttpException)) {
@@ -71,6 +71,12 @@ export class AnyExceptionFilter<T> implements ExceptionFilter {
       `Class: ${className} \nMethod: ${methodName} \nMessage: ${errorResponse.error.message} \n<--------------Stack trace-------------->\n ${stack}\n <--------------End-------------->`,
     );
     response.status(this.getStatus(exception)).json(errorResponse);
+  }
+
+  extractConstraintKey(str: string) {
+    const regex = /constraint='([^']+)'/;
+    const key = regex.exec(str)[1];
+    return MESSAGES.UNIQUE_KEY_CONSTRAINT_FAILED.replace(/\${key}/, key);
   }
 
   getStatus(exception) {

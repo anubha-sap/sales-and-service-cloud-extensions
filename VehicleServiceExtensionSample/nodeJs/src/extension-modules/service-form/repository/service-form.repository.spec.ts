@@ -8,6 +8,7 @@ import { ServiceFormResponseDto } from '../dto/service-form/response-service-for
 import { CustomLogger } from '../../../logger/logger.service';
 import { REQUEST } from '@nestjs/core';
 import { CASE_STATUS, EXTENSION_FIELDS } from '../../../common/constants';
+import { RequestMock } from '../../../../test/mock-data/common.mock.data';
 
 describe('ServiceFormRepository', () => {
   const updatedBy = 'user';
@@ -157,22 +158,6 @@ describe('ServiceFormRepository', () => {
     setClassName: jest.fn(),
     debug: jest.fn(),
   };
-  const mockRequest = {
-    session: {
-      language: 'en',
-      caseStatusBooked: CASE_STATUS.BOOKED,
-      caseStatusClosed: CASE_STATUS.CLOSED,
-      caseStatusCompleted: CASE_STATUS.COMPLETED,
-      caseStatusServiceCompleted: CASE_STATUS.SERVICE_COMPLETED,
-      caseStatusServiceInProcess: CASE_STATUS.SERVICE_IN_PROCESS,
-      destination: 'SAPServiceCloudDiscoveryService7',
-      extensionFieldJobCardId: EXTENSION_FIELDS.JOBCARD_ID,
-      extensionFieldMilometer: EXTENSION_FIELDS.MILOMETER,
-      extensionFieldServiceFormId: EXTENSION_FIELDS.SERVICE_FORM_ID,
-      extensionFieldVehicleNumber: EXTENSION_FIELDS.VEHICLE_NUMBER,
-      logLevel: '4',
-    },
-  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -184,7 +169,7 @@ describe('ServiceFormRepository', () => {
         },
         {
           provide: REQUEST,
-          useValue: mockRequest,
+          useValue: RequestMock,
         },
         { provide: CustomLogger, useValue: mockCustomLogger },
         { provide: UtilsService, useValue: mockUtilsService },

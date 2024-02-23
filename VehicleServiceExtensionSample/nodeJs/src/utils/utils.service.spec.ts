@@ -4,38 +4,27 @@ import { UtilsService } from './utils.service';
 import { REQUEST } from '@nestjs/core';
 import { MESSAGES, CUSTOM_LOGIC_ERROR_CODE } from '../common/constants';
 import { ServerException } from '../common/filters/server-exception';
+import { RequestMock } from '../../test/mock-data/common.mock.data';
 
 describe('UtilsService', () => {
   let service: UtilsService;
 
-  let mockI18nService;
-  let mockRequest;
+  const mockI18nService = {
+    translate: jest.fn(),
+  };
   beforeEach(async () => {
-    mockI18nService = {
-      translate: jest.fn(),
-    };
-    mockRequest = {
-      session: {
-        language: 'en',
-      },
-    };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UtilsService,
         { provide: I18nService, useValue: mockI18nService },
         {
           provide: REQUEST,
-          useValue: mockRequest,
+          useValue: RequestMock,
         },
       ],
     }).compile();
 
     service = module.get<UtilsService>(UtilsService);
-  });
-
-  afterEach(async () => {
-    mockI18nService = mockRequest = undefined;
-    jest.restoreAllMocks();
   });
 
   it('should be defined', () => {

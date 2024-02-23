@@ -2,55 +2,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ServicesService } from './service.service';
 import { ServerException } from '../../common/filters/server-exception';
 import { ServicesRepository } from './repository/services.repository';
-import { ServiceResponseDto } from './dto/response-service.dto';
-import { AdminDataDto } from '../common/dto/admin-data.dto';
 import { REQUEST } from '@nestjs/core';
+import { RequestMock } from '../../../test/mock-data/common.mock.data';
+import {
+  ServicesMockDTO,
+  ServicesResponse,
+  ServicesResponseDTO,
+} from '../../../test/mock-data/modules/services.mock.data';
 
 describe('ServicesService', () => {
   let servicesService: ServicesService;
 
-  const requestStub = {
-    session: {
-      language: 'lan',
-      userToken: 'token',
-      userId: 'uId',
-    },
-  };
-
-  const serviceDto = [
-    {
-      id: '123',
-      service:
-        'Check and top off all fluid levels (engine oil, transmission fluid, brake fluid, power steering fluid, coolant)',
-      minMileage: 0,
-      maxMileage: 5000,
-      price: '2299',
-      isSelected: false,
-    },
-    {
-      id: '111',
-      service: 'engine oil, power steering fluid, coolant',
-      minMileage: 10,
-      maxMileage: 5000,
-      price: '3299',
-      isSelected: true,
-    },
-  ];
-  const adminData = new AdminDataDto({
-    createdOn: new Date('2023-06-06T10:08:10.829Z'),
-    updatedOn: new Date('2023-06-06T10:29:19.686Z'),
-    createdBy: '',
-    updatedBy: '',
-  });
-  const dbResult = {
-    ...serviceDto[1],
-    ...adminData,
-  };
-
-  const serviceResult = new ServiceResponseDto({
-    ...serviceDto[1],
-    adminData,
-  });
   const oMockServicesRepository = {
     save: jest.fn(),
     findAll: jest.fn(),
@@ -69,7 +31,7 @@ describe('ServicesService', () => {
         },
         {
           provide: REQUEST,
-          useValue: requestStub,
+          useValue: RequestMock,
         },
       ],
     }).compile();
@@ -90,9 +52,9 @@ describe('ServicesService', () => {
       try {
         jest
           .spyOn(oMockServicesRepository, 'findAll')
-          .mockResolvedValue(serviceDto);
+          .mockResolvedValue([ServicesResponse]);
         const res = await servicesService.findAll();
-        expect(res).toEqual(serviceDto);
+        expect(res).toEqual([ServicesResponse]);
         expect(oMockServicesRepository.findAll).toHaveBeenCalled();
       } catch (error) {
         expect(error).toBe(undefined);
@@ -113,10 +75,12 @@ describe('ServicesService', () => {
       try {
         jest
           .spyOn(oMockServicesRepository, 'findOne')
-          .mockResolvedValue(dbResult);
-        const res = await servicesService.findOne('111');
-        expect(oMockServicesRepository.findOne).toHaveBeenCalledWith('111');
-        expect(res).toStrictEqual(serviceResult);
+          .mockResolvedValue(ServicesResponse);
+        const res = await servicesService.findOne(ServicesResponse.id);
+        expect(oMockServicesRepository.findOne).toHaveBeenCalledWith(
+          ServicesResponse.id,
+        );
+        expect(res).toEqual(ServicesResponseDTO);
       } catch (error) {
         expect(error).toBe(undefined);
       }
@@ -135,21 +99,16 @@ describe('ServicesService', () => {
   });
 
   describe('create', () => {
-    const oNewService = {
-      service: 'engine oil, power steering fluid, coolant',
-      minMileage: 10,
-      maxMileage: 5000,
-      price: '3299',
-      isSelected: true,
-    };
     it('should create a service', async () => {
       try {
-        jest.spyOn(oMockServicesRepository, 'save').mockResolvedValue(dbResult);
-        const res = await servicesService.create(oNewService);
-        expect(res).toEqual(serviceResult);
+        jest
+          .spyOn(oMockServicesRepository, 'save')
+          .mockResolvedValue(ServicesResponse);
+        const res = await servicesService.create(ServicesMockDTO);
+        expect(res).toEqual(ServicesResponseDTO);
         expect(oMockServicesRepository.save).toHaveBeenCalledWith({
-          ...oNewService,
-          createdBy: requestStub.session.userId,
+          ...ServicesMockDTO,
+          createdBy: RequestMock.session.userId,
         });
       } catch (error) {
         expect(error).toBe(undefined);
@@ -159,8 +118,10 @@ describe('ServicesService', () => {
     it('should return error for create a service', async () => {
       try {
         jest.spyOn(oMockServicesRepository, 'save').mockRejectedValue({});
-        await servicesService.create(oNewService);
-        expect(oMockServicesRepository.save).toHaveBeenCalledWith(oNewService);
+        await servicesService.create(ServicesMockDTO);
+        expect(oMockServicesRepository.save).toHaveBeenCalledWith(
+          ServicesMockDTO,
+        );
       } catch (error) {
         expect(error).toBeInstanceOf(ServerException);
       }
@@ -169,16 +130,19 @@ describe('ServicesService', () => {
 
   describe('update', () => {
     const oPatchBody = {
-      ...serviceDto[1],
+      ...ServicesMockDTO[1],
     };
     oPatchBody.price = '2300';
     it('should update the service', async () => {
       try {
         jest
           .spyOn(oMockServicesRepository, 'update')
-          .mockResolvedValue(dbResult);
-        const res = await servicesService.update('111', oPatchBody);
-        expect(res).toEqual(serviceResult);
+          .mockResolvedValue(ServicesResponse);
+        const res = await servicesService.update(
+          ServicesResponse.id,
+          oPatchBody,
+        );
+        expect(res).toEqual(ServicesResponseDTO);
       } catch (error) {
         expect(error).toBe(undefined);
       }
