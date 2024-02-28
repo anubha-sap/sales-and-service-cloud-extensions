@@ -28,6 +28,7 @@ These are the entities used in the service:
 3. JobCard
 4. JobCardServices
 5. ServiceForm
+6. Employees
 
 Database used in the application is [SAP HANA](https://www.sap.com/india/products/technology-platform/hana/what-is-sap-hana.html). We use [Typeorm](https://typeorm.io/) (A Object-Relational Mapping (ORM) library) to simplify database interactions using object-oriented programming techniques rather than traditional SQL queries.
 
@@ -208,7 +209,7 @@ Here's a general overview of how you can implement authorization using XSUAA:
       - Click on Update.
       - Once the instance parameters is updated with xs-security.json contents, the related roles will get updated in the SAP BTP Cockpit
 
-4. **Assign Roles**: After defining role collections, you assign them to users or user groups. This assignment can be done through the SAP BTP Cockpit. Users or user groups with specific roles have the associated permissions granted by the role templates assigned to their role collections. To assign Role Collections to a user:
+5. **Assign Roles**: After defining role collections, you assign them to users or user groups. This assignment can be done through the SAP BTP Cockpit. Users or user groups with specific roles have the associated permissions granted by the role templates assigned to their role collections. To assign Role Collections to a user:
     - Go to Users under Security in SAP BTP Cockpit
     - Search for the user, click on "Assign Role Collection":
       ![SAP BTP Users](../Images/K10.png "SAP BTP Users")
@@ -216,8 +217,10 @@ Here's a general overview of how you can implement authorization using XSUAA:
       ![Assign Role Collection](../Images/K11.png "Assign Role Collection")
     - Click on "Assign Role Collection"
 
+6. **Creating Employee Master data in the service**: For the application to work properly, you need to replicate Service Manager, Service Technician data in the service. For details regarding the API, refer [here](#create-employeesservice-manager-and-service-technician-users-created-in-btp-should-be-replicated-here).\
+This Employee master data is used in the buildApps to determine if the logged in user is Service Manager or Service Technician. Based on the logged in user's role, build apps controls the functionality.
 
-5. **Protect Resources**: In your application code or configuration, you specify which resources require specific roles or scopes for access. This is typically done using authorization mechanisms provided by your application framework or libraries. For more information on how to protect APIs using Guards in Nestjs, check [this](https://docs.nestjs.com/guards).
+7. **Protect Resources**: In your application code or configuration, you specify which resources require specific roles or scopes for access. This is typically done using authorization mechanisms provided by your application framework or libraries. For more information on how to protect APIs using Guards in Nestjs, check [this](https://docs.nestjs.com/guards).
 
 ## Running backend API using postman
 Please follow below steps to run the APIs
@@ -241,7 +244,7 @@ Please follow below steps to run the APIs
 * Running APIs
   * Download the postman collection from [here](../Files/postmanCollection/ExFs.postman_collection.json). This JSON file needs to downloaded and imported to postman.\
    The sample application’s API is protected. This means that a valid JWT token is expected in the request. In postman you can set this authentication by following the below steps.
-  * Go to collection level authorization and add the following configuration-\
+  * #### Go to collection level authorization and add the following configuration-
   ![Postman collection level authorization configuration](../Images/collection_level_authorization.png "Postman Authorization Configuration")
       * Type:  "OAuth 2.0"<br>
       * grant type - "Authorization Code" <br>
@@ -249,18 +252,24 @@ Please follow below steps to run the APIs
       * auth url -  https://<*subdomain*>.launchpad.cfapps.<*region*>.hana.ondemand.com /oauth/authorize?redirect_uri=auth url -  https://<*subdomain*>.launchpad.cfapps.<*region*>.hana.ondemand.com /oauth/authorize?redirect_uri=<br>
       * access token url -  https://<*subdomain*>.launchpad.cfapps.<*region*>.hana.ondemand.com /oauth/token<br>
       * client ID, client Secret: You will get these details in step 1 under [this](#download-and-deploy-service-in-kyma) section  
-  * Create the following variables in the collection. Use the host from the previous step. No need to fill the other variables.\
+  * #### Create the following variables in the collection. Use the host from the previous step. No need to fill the other variables.
   ![Variables in postman](../Images/postman_variables.png "Variables in Postman")
-  **NOTE: Master data(Inspection Items and Services) has to be created first for the application to work correctly**
-  * Create Inspection Item(Any number of inspection items can be created)\
+  **NOTE: Master data(Inspection Items, Services and Employees) has to be created first for the application to work correctly**
+  * #### Create Inspection Item(Any number of inspection items can be created)
   ![POST request to create an Inspection Item](../Images/create_inspection_item.png "Inspection Item POST request") 
-  * Create Services(Any number of services can be created)
+  * #### Create Services(Any number of services can be created)
    ![POST request to create a Service](../Images/create_service.png "Service POST request")  
-  * Create ServiceForm (Use the caseId from the case created above): 
+  * #### Create Employees(Service Manager and Service Technician users created in BTP should be replicated here)
+   ![POST request to create an Employee](../Images/create_employee.png "Employee POST request")
+    Note: Role Code R22 - Service Manager, Role Code R23 - Service Technician\
+      - To get btpUserId, go SAP BTP Cockpit, click on users, search for the user:
+      ![BTPUserID](../Images/btp_userid.png "BTPUserID")
+      
+  * #### Create ServiceForm (Use the caseId from the case created above): 
    ![POST request to create a Service Form](../Images/create_service_form.png "Service POST request")
-  * Update Service Form status to “Z02”(Booked) and select few related services and inspection items(by setting the field “isSelected” to true). Only for booked service forms with few selected services, we can create job card.\
+  * #### Update Service Form status to “Z02”(Booked) and select few related services and inspection items(by setting the field “isSelected” to true). Only for booked service forms with few selected services, we can create job card.
   ![Service Form PATCH request](../Images/update_service_form.png "Service Form Patch request")
-  * Create Job Card. Here 
+  * #### Create Job Card. Here 
   sourceid is the id of the serviceform created in the previous step. sourceType is service-form\
   ![Create Job Card](../Images/create_job_card.png "Create Job Card")
 

@@ -68,7 +68,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"createdBy\": \"Check for toolkits\",\r\n    \"description\": \"udpate\",\r\n    \"asd\":\"asd\"\r\n}",
+							"raw": "{\r\n    \"description\": \"Verify the condition of the brake pads and brake fluid.\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -403,7 +403,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"service\": \"Change Filter\",\r\n    \"minMileage\": 0,\r\n    \"maxMileage\": 5000,\r\n    \"price\": \"499\"\r\n}",
+							"raw": "{\r\n    \"service\": \"Suspension and Steering Check\",\r\n    \"minMileage\": 20000,\r\n    \"maxMileage\": 1000000,\r\n    \"price\": \"1399\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -755,7 +755,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"caseId\": \"529b98d2-62b7-11ee-a0ef-07c86a59c79a\"\r\n}",
+							"raw": "{\r\n    \"caseId\": \"69eca6ab-cb21-11ee-b2f3-f3d57b425c82\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -771,76 +771,6 @@
 								"vehicle-service",
 								"service-forms",
 								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getone-service-form",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"",
-									"pm.test(\"Response status code is 200\", function () {",
-									"    pm.expect(pm.response.code).to.equal(200);",
-									"});",
-									"",
-									"",
-									"pm.test(\"id is a non-empty string\", function () {",
-									"    const responseData = pm.response.json();",
-									"",
-									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
-									"});",
-									"",
-									"",
-									"pm.test(\"displayId is a non-negative integer\", function () {",
-									"    const responseData = pm.response.json();",
-									"",
-									"    pm.expect(responseData).to.be.an('object');",
-									"    pm.expect(responseData.displayId).to.exist.and.to.be.a('number').and.to.satisfy(function (displayId) {",
-									"        return displayId >= 0;",
-									"    }, \"displayId should be a non-negative integer\");",
-									"});",
-									"",
-									"",
-									"pm.test(\"Response contains all required fields\", function () {",
-									"    const responseData = pm.response.json();",
-									"",
-									"    pm.expect(responseData).to.be.an('object');",
-									"    pm.expect(responseData).to.have.property('id');",
-									"    pm.expect(responseData).to.have.property('displayId');",
-									"    pm.expect(responseData).to.have.property('caseId');",
-									"    pm.expect(responseData).to.have.property('caseDisplayId');",
-									"    pm.expect(responseData).to.have.property('registeredProduct');",
-									"    pm.expect(responseData).to.have.property('customerComplaints');",
-									"    pm.expect(responseData).to.have.property('milometer');",
-									"    pm.expect(responseData).to.have.property('servicesProposed');",
-									"    pm.expect(responseData).to.have.property('inspectionItems');",
-									"    pm.expect(responseData).to.have.property('notes');",
-									"    pm.expect(responseData).to.have.property('status');",
-									"    pm.expect(responseData).to.have.property('adminData');",
-									"    pm.expect(responseData).to.have.property('statusDescription');",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/vehicle-service/service-forms/{{sfId}}",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"vehicle-service",
-								"service-forms",
-								"{{sfId}}"
 							]
 						}
 					},
@@ -900,19 +830,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/vehicle-service/service-forms/?$filter=caseId eq 'b867087f-f3ba-11ed-95b1-4f6d461bbdcd' ",
+							"raw": "{{host}}/vehicle-service/service-forms",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"vehicle-service",
-								"service-forms",
-								""
+								"service-forms"
 							],
 							"query": [
 								{
 									"key": "$filter",
-									"value": "caseId eq 'b867087f-f3ba-11ed-95b1-4f6d461bbdcd' "
+									"value": "caseId eq '71a9ab7d-d532-11ee-ab2c-759f5956dc65'",
+									"disabled": true
 								}
 							]
 						}
@@ -966,7 +896,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"status\": \"Z02\",\n    \"servicesProposed\": [\n        {\n            \"id\": \"ff106a0b-7b94-4d30-8d82-6f1e0507e2ad\",\n            \"service\": \"Brake pad replacement\",\n            \"price\": \"3450\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"ec3be6b5-9543-4e49-9fd3-71523868d3ef\",\n            \"service\": \"Transmission fluid change\",\n            \"price\": \"5450\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"5de7e8b2-9911-4799-9b1d-458e2300b463\",\n            \"service\": \"Brake pad replacement1\",\n            \"price\": \"89.99\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"86d5fe06-3111-4094-b101-887cad41d808\",\n            \"service\": \"Air filter replacement\",\n            \"price\": \"999\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"e58c85d7-1a04-4288-bd31-2ebd44fcab6e\",\n            \"service\": \"Change Filter\",\n            \"price\": \"499\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"1b15a507-c8a4-4150-b863-1edcf2d6009c\",\n            \"service\": \"Change Filter\",\n            \"price\": \"499\",\n            \"isSelected\": true\n        }\n    ],\n    \"inspectionItems\": [\n        {\n            \"id\": \"0b6c61f3-d586-402e-b712-177fe7a36416\",\n            \"description\": \"Check engine oil level and condition\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"0916c7a0-265a-4a0c-8550-2abde9588179\",\n            \"description\": \"Inspect windshield washer fluid level\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"df30287c-3328-46cb-a799-5b9208cf586a\",\n            \"description\": \"Check brake pads and rotors for wear\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"d9a7c6c8-f42b-47e6-af48-79aff4c24319\",\n            \"description\": \"Test headlights, taillights, brake lights, and turn signals\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"138886ea-054b-4115-b0a6-5c6cd502804d\",\n            \"description\": \" Safety and Electrical Systems\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"e6e8f6be-d0d3-4516-b495-3c5e43ff3123\",\n            \"description\": \"Test headlights, taillights, brake lights, and turn signals\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"0a6475fe-d0ac-4f3c-83ad-f24205831b2d\",\n            \"description\": \"Test the operation of the ignition system\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"0bb447ff-eb9e-48f2-991f-b32f488479f6\",\n            \"description\": \"Examine the condition of the coolant and recommend a flush if necessary\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"4fc9b078-db0d-412f-8fc5-cb54a9c5d54d\",\n            \"description\": \"Check for toolkits\",\n            \"isSelected\": true\n        }\n    ]\n}",
+							"raw": "{\n    \"status\": \"Z02\",\n    \"servicesProposed\": [\n        {\n            \"id\": \"b8c35199-1922-42c3-8c4e-d4eef3c19148\",\n            \"service\": \"Change Filter\",\n            \"price\": \"499\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"330b4de0-b389-478e-bede-e4ade109a6a1\",\n            \"service\": \"Change Tyre\",\n            \"price\": \"499\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"82604309-d5bb-4516-a3d5-195ecaa0a6d4\",\n            \"service\": \"Wheel Alignment\",\n            \"price\": \"399\",\n            \"isSelected\": true\n        }\n    ],\n    \"inspectionItems\": [\n        {\n            \"id\": \"3f32e6e4-8bf2-411e-90a6-87e27f663f4b\",\n            \"description\": \"Check for toolkits\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"11f83129-c5af-4dff-82ef-e372f29b8f01\",\n            \"description\": \"Inspect lights (headlights, taillights, brake lights, turn signals).\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"ff53693c-71d2-493a-80c8-d58433bc8b52\",\n            \"description\": \"Inspect the engine for oil leaks.\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"129daa0c-fadc-4714-bddc-9a1eb9b3f480\",\n            \"description\": \"Verify the condition of the serpentine belt.\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"ff304083-b125-4cb4-b024-235322010614\",\n            \"description\": \"Check transmission fluid level and condition.\",\n            \"isSelected\": true\n        },\n        {\n            \"id\": \"ea8dc1e7-1359-4973-9035-3a18035b1e41\",\n            \"description\": \"Verify the condition of the brake pads and brake fluid.\",\n            \"isSelected\": true\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1108,7 +1038,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/vehicle-service/job-cards/?sourceid=e7e18e25-d278-4ba6-b4b4-13689f5642bb&sourceType=service-form",
+							"raw": "{{host}}/vehicle-service/job-cards/?sourceid=c4e111e7-0008-4a94-bbe9-5687e96216ae&sourceType=service-form",
 							"host": [
 								"{{host}}"
 							],
@@ -1120,7 +1050,7 @@
 							"query": [
 								{
 									"key": "sourceid",
-									"value": "e7e18e25-d278-4ba6-b4b4-13689f5642bb"
+									"value": "c4e111e7-0008-4a94-bbe9-5687e96216ae"
 								},
 								{
 									"key": "sourceType",
@@ -1275,7 +1205,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/vehicle-service/job-cards/",
+							"raw": "{{host}}/vehicle-service/job-cards/?$search=\"java_202\"",
 							"host": [
 								"{{host}}"
 							],
@@ -1283,6 +1213,27 @@
 								"vehicle-service",
 								"job-cards",
 								""
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "caseId eq 56d0f4d3-cbe8-11ee-b2f3-f98afdc59691",
+									"disabled": true
+								},
+								{
+									"key": "$search",
+									"value": "\"java_202\""
+								},
+								{
+									"key": "$filter",
+									"value": "individualCustomer.name ct 'AKRON' or account.name ct 'AKRON'",
+									"disabled": true
+								},
+								{
+									"key": "$filter",
+									"value": "vehicleNumber ct \"KH1234DF\"",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -1326,14 +1277,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/vehicle-service/job-cards/{{jcId}}",
+							"raw": "{{host}}/vehicle-service/job-cards/d2cd9993-1b5e-4d4f-8924-3091377ab0c0",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"vehicle-service",
 								"job-cards",
-								"{{jcId}}"
+								"d2cd9993-1b5e-4d4f-8924-3091377ab0c0"
 							]
 						}
 					},
@@ -1346,7 +1297,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"technician\": \"Peter\",\n    \"status\": \"Z22\"\n}",
+							"raw": "{\n    \"observation\": \"asd\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1354,7 +1305,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/vehicle-service/job-cards/{{jcId}}/services/{{jcsId}}",
+							"raw": "{{host}}/vehicle-service/job-cards/147cc143-a43b-4ca2-8dc9-d2e0e6b0245c/services/689d58ba-fc8f-447b-840a-d24e744d3f61",
 							"host": [
 								"{{host}}"
 							],
@@ -1377,7 +1328,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vZXh0ZXJuYWwtZnVuYy1zZXJ2aWNlcy5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTIxMDA1NDMxMDIiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiM1BXYzJBcExMTjhrVWZodjgwN2NZazIvdjdnZnhUTnZrOTdyVXhqanpvYz0ifQ.eyJqdGkiOiJmYmQwZGYxOTliOTg0YTcxODNjYTlmNThlNGE3Y2Q1YyIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiJiNWFkYTllOC02NjY1LTQ3NGEtOGU5NC1hZjYxMzU4NTkwZGQiLCJ6ZG4iOiJleHRlcm5hbC1mdW5jLXNlcnZpY2VzIn0sInN1YiI6InNiLXZlaGljbGUtc2VydmljZSF0MTczOTE4IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi12ZWhpY2xlLXNlcnZpY2UhdDE3MzkxOCIsImNpZCI6InNiLXZlaGljbGUtc2VydmljZSF0MTczOTE4IiwiYXpwIjoic2ItdmVoaWNsZS1zZXJ2aWNlIXQxNzM5MTgiLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjIwZTNlOTc5IiwiaWF0IjoxNjk3NTMxNTg4LCJleHAiOjE2OTc1NzQ3ODgsImlzcyI6Imh0dHBzOi8vZXh0ZXJuYWwtZnVuYy1zZXJ2aWNlcy5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiYjVhZGE5ZTgtNjY2NS00NzRhLThlOTQtYWY2MTM1ODU5MGRkIiwiYXVkIjpbInVhYSIsInNiLXZlaGljbGUtc2VydmljZSF0MTczOTE4Il19.Qb5LwWv99z1wrAC1DyoUBYIz31Fq1kEorspiinyM957LfPm-8Aqva303YN9HE3J7boSPgG-GfCSZE38XKBlP1aViqG2z741xFNtAeVhIg-6uQgLYgdAclUWzbNomcCYsPIvwrinPxtf-DEWv_3paVoR5D4xTcMQy-ueEcEJHYbX9iDqhqUYPIPuU9xq6t_zPBHxokSDDAwSeUlDnm8nMA_76Jbxj15f-TyRIuBxXC4ocVOxes7WQoo9Z8UkMaAs1Oj64UmdqtAfT8P7Ec34_TU53tuAco6M8_uuaCSmSAB8dmLq7BUkV-ZsCRtjQOfkwMCCb7MwNduWD8gk4h_A_sA",
+									"value": "eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vZXh0ZXJuYWwtZnVuYy1zZXJ2aWNlcy5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTIxMDA1NDMxMDIiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiaEZFNTN6ZXRzQmY3Yll1bjZnMktJQ3R2TUk2Z1FZYnZmakZPQmxaOW9Ccz0ifQ.eyJqdGkiOiIxZDQ4YTYxYzA2YjU0NDAzOTBlODFmYjcyZjg3ZTRlZiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiJiNWFkYTllOC02NjY1LTQ3NGEtOGU5NC1hZjYxMzU4NTkwZGQiLCJ6ZG4iOiJleHRlcm5hbC1mdW5jLXNlcnZpY2VzIn0sInN1YiI6InNiLXZlaGljbGUtc2VydmljZSF0MTczOTE4IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi12ZWhpY2xlLXNlcnZpY2UhdDE3MzkxOCIsImNpZCI6InNiLXZlaGljbGUtc2VydmljZSF0MTczOTE4IiwiYXpwIjoic2ItdmVoaWNsZS1zZXJ2aWNlIXQxNzM5MTgiLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjIwZTNlOTc5IiwiaWF0IjoxNzA1OTg3MDUyLCJleHAiOjE3MDYwMzAyNTIsImlzcyI6Imh0dHBzOi8vZXh0ZXJuYWwtZnVuYy1zZXJ2aWNlcy5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiYjVhZGE5ZTgtNjY2NS00NzRhLThlOTQtYWY2MTM1ODU5MGRkIiwiYXVkIjpbInVhYSIsInNiLXZlaGljbGUtc2VydmljZSF0MTczOTE4Il19.Ctvd-ZzQXOd-JBfrzV8tpngEi6rMZUOg_JzBrkVPs3TvCcAnaJQ0k_MkrXs5JfYRmmTMAREpAXO4LcEvGAPnyRuAJ2N_e2GHRsK9_8ON6CmhHJ5J4E2fmZMaErgTjyGIi8WzxrhR6LRf453tQV64RfZtUbhBECUbfa2Ei0SNqggLcBzhGGraj072yXWsStSKuOjrcD9-PplauOonOWZBXj3oF9tYO65WRG1ETzP9u0TS5TmNxK7AGyMRaEX25KkcjEaqaaRUyoqGp6DrJtpG878PtY7rQqkODpccbf_P1kgKf8g2RT-m9U8GIvICNUeRWkKsMWiWF_mUjrHPNQtpfA",
 									"type": "string"
 								}
 							]
@@ -1386,7 +1337,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"entity\": \"sap.crm.caseservice.entity.case\",\n    \"currentImage\": \"{\\\"id\\\":\\\"9c65e162-043e-11ee-b91a-71a8c681c084\\\",\\\"subject\\\":\\\"sbsws test vehicle case\\\",\\\"priority\\\":\\\"03\\\",\\\"origin\\\":\\\"MANUAL_DATA_ENTRY\\\",\\\"caseType\\\":\\\"ZVSR\\\",\\\"statusSchema\\\":\\\"Z1\\\",\\\"status\\\":\\\"05\\\",\\\"escalationStatus\\\":\\\"NOT_ESCALATED\\\",\\\"isRecommendedCommunicationLanguage\\\":false,\\\"processor\\\":{\\\"id\\\":\\\"9c65e162-043e-11ee-b91a-71a8c681c084\\\",\\\"displayId\\\":\\\"8000000009\\\",\\\"isDeleted\\\":false,\\\"partyRoleCategory\\\":\\\"PROCESSOR\\\",\\\"partyRole\\\":\\\"40\\\",\\\"addressId\\\":\\\"11eccc06-510c-6c3e-afdb-81c341010a00\\\",\\\"determinationMethodCode\\\":13,\\\"isMain\\\":true,\\\"partyType\\\":\\\"EMPLOYEE\\\"},\\\"reporter\\\":{\\\"id\\\":\\\"9c65e162-043e-11ee-b91a-71a8c681c084\\\",\\\"displayId\\\":\\\"8000000010\\\",\\\"isDeleted\\\":false,\\\"partyRoleCategory\\\":\\\"REPORTER\\\",\\\"partyRole\\\":\\\"214\\\",\\\"addressId\\\":\\\"11eccc65-79af-aa3e-afdb-81c341010a00\\\",\\\"determinationMethodCode\\\":3,\\\"isMain\\\":true,\\\"partyType\\\":\\\"EMPLOYEE\\\"},\\\"timePoints\\\":{\\\"reportedOn\\\":\\\"2023-06-21T11:58:00Z\\\",\\\"assignedToProcessorOn\\\":\\\"2023-06-21T11:58:47.608522760Z\\\"},\\\"isRecommendedCategory\\\":false,\\\"isEndOfPurpose\\\":false,\\\"isDepersonalized\\\":false,\\\"isRead\\\":false,\\\"isIrrelevant\\\":false,\\\"accessControlEntries\\\":[\\\"9c65e162-043e-11ee-b91a-71a8c681c084\\\",\\\"9c65e162-043e-11ee-b91a-71a8c681c084\\\",\\\"9808336e-cc65-11ec-980b-7f14df82f69b\\\",\\\"9c65e162-043e-11ee-b91a-71a8c681c084\\\"],\\\"adminData\\\":{\\\"createdOn\\\":\\\"2023-06-21T11:58:46.985179524Z\\\",\\\"createdBy\\\":\\\"9808336e-cc65-11ec-980b-7f14df82f69b\\\",\\\"updatedOn\\\":\\\"2023-06-21T11:58:46.985179524Z\\\",\\\"updatedBy\\\":\\\"9808336e-cc65-11ec-980b-7f14df82f69b\\\"}}\",\n    \"beforeImage\": \"\"\n}",
+							"raw": "{\n    \"entity\": \"sap.ssc.caseservice.entity.case\",\n    \"currentImage\": {\n        \"id\": \"0ae489f2-6900-11ee-a267-434a6559950f\",\n        \"displayId\": \"738\",\n        \"subject\": \"exfs_12_10_02\",\n        \"priority\": \"03\",\n        \"priorityDescription\": \"Normal\",\n        \"origin\": \"MANUAL_DATA_ENTRY\",\n        \"caseType\": \"ZVSR\",\n        \"caseTypeDescription\": \"Vehicle Service Case Type\",\n        \"statusSchema\": \"Z1\",\n        \"status\": \"05\",\n        \"statusDescription\": \"Completed\",\n        \"escalationStatus\": \"NOT_ESCALATED\",\n        \"isRecommendedCommunicationLanguage\": false,\n        \"registeredProducts\": [\n            {\n                \"serialId\": \"9999\",\n                \"referenceProduct\": {\n                    \"id\": \"11edd9f9-9b1d-af8e-afdb-812c72a8c000\"\n                },\n                \"referenceDate\": \"2023-06-01T00:00:00.000Z\",\n                \"id\": \"3bda2314-4f82-4e2b-bb39-124de0062c5e\",\n                \"displayId\": \"41\",\n                \"status\": \"ACTIVE\",\n                \"description\": \"TATA Nexon XMA\",\n                \"isMain\": true\n            }\n        ],\n        \"individualCustomer\": {\n            \"emailId\": \"raghuTesting@gmail.com\",\n            \"id\": \"11ee5b8e-599b-82ae-afdb-81fd4ba8c000\",\n            \"displayId\": \"1000380\",\n            \"name\": \"Raghu Exfs\",\n            \"isDeleted\": false,\n            \"partyRoleCategory\": \"ACCOUNT\",\n            \"partyRole\": \"1001\",\n            \"partyRoleDescription\": \"Account\",\n            \"addressId\": \"11ee5b8e-599c-1eee-afdb-81fd4ba8c000\",\n            \"determinationMethodCode\": 1,\n            \"isMain\": true,\n            \"partyType\": \"INDIVIDUAL_CUSTOMER\"\n        },\n        \"processor\": {\n            \"emailId\": \"tony.mathew@sap.com\",\n            \"employeeDisplayId\": \"I543617\",\n            \"id\": \"11ee0053-8b60-e00e-afdb-811968a8c000\",\n            \"displayId\": \"8000000451\",\n            \"name\": \"Tony Mathew\",\n            \"isDeleted\": false,\n            \"partyRoleCategory\": \"PROCESSOR\",\n            \"partyRole\": \"40\",\n            \"partyRoleDescription\": \"Processor\",\n            \"addressId\": \"11ee4bf1-b60a-1c1e-afdb-81fe52a8c000\",\n            \"determinationMethodCode\": 3,\n            \"isMain\": true,\n            \"partyType\": \"EMPLOYEE\"\n        },\n        \"reporter\": {\n            \"id\": \"11ee0053-8b60-e00e-afdb-811968a8c000\",\n            \"displayId\": \"8000000451\",\n            \"name\": \"Tony Mathew\",\n            \"isDeleted\": false,\n            \"partyRoleCategory\": \"REPORTER\",\n            \"partyRole\": \"214\",\n            \"partyRoleDescription\": \"Reporter\",\n            \"addressId\": \"11ee4bf1-b60a-1c1e-afdb-81fe52a8c000\",\n            \"determinationMethodCode\": 3,\n            \"isMain\": true,\n            \"partyType\": \"EMPLOYEE\"\n        },\n        \"timePoints\": {\n            \"reportedOn\": \"2023-10-12T13:04:00.000Z\",\n            \"completedOn\": \"2023-10-12T13:09:38.913Z\",\n            \"completionDueOn\": \"2023-10-17T12:00:00.000Z\",\n            \"assignedToCustomerOn\": \"2023-10-12T13:08:31.882Z\",\n            \"initialReviewDueOn\": \"2023-10-13T05:00:00.000Z\",\n            \"initialReviewCompletedOn\": \"2023-10-12T13:08:31.882Z\",\n            \"resolutionDueOn\": \"2023-10-16T12:00:00.000Z\",\n            \"responseDueOn\": \"2023-10-13T07:00:00.000Z\",\n            \"assignedToProcessorOn\": \"2023-10-12T13:05:40.353Z\"\n        },\n        \"catalog\": {\n            \"id\": \"7bea058c-dc04-4221-be52-fcbaa7187396\",\n            \"displayId\": \"ZVSR\",\n            \"name\": \"Vehicle Service\"\n        },\n        \"serviceLevelId\": \"79ad2416-f3ba-11ed-bea5-f786727d75a8\",\n        \"serviceLevel\": \"Car Servicing SLA\",\n        \"durationTerms\": {\n            \"durationWithAgent\": \"P0Y0M0DT0H0M0S\"\n        },\n        \"isRecommendedCategory\": false,\n        \"isEndOfPurpose\": false,\n        \"isDepersonalized\": false,\n        \"isRead\": true,\n        \"isIrrelevant\": false,\n        \"isFormEnabled\": false,\n        \"isSubcaseEnabled\": true,\n        \"isTaskEnabled\": true,\n        \"extensions\": {\n            \"milometer_lgfbu3bg\": 4567,\n            \"serviceformid_lgfbwo7p\": \"7\",\n            \"jobcardid_lgfbv7xg\": \"6\"\n        },\n        \"adminData\": {\n            \"createdOn\": \"2023-10-12T13:05:39.828Z\",\n            \"createdBy\": \"d42ca091-4bf1-11ee-8c78-43e3099ef9e7\",\n            \"createdByName\": \"Tony Mathew\",\n            \"updatedOn\": \"2023-10-12T13:09:38.640Z\",\n            \"updatedBy\": \"d42ca091-4bf1-11ee-8c78-43e3099ef9e7\",\n            \"updatedByName\": \"Tony Mathew\"\n        }\n    },\n    \"beforeImage\": \"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1402,6 +1353,129 @@
 								"vehicle-service",
 								"job-cards",
 								"validations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Employees",
+			"item": [
+				{
+					"name": "employees",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/employees",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"employees"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "roleCode eq R23",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "employees",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Employee Name\",\n    \"email\": \"employee.name@company.com\",\n    \"roleCode\": \"R22\",\n    \"btpUserId\": \"a734defd-020a-4c91-b9af-4f9a10b7dc7f\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/vehicle-service/employees",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"employees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "employee",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/employees/7cdb8762-80a4-4e42-b319-727e88e456ee",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"employees",
+								"7cdb8762-80a4-4e42-b319-727e88e456ee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "employee",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"roleCode\": \"R23\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/vehicle-service/employees/fba0f015-ca6f-47f7-8ba1-5a0ca82bf567",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"employees",
+								"fba0f015-ca6f-47f7-8ba1-5a0ca82bf567"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "employee",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/employees/001f6839-82d0-44b8-b1db-83c3830598d6",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"employees",
+								"001f6839-82d0-44b8-b1db-83c3830598d6"
 							]
 						}
 					},
