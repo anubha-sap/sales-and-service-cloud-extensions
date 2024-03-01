@@ -1,50 +1,27 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ServicesController } from './service.controller';
 import { ServicesService } from './service.service';
+import {
+  ServicesMockDTO,
+  ServicesResponseDTO,
+} from '../../../test/mock-data/modules/services.mock.data';
+import { AdminData } from '../../../test/mock-data/common.mock.data';
 
 describe('ServicesController', () => {
   let servicesController: ServicesController;
-  const tasks = [
-    {
-      taskId: '111',
-      task: 'REPLACE_OIL_FILTER',
-      taskDescription: 'Replace oil filter',
-      assignee: 'Smith',
-      status: 'OPEN',
-    },
-    {
-      taskId: '121',
-      task: 'REFILL_ENGINE_WITH_NEW_OIL',
-      taskDescription: 'Refill engine with new oil',
-      assignee: 'Chris',
-      status: 'OPEN',
-    },
-  ];
-  const serviceDto = {
-    service: 'REPLACE_OIL_FILTER',
-    minMileage: 0,
-    maxMileage: 5000,
-    price: '5000',
-    ert: 120,
-    isSelected: false,
-  };
-  const mockTaskService = {
+  const mockServicesService = {
     findAll: jest.fn(() => {
-      return tasks;
+      return [{ ...ServicesMockDTO, ...AdminData }];
     }),
     findOne: jest.fn(() => {
-      return tasks[0];
+      return ServicesResponseDTO;
     }),
-    create: jest.fn((taskDto) => {
-      return {
-        id: '123',
-        ...taskDto,
-      };
+    create: jest.fn((servicesDTO) => {
+      return ServicesResponseDTO;
     }),
-    update: jest.fn().mockImplementation((id, taskDto) => ({
-      id,
-      ...taskDto,
-    })),
+    update: jest
+      .fn()
+      .mockImplementation((id, servicesDTO) => ServicesResponseDTO),
     remove: jest.fn().mockImplementation((id) => ({
       id,
     })),
@@ -56,7 +33,7 @@ describe('ServicesController', () => {
       providers: [ServicesService],
     })
       .overrideProvider(ServicesService)
-      .useValue(mockTaskService)
+      .useValue(mockServicesService)
       .compile();
 
     servicesController = module.get<ServicesController>(ServicesController);
@@ -66,33 +43,36 @@ describe('ServicesController', () => {
     expect(servicesController).toBeDefined();
   });
 
-  it('should return array of tasks', async () => {
+  it('should return array of services', async () => {
     const res = await servicesController.findAll();
-    expect(mockTaskService.findAll).toHaveBeenCalled();
-    expect(res).toBe(tasks);
+    expect(mockServicesService.findAll).toHaveBeenCalled();
+    expect(res).toEqual([{ ...ServicesMockDTO, ...AdminData }]);
   });
 
-  it('should return selected task', async () => {
+  it('should return selected services', async () => {
     const res = await servicesController.findOne('111');
-    expect(mockTaskService.findOne).toHaveBeenCalled();
-    expect(res).toBe(tasks[0]);
+    expect(mockServicesService.findOne).toHaveBeenCalled();
+    expect(res).toBe(ServicesResponseDTO);
   });
 
-  it('should create a task', async () => {
-    const res = await servicesController.create(serviceDto);
-    expect(res).toEqual({ id: '123', ...serviceDto });
-    expect(mockTaskService.create).toHaveBeenCalledWith(serviceDto);
+  it('should create a services', async () => {
+    const res = await servicesController.create(ServicesMockDTO);
+    expect(res).toEqual(ServicesResponseDTO);
+    expect(mockServicesService.create).toHaveBeenCalledWith(ServicesMockDTO);
   });
 
-  it('should update the task', async () => {
-    const res = await servicesController.update('123', serviceDto);
-    expect(res).toEqual({ id: '123', ...serviceDto });
-    expect(mockTaskService.update).toHaveBeenCalledWith('123', serviceDto);
+  it('should update the services', async () => {
+    const res = await servicesController.update('123', ServicesMockDTO);
+    expect(res).toEqual(ServicesResponseDTO);
+    expect(mockServicesService.update).toHaveBeenCalledWith(
+      '123',
+      ServicesMockDTO,
+    );
   });
 
-  it('should delete the task', async () => {
+  it('should delete the services', async () => {
     const res = await servicesController.remove('111');
     expect(res).toEqual({ id: '111' });
-    expect(mockTaskService.remove).toHaveBeenCalledWith('111');
+    expect(mockServicesService.remove).toHaveBeenCalledWith('111');
   });
 });

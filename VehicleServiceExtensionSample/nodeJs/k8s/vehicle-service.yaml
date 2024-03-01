@@ -170,6 +170,11 @@ spec:
                 secretKeyRef:
                   name: vehicle-service-secrets
                   key: extension_field_vehicle_number
+            - name: xsappname
+              valueFrom:
+                secretKeyRef:
+                  name: xsuaa2
+                  key: xsappname
           volumeMounts:
           - mountPath: /bindings/destination
             name: destination-volume

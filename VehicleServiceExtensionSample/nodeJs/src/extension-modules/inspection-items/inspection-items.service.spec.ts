@@ -4,70 +4,36 @@ import { TypeORMError } from 'typeorm';
 import { ServerException } from '../../common/filters/server-exception';
 import { MESSAGES } from '../../common/constants';
 import { InspectionItemsRepository } from './repository/inspection-items.repository';
-import { AdminDataDto } from '../common/dto/admin-data.dto';
-import { InspectionItemResponseDto } from './dto/response-inspection-item.dto';
 import { REQUEST } from '@nestjs/core';
+import {
+  InspectionItemsDTO,
+  InspectionItemsResponse,
+  InspectionItemsResponseDTO,
+} from '../../../test/mock-data/modules/inspection-items.mock.data';
+import { RequestMock } from '../../../test/mock-data/common.mock.data';
 
 describe('InspectionItemsService', () => {
   let service: InspectionItemsService;
-  let oInspectionItems;
-  let mockInspectionRepository;
-  let adminData;
-  const requestStub = {
-    session: {
-      language: 'lan',
-      userToken: 'token',
-      userId: 'uId',
-    },
+  const mockInspectionRepository = {
+    findAll: jest.fn().mockImplementation(() => {
+      return [InspectionItemsResponse];
+    }),
+    findOne: jest.fn().mockImplementation(() => {
+      return InspectionItemsResponse;
+    }),
+    save: jest.fn().mockImplementation((oInspectionItemDto) => {
+      return Promise.resolve(InspectionItemsResponse);
+    }),
+    update: jest
+      .fn()
+      .mockImplementation((id, oInspectionItemDto) => InspectionItemsResponse),
+    delete: jest.fn().mockImplementation(() => ({
+      raw: [],
+      affected: 1,
+    })),
   };
 
   beforeEach(async () => {
-    oInspectionItems = [
-      {
-        description: 'Check for toolkit',
-        isSelected: false,
-      },
-      {
-        description: 'Check for any dents',
-        isSelected: false,
-      },
-    ];
-
-    adminData = new AdminDataDto({
-      createdOn: new Date('2023-06-06T10:08:10.829Z'),
-      updatedOn: new Date('2023-06-06T10:29:19.686Z'),
-      createdBy: 'test@abc.com',
-      updatedBy: 'null',
-    });
-
-    mockInspectionRepository = {
-      findAll: jest.fn(() => {
-        return oInspectionItems;
-      }),
-      findOne: jest.fn(() => {
-        return {
-          id: 'e0dfacf7-a972-4367-bc9a-d8c4a086a09b',
-          ...oInspectionItems[0],
-          ...adminData,
-        };
-      }),
-      save: jest.fn().mockImplementation((oInspectionItemDto) => {
-        return Promise.resolve({
-          id: '123',
-          ...oInspectionItemDto,
-          ...adminData,
-        });
-      }),
-      update: jest.fn().mockImplementation((id, oInspectionItemDto) => ({
-        ...id,
-        ...oInspectionItemDto,
-      })),
-      delete: jest.fn().mockImplementation(() => ({
-        raw: [],
-        affected: 1,
-      })),
-    };
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         InspectionItemsService,
@@ -77,17 +43,12 @@ describe('InspectionItemsService', () => {
         },
         {
           provide: REQUEST,
-          useValue: requestStub,
+          useValue: RequestMock,
         },
       ],
     }).compile();
 
     service = module.get<InspectionItemsService>(InspectionItemsService);
-  });
-
-  afterEach(async () => {
-    oInspectionItems = mockInspectionRepository = undefined;
-    jest.restoreAllMocks();
   });
 
   it('should be defined', () => {
@@ -97,13 +58,8 @@ describe('InspectionItemsService', () => {
   describe('create', () => {
     it('should be able to create inspection-item', async () => {
       try {
-        const oResult = new InspectionItemResponseDto({
-          id: '123',
-          ...oInspectionItems[1],
-          adminData,
-        });
-        const oInspectionItem = await service.create(oInspectionItems[1]);
-        expect(oInspectionItem).toStrictEqual(oResult);
+        const oInspectionItem = await service.create(InspectionItemsDTO);
+        expect(oInspectionItem).toEqual(InspectionItemsResponseDTO);
       } catch (error) {
         expect(error).toBe(undefined);
       }
@@ -113,7 +69,7 @@ describe('InspectionItemsService', () => {
         jest
           .spyOn(mockInspectionRepository, 'save')
           .mockRejectedValue(new TypeORMError('Error Saving'));
-        await service.create(oInspectionItems[1]);
+        await service.create(InspectionItemsDTO);
       } catch (error) {
         expect(error).toBeInstanceOf(ServerException);
       }
@@ -124,7 +80,7 @@ describe('InspectionItemsService', () => {
     it('should be able to findAll inspection-items', async () => {
       try {
         const oInspectionItem = await service.findAll();
-        expect(oInspectionItem).toStrictEqual(oInspectionItems);
+        expect(oInspectionItem).toStrictEqual([InspectionItemsResponse]);
       } catch (error) {
         expect(error).toBe(undefined);
       }
@@ -144,17 +100,12 @@ describe('InspectionItemsService', () => {
   });
 
   describe('findOne', () => {
-    const sId = 'e0dfacf7-a972-4367-bc9a-d8c4a086a09b';
     it('should be able to findOne inspection-item', async () => {
       try {
-        const oResult = new InspectionItemResponseDto({
-          id: 'e0dfacf7-a972-4367-bc9a-d8c4a086a09b',
-          ...oInspectionItems[0],
-          adminData,
-        });
-
-        const oInspectionItem = await service.findOne(sId);
-        expect(oInspectionItem).toStrictEqual(oResult);
+        const oInspectionItem = await service.findOne(
+          InspectionItemsResponseDTO.id,
+        );
+        expect(oInspectionItem).toEqual(InspectionItemsResponseDTO);
       } catch (error) {
         expect(error).toBe(undefined);
       }
@@ -166,7 +117,7 @@ describe('InspectionItemsService', () => {
           .mockRejectedValue(
             new TypeORMError('Error fetching inspection-item'),
           );
-        await service.findOne(sId);
+        await service.findOne(InspectionItemsResponseDTO.id);
       } catch (error) {
         expect(error).toBeInstanceOf(ServerException);
       }
@@ -180,18 +131,11 @@ describe('InspectionItemsService', () => {
     };
     it('should be able to update inspection-item', async () => {
       try {
-        const oResult = new InspectionItemResponseDto({
-          id: 'e0dfacf7-a972-4367-bc9a-d8c4a086a09b',
-          ...oInspectionItems[1],
-          adminData,
-        });
-        jest.spyOn(mockInspectionRepository, 'update').mockResolvedValue({
-          id: 'e0dfacf7-a972-4367-bc9a-d8c4a086a09b',
-          ...oInspectionItems[1],
-          ...adminData,
-        });
-        const oInspectionItem = await service.update(sId, oInspectionItems[0]);
-        expect(oInspectionItem).toStrictEqual(oResult);
+        jest
+          .spyOn(mockInspectionRepository, 'update')
+          .mockResolvedValue(InspectionItemsResponse);
+        const oInspectionItem = await service.update(sId, InspectionItemsDTO);
+        expect(oInspectionItem).toEqual(InspectionItemsResponseDTO);
       } catch (error) {
         expect(error).toBe(undefined);
       }

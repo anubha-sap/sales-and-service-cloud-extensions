@@ -26,6 +26,12 @@ export class SessionMiddleware implements NestMiddleware {
       throw new UnauthorizedException();
     }
     const decodedToken = decodeJwt(userToken);
+    if (!decodedToken.scope) {
+      this.logger.error(
+        `No Scopes available for the user: ${decodedToken.user_id})}\n`,
+      );
+      throw new UnauthorizedException();
+    }
 
     // Fetching case statuses from environment variables
     const caseStatuses = {
@@ -51,6 +57,7 @@ export class SessionMiddleware implements NestMiddleware {
       language: lang,
       userToken,
       userId: decodedToken.user_id,
+      scopes: decodedToken.scope,
       log: this.configService.get('logLevel'),
       sscDestination: this.configService.get('destination'),
       caseStatuses,

@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -8,7 +9,7 @@ import { FindManyOptions, FindOptionsWhere, QueryRunner } from 'typeorm';
 import { CreateJobCardQueryDto } from './dto/job-card/create-job-card.dto';
 import { JobCardServices } from './entities/job-card-services.entity';
 import { ServiceFormService } from '../service-form/service-form.service';
-import { UpdateJobCardServiceDto } from './dto/job-card/update-job-card-service';
+import { JobCardServiceDto } from './dto/job-card/job-card-service/job-card-service.dto';
 import { UpdateJobCardDto } from './dto/job-card/update-job-card.dto';
 import { REQUEST } from '@nestjs/core';
 import { I18nService } from 'nestjs-i18n';
@@ -20,17 +21,20 @@ import {
   TRANSLATION_JSON_FILE,
   MESSAGES,
   CASE_TYPE,
+  AUTHORIZED_FIELDS,
 } from '../../common/constants';
-import { SFStatus, JCStatus, ServiceStatus } from '../common/enums';
+import { SFStatus, JCStatus, ServiceStatus, Scope } from '../common/enums';
 import { ServerException } from '../../common/filters/server-exception';
 import { TransactionManager } from '../../database/transaction.manager';
 import { UtilsService } from '../../utils/utils.service';
-import { CustomerDetails, JobCardType, CodeList } from '../common/interfaces';
+import { CustomerDetails, JobCardType } from '../common/interfaces';
 import { JobCardRepository } from './repository/job-card.repository';
 import { JobCardServiceRepository } from './repository/job-card-services.repository';
 import { JobCardResponseDto } from './dto/job-card/response-job-card.dto';
 import { ServiceForm } from '../service-form/entities/service-form.entity';
 import { CustomLogger } from '../../logger/logger.service';
+import { EmployeesService } from '../employees/employees.service';
+import { JobCardServiceResponseDto } from './dto/job-card/job-card-service/response-job-card-service.dto';
 
 @Injectable()
 export class JobCardService {
@@ -43,6 +47,7 @@ export class JobCardService {
   private caseStatusClosed: string;
   private caseStatusCompleted: string;
   private requestId: string;
+  private scopes: string;
 
   constructor(
     private readonly logger: CustomLogger,
@@ -54,6 +59,7 @@ export class JobCardService {
     private transactionManager: TransactionManager,
     private readonly i18n: I18nService,
     private readonly utilService: UtilsService,
+    private readonly employeesService: EmployeesService,
     @Inject(REQUEST) private readonly request: Request,
   ) {
     this.logger.setClassName(JobCardService.name);
@@ -69,6 +75,7 @@ export class JobCardService {
     this.caseStatusClosed = this.request[SESSION].caseStatuses.closed;
     this.caseStatusCompleted = this.request[SESSION].caseStatuses.completed;
     this.requestId = this.request[SESSION].reqId;
+    this.scopes = this.request[SESSION].scopes;
   }
 
   async create(oJobCardCreateDto: CreateJobCardQueryDto) {
@@ -93,7 +100,7 @@ export class JobCardService {
         throw new InternalServerErrorException(MESSAGES.NO_SERVICES_SELECTED);
       }
       for (const oService of oServices) {
-        const oJobCardService = JobCardServices.toEntity(oService);
+        const oJobCardService = JobCardServices.toEntity(oService, this.userId);
         oJobCardServices.push(oJobCardService);
       }
 
@@ -101,7 +108,7 @@ export class JobCardService {
 
       const oCase = await this.casesService.getCaseById(sCaseId);
       if (oCase.status === this.caseStatusCompleted) {
-        throw new Error(MESSAGES.CASE_COMPLETED);
+        throw new InternalServerErrorException(MESSAGES.CASE_COMPLETED);
       }
       const oCaseData = this.casesService.getCaseData(oCase);
 
@@ -188,6 +195,12 @@ export class JobCardService {
           delete oCustomerDetails.serviceAdvisor;
           oEntity.customerDetails = oCustomerDetails;
         }
+        if (oEntity.servicesSelected) {
+          const oServicesSelected = oEntity.servicesSelected.map((service) =>
+            JobCardServices.toDto(service),
+          );
+          Object.assign(oEntity.servicesSelected, oServicesSelected);
+        }
         oJobCards.push(await this.translateJobCardEntity(oEntity));
       }
       return oJobCards;
@@ -236,7 +249,12 @@ export class JobCardService {
       oJobCard.serviceAdvisor = oCustomerDetails.serviceAdvisor;
       delete oCustomerDetails.serviceAdvisor;
       oJobCard.customerDetails = oCustomerDetails;
-
+      if (oJobCard.servicesSelected) {
+        const oServicesSelected = oJobCard.servicesSelected.map((service) =>
+          JobCardServices.toDto(service),
+        );
+        Object.assign(oJobCard.servicesSelected, oServicesSelected);
+      }
       return this.translateJobCardEntity(oJobCard);
     } catch (error) {
       throw new ServerException(error, JobCardService.name, this.update.name);
@@ -292,104 +310,77 @@ export class JobCardService {
   }
 
   async updateJobCardService(
-    jobCardId: string,
-    jobCardServiceId: string,
-    updateJobCardService: UpdateJobCardServiceDto,
+    sJobCardId: string,
+    sJobCardServiceId: string,
+    updateJobCardService: JobCardServiceDto,
   ) {
+    // 1. Get JobCardService, check authorization
+    // 2. Update JobCardService
+    // 3. After this update, check if first jobcardservice started or last jobcard completed.
+    // 4. If either of this two, update jobCard, case statuses(This can be done as a db transaction)
     try {
-      let oCaseUpdateData = {};
-      let bJobCardCompleted = false;
-      let bJobCardStarted = false;
-
       const oResult = await this.findOneJobCardService(
-        jobCardId,
-        jobCardServiceId,
+        sJobCardId,
+        sJobCardServiceId,
         true,
       );
-      oResult.updatedBy = this.userId;
+      const sCaseId = oResult.jobCard.caseId;
+
+      this.checkAuthorization(updateJobCardService, oResult);
 
       for (const sField of Object.keys(updateJobCardService)) {
+        if (sField === 'technician') {
+          const oEmployee = await this.employeesService.findAll({
+            btpUserId: updateJobCardService.technician.btpUserId,
+          });
+          if (oEmployee.length === 0) {
+            throw new InternalServerErrorException(MESSAGES.INVALID_EMPLOYEE);
+          }
+          oResult.technician = JSON.stringify({
+            name: oEmployee[0].name,
+            btpUserId: oEmployee[0].btpUserId,
+          });
+          continue;
+        }
         oResult[sField] = updateJobCardService[sField];
       }
+      oResult.updatedBy = this.userId;
+
+      this.addStartOrEndTime(updateJobCardService, oResult);
+      let oUpdatedService = await this.jobCardServicesRepository.save(oResult);
 
       if (
-        [ServiceStatus.Z22, ServiceStatus.Z23].includes(
-          updateJobCardService.status,
-        )
+        updateJobCardService.status === ServiceStatus.Z22 ||
+        updateJobCardService.status === ServiceStatus.Z23
       ) {
-        this.addStartOrEndTime(updateJobCardService, oResult);
+        const oJobCardUpdateData = {
+          updatedBy: this.userId,
+        };
         const oData = await this.createCaseUpdateData(
-          jobCardId,
-          updateJobCardService,
+          sJobCardId,
+          oUpdatedService,
+          oJobCardUpdateData,
         );
-        oCaseUpdateData = oData.oCaseUpdateData;
-        bJobCardStarted = oData.bJobCardStarted;
-        bJobCardCompleted = oData.bJobCardCompleted;
+
+        if (oData.bJobCardStarted || oData.bJobCardCompleted) {
+          oUpdatedService = await this.transactionManager.executeTransaction(
+            async (queryRunner: QueryRunner) => {
+              await queryRunner.manager.update(
+                JobCard,
+                sJobCardId,
+                oData.oJobCardUpdateData,
+              );
+              await this.casesService.updateCase(
+                sCaseId,
+                oData.oCaseUpdateData,
+              );
+              return oUpdatedService;
+            },
+          );
+        }
       }
 
-      const sCaseId = oResult.jobCard.caseId;
-      const sJobCardId = oResult.jobCard.id;
-      let oUpdatedJobCardService: JobCardServices;
-
-      if (bJobCardStarted) {
-        oUpdatedJobCardService =
-          await this.transactionManager.executeTransaction(
-            async (queryRunner: QueryRunner) => {
-              await queryRunner.manager.save(oResult);
-              const oJobCardUpdateData = {
-                updatedBy: this.userId,
-              };
-              await queryRunner.manager.update(
-                JobCard,
-                sJobCardId,
-                oJobCardUpdateData,
-              );
-              await this.casesService.updateCase(sCaseId, oCaseUpdateData);
-              delete oResult.jobCard;
-              return oResult;
-            },
-          );
-      } else if (bJobCardCompleted) {
-        /* When all the services are completed, first update the job-card, job-card-services statuses to completed, then update case status to completed.
-      This order is important because there is a custom logic validation which throws error if we try to close case before all job-card-services are closed.
-      This is the reason why casesService.updateCase() is not part of executeTransaction() */
-        oUpdatedJobCardService =
-          await this.transactionManager.executeTransaction(
-            async (queryRunner: QueryRunner) => {
-              await queryRunner.manager.save(oResult);
-              const oJobCardUpdateData = {
-                status: JCStatus.Z13,
-                updatedBy: this.userId,
-              };
-              await queryRunner.manager.update(
-                JobCard,
-                sJobCardId,
-                oJobCardUpdateData,
-              );
-              delete oResult.jobCard;
-              return oResult;
-            },
-          );
-        await this.casesService.updateCase(sCaseId, oCaseUpdateData);
-      } else {
-        oUpdatedJobCardService =
-          await this.transactionManager.executeTransaction(
-            async (queryRunner: QueryRunner) => {
-              await queryRunner.manager.save(oResult);
-              const oJobCardUpdateData = {
-                updatedBy: this.userId,
-              };
-              await queryRunner.manager.update(
-                JobCard,
-                sJobCardId,
-                oJobCardUpdateData,
-              );
-              delete oResult.jobCard;
-              return oResult;
-            },
-          );
-      }
-      return oUpdatedJobCardService;
+      return oUpdatedService;
     } catch (error) {
       throw new ServerException(
         error,
@@ -399,7 +390,37 @@ export class JobCardService {
     }
   }
 
-  async findAllJCStatus() {
+  checkAuthorization(
+    updateJobCardService: JobCardServiceDto,
+    oResult: JobCardServices,
+  ) {
+    const oUserScopes = this.request[SESSION].scopes;
+    const bHasOnlyEditTaskScope =
+      oUserScopes.includes(`${process.env.xsappname}.${Scope.EditTask}`) &&
+      !oUserScopes.includes(
+        `${process.env.xsappname}.${Scope.EditJobCardService}`,
+      );
+    // A User who has only `EditTask` scope can update only his own record, and can update only specific fields
+
+    const aUnauthorizedFields = Object.keys(updateJobCardService).filter(
+      (sField) => !AUTHORIZED_FIELDS.includes(sField),
+    );
+
+    if (bHasOnlyEditTaskScope) {
+      if (this.userId != JSON.parse(oResult.technician).btpUserId) {
+        throw new ForbiddenException(MESSAGES.CANNOT_EDIT_OTHER_USER_RECORDS);
+      } else if (aUnauthorizedFields.length > 0) {
+        throw new ForbiddenException(
+          MESSAGES.CANNOT_EDIT_FIELD.replace(
+            /\${key}/,
+            aUnauthorizedFields.toString(),
+          ),
+        );
+      }
+    }
+  }
+
+  /*   async findAllJCStatus() {
     const oCodeList: CodeList[] = [];
     try {
       for (const status in JCStatus) {
@@ -447,7 +468,7 @@ export class JobCardService {
       );
     }
     return oCodeList;
-  }
+  } */
 
   async findValidationStatusService(body) {
     const entityName = body?.entity;
@@ -508,6 +529,7 @@ export class JobCardService {
             }
           }
         }
+        this.logger.debug(`Response from Validation API: ${error}`);
       }
     } catch (error) {
       throw new ServerException(
@@ -522,7 +544,6 @@ export class JobCardService {
       info: info,
       error: error,
     };
-
     return responseData;
   }
 
@@ -545,6 +566,18 @@ export class JobCardService {
       }
     }
     return oJobCardInstance;
+  }
+
+  async translateJobCardServiceEntity(
+    oJobCardServiceInstance: JobCardServiceResponseDto,
+  ) {
+    oJobCardServiceInstance.statusDescription = await this.i18n.translate(
+      `${TRANSLATION_JSON_FILE}.${oJobCardServiceInstance.status}`,
+      {
+        lang: this.language,
+      },
+    );
+    return oJobCardServiceInstance;
   }
 
   async getCustomerDetailsFromCase(sCaseId: string) {
@@ -593,7 +626,11 @@ export class JobCardService {
     }
   }
 
-  async createCaseUpdateData(jobCardId, updateJobCardService) {
+  async createCaseUpdateData(
+    jobCardId,
+    oUpdatedService: JobCardServices,
+    oJobCardUpdateData,
+  ) {
     let oCaseUpdateData = {};
     let bJobCardStarted = false;
     let bJobCardCompleted = false;
@@ -609,26 +646,33 @@ export class JobCardService {
 
     // If the first service is started, update case status to "Service In Process".
     if (
-      updateJobCardService.status === ServiceStatus.Z22 &&
-      nInProgressServices === 0 &&
+      oUpdatedService.status === ServiceStatus.Z22 &&
+      nInProgressServices === 1 &&
       nCompletedServices === 0
     ) {
       oCaseUpdateData = {
         status: this.caseStatusServiceInProcess,
       };
       bJobCardStarted = true;
+      oJobCardUpdateData.status = JCStatus.Z12;
     }
     // If the last service is completed, update case status to "Service Completed", update job card status to "Completed"
     else if (
-      updateJobCardService.status === ServiceStatus.Z23 &&
-      nCompletedServices + 1 === nJobCardServices
+      oUpdatedService.status === ServiceStatus.Z23 &&
+      nCompletedServices === nJobCardServices
     ) {
       oCaseUpdateData = {
         status: this.caseStatusServiceCompleted,
       };
       bJobCardCompleted = true;
+      oJobCardUpdateData.status = JCStatus.Z13;
     }
 
-    return { oCaseUpdateData, bJobCardStarted, bJobCardCompleted };
+    return {
+      oCaseUpdateData,
+      bJobCardStarted,
+      bJobCardCompleted,
+      oJobCardUpdateData,
+    };
   }
 }

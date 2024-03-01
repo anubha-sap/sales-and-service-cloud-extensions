@@ -11,6 +11,7 @@ describe('SessionMiddleware', () => {
   const mockCustomLogger = {
     setClassName: jest.fn(),
     log: jest.fn(),
+    error: jest.fn(),
     debug: jest.fn(),
   };
   const mockConfigService = {
@@ -56,5 +57,33 @@ describe('SessionMiddleware', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(UnauthorizedException);
     }
+  });
+
+  it('should throw unauthorized error when no scopes defined for the user', () => {
+    try {
+      const req = {
+        hostname: 'LOCALHOST',
+        headers: {
+          'accept-language': 'es',
+          Authorization:
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+        },
+      };
+      sessionMiddleware.use(req as any, {} as any, next);
+    } catch (error) {
+      expect(error).toBeInstanceOf(UnauthorizedException);
+    }
+  });
+
+  it('Should handle external hooks requests', () => {
+    const req = {
+      hostname: 'LOCALHOST',
+      headers: {
+        'accept-language': 'es',
+        Authorization:
+          'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vZXh0ZXJuYWwtZnVuYy1zZXJ2aWNlcy5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTIxMDA1NDMxMDIiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiWnF0T1lXNDF5UU1pK05Lak80MUdXeDNDS1hKRmY1b2F4U2YyS09OQXdsTT0ifQ.eyJqdGkiOiJjZWQ4MGVmYjg0MTc0MzRhYTViNWQwYzg3YzViZmNmOSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiJiNWFkYTllOC02NjY1LTQ3NGEtOGU5NC1hZjYxMzU4NTkwZGQiLCJ6ZG4iOiJleHRlcm5hbC1mdW5jLXNlcnZpY2VzIn0sInN1YiI6InNiLXZlaGljbGUtc2VydmljZSF0MTczOTE4IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi12ZWhpY2xlLXNlcnZpY2UhdDE3MzkxOCIsImNpZCI6InNiLXZlaGljbGUtc2VydmljZSF0MTczOTE4IiwiYXpwIjoic2ItdmVoaWNsZS1zZXJ2aWNlIXQxNzM5MTgiLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjIwZTNlOTc5IiwiaWF0IjoxNzAzODI0OTIyLCJleHAiOjE3MDM4NjgxMjIsImlzcyI6Imh0dHBzOi8vZXh0ZXJuYWwtZnVuYy1zZXJ2aWNlcy5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiYjVhZGE5ZTgtNjY2NS00NzRhLThlOTQtYWY2MTM1ODU5MGRkIiwiYXVkIjpbInVhYSIsInNiLXZlaGljbGUtc2VydmljZSF0MTczOTE4Il19.BYI4jWi9nzvIQF_QVc5n2tJtvUm4M4Msbu5tCpiq_IJiDgsjlRqKmHb61r5kizZ0_Lim69jhshrscvK8JrU5GtyvVwrUdbQv_W7_Epty5G4orPpPmfuxNqquIdIyOAQGgqC0o3ce0-c2r1B9YA66HU4L-6VOQdb8cLIj4JL22JEF1y7fGhMP6pnMCdQe7HUD7FK5RLApYyrBdQjmsNdjvECwsL7g0pt3DqTmOl1vdNUwgLOgH4229mXaLqVHuMN6s0lWnxlRtvp__ygYdMCK3ofB1gI2DYNbTxqWrwOLaxdDMvywRSXogi4NtXAUkXJTF2a-Hb4wnPdPlnjVqH5uyQ',
+      },
+    };
+    sessionMiddleware.use(req as any, {} as any, next);
   });
 });

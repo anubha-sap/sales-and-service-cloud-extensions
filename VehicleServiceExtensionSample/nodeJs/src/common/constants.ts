@@ -6,10 +6,11 @@ export const DEFAULT_LOG_LEVEL = 3;
 export const TRANSLATION_JSON_FILE = 'vehicleService';
 export const ETAG = 'ETag';
 export const ETAG_HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
+export const AUTHORIZED_FIELDS = ['status', 'observation'];
 export const MESSAGES = {
   //Recommended approach is to move to properties file for translation
   DB_ERROR: 'DB Error',
-  UNIQUE_KEY_CONSTRAINT_FAILED: 'Unique key constraint violation',
+  UNIQUE_KEY_CONSTRAINT_FAILED: 'Record with the given ${key} already exists',
   NO_UPDATE_DATA: 'No update data provided',
   INTERNAL_SERVER_ERROR: 'Internal Server Error',
   RESOURCE_NOT_FOUND: 'Resource with the provided id not found',
@@ -23,6 +24,13 @@ export const MESSAGES = {
     'Status of the Case cannot be changed because all the tasks under the Job Card are not completed.',
   JOBCARD_NOT_FOUND: 'No jobcard found for selected Case',
   ERR_IN_INVOICE: 'Error in generate Invoice : ',
+  INVALID_EMPLOYEE: 'Invalid Employee ID',
+  NO_SERVICES_AVAILABLE:
+    'No Services available. Please add some Services matching the mileage criteria',
+  NO_INSPECTION_ITEMS_AVAILABLE:
+    'No Inspection Items available. Please add some Inspection Items',
+  CANNOT_EDIT_OTHER_USER_RECORDS: `User cannot edit other user's records`,
+  CANNOT_EDIT_FIELD: 'User does not have access to edit the field ${key}',
 };
 
 export const EXTENSION_FIELDS = {

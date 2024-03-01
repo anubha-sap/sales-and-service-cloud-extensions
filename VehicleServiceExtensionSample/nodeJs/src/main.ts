@@ -12,18 +12,7 @@ import { GLOBAL_PREFIX } from './common/constants';
 import { LoggingInterceptor } from './common/interceptor/logging.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    cors: {
-      origin: '*',
-      methods: ['GET', 'POST', 'PUT', 'DELETE'],
-      allowedHeaders: [
-        'Authorization',
-        'Content-Type',
-        'Access-Control-Allow-Credentials',
-      ],
-      credentials: true,
-    },
-  });
+  const app = await NestFactory.create(AppModule);
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.use(helmet());
   app.use(json());

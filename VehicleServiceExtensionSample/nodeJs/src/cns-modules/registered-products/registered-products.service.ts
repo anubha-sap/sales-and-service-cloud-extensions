@@ -1,4 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { RegisteredProductApi } from './open-api/client/registeredProducts';
 import { MESSAGES, SESSION } from '../../common/constants';
 import { ServerException } from '../../common/filters/server-exception';
@@ -60,7 +64,9 @@ export class RegisteredProductsService {
     // Getting Registered Products - dop, vin, model
     const oRegisteredProducts = oCase.registeredProducts;
     if (!oRegisteredProducts) {
-      throw new Error(MESSAGES.NO_REGISTERED_PRODUCTS_IN_CASE);
+      throw new InternalServerErrorException(
+        MESSAGES.NO_REGISTERED_PRODUCTS_IN_CASE,
+      );
     }
     const sRegisteredProductsId = oCase.registeredProducts[0].id;
     const oRegisteredProduct = await this.findOne(sRegisteredProductsId);

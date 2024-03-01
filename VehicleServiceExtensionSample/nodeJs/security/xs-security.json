@@ -1,0 +1,118 @@
+{
+  "description": "Security profle for vehicle-service(EXFS)",
+  "oauth2-configuration": {
+    "redirect-uris": [
+      "https://*.kyma.ondemand.com/**",
+      "http://localhost:5000/**",
+      "https://*.hana.ondemand.com/**"
+    ]
+  },
+  "role-templates": [
+    {
+      "name": "ServiceAdvisorRole",
+      "scope-references": [
+        "uaa.user",
+        "$XSAPPNAME.CreateServiceForm",
+        "$XSAPPNAME.ViewServiceForm",
+        "$XSAPPNAME.UpdateServiceForm",
+        "$XSAPPNAME.DeleteServiceForm",
+        "$XSAPPNAME.CreateJobCard",
+        "$XSAPPNAME.ViewJobCard",
+        "$XSAPPNAME.DeleteJobCard",
+        "$XSAPPNAME.GenerateInvoice"
+      ]
+    },
+    {
+      "name": "ServiceManagerRole",
+      "scope-references": [
+        "uaa.user",
+        "$XSAPPNAME.ViewJobCard",
+        "$XSAPPNAME.EditJobCardService",
+        "$XSAPPNAME.MasterData"
+      ]
+    },
+    {
+      "name": "ServiceTechnicianRole",
+      "scope-references": [
+        "uaa.user",
+        "$XSAPPNAME.ViewJobCard",
+        "$XSAPPNAME.EditTask"
+      ]
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "Service Advisor",
+      "description": "The Service Advisor will be able to create, view, update, and delete service forms, view and delete Job Cards, and generate Invoices.",
+      "role-template-references": [
+        "$XSAPPNAME.ServiceAdvisorRole"
+      ]
+    },
+    {
+      "name": "Service Manager",
+      "description": "The Service Manager will be able to: view Job Cards, view Job Card Services, update Job Card Services, perform CRUD operations on Inspection Items, Services, and Employees.",
+      "role-template-references": [
+        "$XSAPPNAME.ServiceManagerRole"
+      ]
+    },
+    {
+      "name": "Service Technician",
+      "description": "The Service Technician will be able to view Job Cards and edit their own Job Card Service. A Technician is only authorized to edit specific fields.",
+      "role-template-references": [
+        "$XSAPPNAME.ServiceTechnicianRole"
+      ]
+    }
+  ],
+  "scopes": [
+    {
+      "description": "This is required by destination service for token exchange",
+      "name": "uaa.user"
+    },
+    {
+      "description": "Create a Job Card",
+      "name": "$XSAPPNAME.CreateJobCard"
+    },
+    {
+      "description": "View Job Card",
+      "name": "$XSAPPNAME.ViewJobCard"
+    },
+    {
+      "description": "Edit a Job Card Service entity. This scope allows to edit all fields in a Job Card Service",
+      "name": "$XSAPPNAME.EditJobCardService"
+    },
+    {
+      "description": "Delete a Job Card",
+      "name": "$XSAPPNAME.DeleteJobCard"
+    },
+    {
+      "description": "Create a Service Form",
+      "name": "$XSAPPNAME.CreateServiceForm"
+    },
+    {
+      "description": "View Service Form",
+      "name": "$XSAPPNAME.ViewServiceForm"
+    },
+    {
+      "description": "Update a Service Form",
+      "name": "$XSAPPNAME.UpdateServiceForm"
+    },
+    {
+      "description": "Delete a Service Form",
+      "name": "$XSAPPNAME.DeleteServiceForm"
+    },
+    {
+      "description": "This scope allows to edit only two fields in JobCardServices entity - observation and notes. If a user has both `EditTask` and `EditJobCardService` scopes, only `EditJobCardService` will be considered",
+      "name": "$XSAPPNAME.EditTask"
+    },
+    {
+      "description": "This scope allows to create, read, update and delete the master data - InspectionItems, Services and Employees",
+      "name": "$XSAPPNAME.MasterData"
+    },
+    {
+      "description": "This scope allows to generate invoice",
+      "name": "$XSAPPNAME.GenerateInvoice"
+    }
+  ],
+  "tenant-mode": "dedicated",
+  "xsappname": "vehicle-service"
+}

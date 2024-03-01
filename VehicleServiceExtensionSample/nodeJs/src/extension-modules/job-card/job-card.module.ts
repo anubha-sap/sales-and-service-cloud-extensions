@@ -11,6 +11,7 @@ import { CustomerModule } from '../../cns-modules/customer/customer.module';
 import { RegisteredProductsModule } from '../../cns-modules/registered-products/registered-products.module';
 import { JobCardRepository } from './repository/job-card.repository';
 import { JobCardServiceRepository } from './repository/job-card-services.repository';
+import { EmployeesModule } from '../employees/employees.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { JobCardServiceRepository } from './repository/job-card-services.reposit
     ServicesModule,
     CasesModule,
     RegisteredProductsModule,
+    EmployeesModule,
     TypeOrmModule.forFeature([JobCard, JobCardServices]),
   ],
   controllers: [JobCardController],

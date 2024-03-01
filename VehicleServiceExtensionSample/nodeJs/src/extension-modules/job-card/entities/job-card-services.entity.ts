@@ -12,17 +12,17 @@ export class JobCardServices extends ServicesColumns {
     Object.assign(this, partial);
   }
 
-  @Column({ nullable: true })
+  @Column({ default: JSON.stringify({ btpUserId: '', name: '' }) })
   technician: string;
 
   @Column({ default: ServiceStatus.Z21 })
   status: ServiceStatus;
 
   @Column({ type: 'timestamp', nullable: true })
-  startTime: string;
+  startTime: Date;
 
   @Column({ type: 'timestamp', nullable: true })
-  endTime: string;
+  endTime: Date;
 
   @Column({ type: 'clob', nullable: true })
   notes: string;
@@ -40,7 +40,7 @@ export class JobCardServices extends ServicesColumns {
   @ApiResponseProperty()
   adminData: AdminDataDto;
 
-  public static toEntity(oJobCardService) {
+  public static toEntity(oJobCardService, sUserId: string) {
     return new JobCardServices({
       service: oJobCardService.service,
       price: oJobCardService.price,
@@ -50,6 +50,7 @@ export class JobCardServices extends ServicesColumns {
       endTime: oJobCardService.endTime,
       notes: oJobCardService.notes,
       observation: oJobCardService.observation,
+      createdBy: sUserId,
     });
   }
 
