@@ -16,7 +16,7 @@ export const oJobCard = {
     '{"dateOfPurchase":"2022-04-04T00:00:00Z","model":"AHT Radiator"}',
   customerComplaints: '["C1  ","  ","  ","  ","  "]',
   milometer: 4000,
-  estimatedCompletionDate: '2023-12-19T08:56:00.000Z',
+  estimatedCompletionDate: '2023-12-19T08:57:00.000Z',
   status: JCStatus.Z13,
   servicesSelected: [
     {
