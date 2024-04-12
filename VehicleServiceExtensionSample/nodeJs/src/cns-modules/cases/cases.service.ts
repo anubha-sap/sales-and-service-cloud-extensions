@@ -84,6 +84,33 @@ export class CasesService {
     }
   }
 
+  async getCase(query: Record<string, any>) {
+    try {
+      const startTime = new Date().getTime();
+      this.logger.debug(`Querying case with ${JSON.stringify(query)}`);
+      const responseData = await CaseApi.querycaseserviceCase(query).execute({
+        destinationName: this.sscDestination,
+        jwt: this.userToken,
+      });
+      const endTime = new Date().getTime();
+      this.logger.debug(
+        `Time taken by request ${this.requestId} to get case: ${
+          (endTime - startTime) / 1000
+        } seconds`,
+      );
+      return responseData.value;
+    } catch (error) {
+      const caseError = new Error(
+        error.response?.data?.error?.message || error.message,
+      );
+      throw new ServerException(
+        caseError,
+        CasesService.name,
+        this.getCase.name,
+      );
+    }
+  }
+
   getCaseData(oCase) {
     const sProcessor = oCase.processor?.name;
     const nMilometer = oCase.extensions

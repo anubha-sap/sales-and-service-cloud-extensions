@@ -27,6 +27,9 @@ import { DataSource } from 'typeorm';
 import { CustomLogger } from '../../logger/logger.service';
 import { EmployeesService } from '../employees/employees.service';
 import {
+  JobCardCountResponseDTO,
+  JobCardCountResponseDTOWithCNSData,
+  JobCardCountResponseDTOWithoutCNSData,
   JobCardResponseDTO,
   JobCardResponseDTOWithCNSData,
   JobCardResponseDTOWithoutCNSData,
@@ -48,7 +51,6 @@ import { ServiceForm } from '../../../test/mock-data/modules/service-form.mock.d
 import { JobCardServices } from './entities/job-card-services.entity';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { EmployeesResponseDto } from '../../../test/mock-data/modules/employees.mock.data';
-import { JobCardServiceResponseDto } from './dto/job-card/job-card-service/response-job-card-service.dto';
 
 describe('VehicleServiceService', () => {
   let jobCardService: JobCardService;
@@ -100,6 +102,7 @@ describe('VehicleServiceService', () => {
     getCaseById: jest.fn(),
     getCaseData: jest.fn(),
     updateCase: jest.fn(),
+    getCase: jest.fn(),
   };
 
   const mockEmployeesService = {
@@ -173,13 +176,37 @@ describe('VehicleServiceService', () => {
   });
 
   describe('findAll', () => {
-    it('Should return all job cards with CNS data', async () => {
+    it('Should return job cards based on $top and $skip', async () => {
       const oJobCardResponseDTOMock = JSON.parse(
-        JSON.stringify(JobCardResponseDTO),
+        JSON.stringify(JobCardCountResponseDTO),
       );
       jest
         .spyOn(mockJobCardRepository, 'findAllJobCards')
-        .mockResolvedValue([oJobCardResponseDTOMock]);
+        .mockResolvedValue(oJobCardResponseDTOMock);
+      jest.spyOn(mockCaseService, 'getCaseById').mockResolvedValue(oCase);
+      jest.spyOn(mockCaseService, 'getCaseData').mockReturnValue(caseData);
+      jest
+        .spyOn(mockCustomerService, 'getIndividualCustomerInfo')
+        .mockReturnValue(oCustomerDataResult);
+      jest.spyOn(mockI18nService, 'translate').mockReturnValue(sTranslatedText);
+      const res = await jobCardService.findAll(
+        {
+          caseId: 'd886b468-ed95-11ed-a6bd-5354a6389ba0',
+        },
+        true,
+        1,
+        5,
+      );
+      expect(res).toEqual(JobCardCountResponseDTOWithCNSData);
+      expect(mockJobCardRepository.findAllJobCards).toHaveBeenCalled();
+    });
+    it('Should return all job cards with CNS data', async () => {
+      const oJobCardResponseDTOMock = JSON.parse(
+        JSON.stringify(JobCardCountResponseDTO),
+      );
+      jest
+        .spyOn(mockJobCardRepository, 'findAllJobCards')
+        .mockResolvedValue(oJobCardResponseDTOMock);
       jest.spyOn(mockCaseService, 'getCaseById').mockResolvedValue(oCase);
       jest.spyOn(mockCaseService, 'getCaseData').mockReturnValue(caseData);
       jest
@@ -192,17 +219,17 @@ describe('VehicleServiceService', () => {
         },
         true,
       );
-      expect(res).toEqual([JobCardResponseDTOWithCNSData]);
+      expect(res).toEqual(JobCardCountResponseDTOWithCNSData);
       expect(mockJobCardRepository.findAllJobCards).toHaveBeenCalled();
     });
 
     it('Should return all job cards without CNS data', async () => {
       const oJobCardResponseDTOMock = JSON.parse(
-        JSON.stringify(JobCardResponseDTO),
+        JSON.stringify(JobCardCountResponseDTO),
       );
       jest
         .spyOn(mockJobCardRepository, 'findAllJobCards')
-        .mockResolvedValue([oJobCardResponseDTOMock]);
+        .mockResolvedValue(oJobCardResponseDTOMock);
       jest.spyOn(mockCaseService, 'getCaseById').mockResolvedValue(oCase);
       jest.spyOn(mockCaseService, 'getCaseData').mockReturnValue(caseData);
       jest
@@ -215,7 +242,7 @@ describe('VehicleServiceService', () => {
         },
         false,
       );
-      expect(res).toEqual([JobCardResponseDTOWithoutCNSData]);
+      expect(res).toEqual(JobCardCountResponseDTOWithoutCNSData);
       expect(mockJobCardRepository.findAllJobCards).toHaveBeenCalled();
     });
 
@@ -248,11 +275,11 @@ describe('VehicleServiceService', () => {
     it('Should handle when case type is ZVSR or when case status is completed/closed/servicecompleted', async () => {
       const oCaseEntity = JSON.parse(JSON.stringify(caseEntity));
       const oJobCardResponseDTOMock = JSON.parse(
-        JSON.stringify(JobCardResponseDTO),
+        JSON.stringify(JobCardCountResponseDTO),
       );
       jest
         .spyOn(mockJobCardRepository, 'findAllJobCards')
-        .mockResolvedValue([oJobCardResponseDTOMock]);
+        .mockResolvedValue(oJobCardResponseDTOMock);
       const res = await jobCardService.findValidationStatusService(oCaseEntity);
       expect(res).toEqual({
         data: oCaseEntity.currentImage,
@@ -265,12 +292,12 @@ describe('VehicleServiceService', () => {
     it('Should return entity data and error when no selected service', async () => {
       const oCaseEntity = JSON.parse(JSON.stringify(caseEntity));
       const oJobCardResponseDTOMock = JSON.parse(
-        JSON.stringify(JobCardResponseDTO),
+        JSON.stringify(JobCardCountResponseDTO),
       );
-      oJobCardResponseDTOMock.servicesSelected = [];
+      oJobCardResponseDTOMock.value[0].servicesSelected = [];
       jest
         .spyOn(mockJobCardRepository, 'findAllJobCards')
-        .mockResolvedValue([oJobCardResponseDTOMock]);
+        .mockResolvedValue(oJobCardResponseDTOMock);
       const res = await jobCardService.findValidationStatusService(oCaseEntity);
       expect(res).toEqual({
         data: caseEntity.currentImage,
@@ -290,7 +317,7 @@ describe('VehicleServiceService', () => {
       const oCaseEntity = JSON.parse(JSON.stringify(caseEntity));
       jest
         .spyOn(mockJobCardRepository, 'findAllJobCards')
-        .mockResolvedValue([]);
+        .mockResolvedValue({ value: [], count: 0 });
       const res = await jobCardService.findValidationStatusService(oCaseEntity);
       expect(res).toEqual({
         data: oCaseEntity.currentImage,
@@ -309,12 +336,13 @@ describe('VehicleServiceService', () => {
     it('should return entity data and error when not completed service status', async () => {
       const oCaseEntity = JSON.parse(JSON.stringify(caseEntity));
       const oJobCardResponseDTOMock = JSON.parse(
-        JSON.stringify(JobCardResponseDTO),
+        JSON.stringify(JobCardCountResponseDTO),
       );
-      oJobCardResponseDTOMock.servicesSelected[0].status = ServiceStatus.Z22;
+      oJobCardResponseDTOMock.value[0].servicesSelected[0].status =
+        ServiceStatus.Z22;
       jest
         .spyOn(mockJobCardRepository, 'findAllJobCards')
-        .mockResolvedValue([oJobCardResponseDTOMock]);
+        .mockResolvedValue(oJobCardResponseDTOMock);
       const res = await jobCardService.findValidationStatusService(oCaseEntity);
       expect(res).toEqual({
         data: oCaseEntity.currentImage,
@@ -1063,4 +1091,29 @@ describe('VehicleServiceService', () => {
       expect(oResult).toStrictEqual(JobCardServiceResponseDTO);
     });
   });
+
+  /*   describe('handleSearchQuery', () => {
+    it('Should handle search query', async () => {
+      const sMockSearchQuery = 'KH';
+      jest
+        .spyOn(mockJobCardRepository, 'findAllJobCards')
+        .mockReturnValue(JobCardCountResponseDTO);
+      jest.spyOn(mockCaseService, 'getCase').mockResolvedValue([oCase]);
+
+      const oResult = await jobCardService.handleSearchQuery(sMockSearchQuery);
+      expect(oResult).toStrictEqual(JobCardCountResponseDTO);
+    });
+  });
+
+  describe('handleFilterInCase', () => {
+    it('Should handle filter query', async () => {
+      const sMockFilterQuery = `individualCustomer.name ct 'Raghu' or account.name ct 'Ki'`;
+      jest
+        .spyOn(mockJobCardRepository, 'findAllJobCards')
+        .mockReturnValue(JobCardCountResponseDTO);
+      jest.spyOn(mockCaseService, 'getCase').mockResolvedValue([oCase]);
+      const oResult = await jobCardService.handleFilterInCase(sMockFilterQuery);
+      expect(oResult).toStrictEqual(JobCardCountResponseDTO);
+    });
+  }); */
 });

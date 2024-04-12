@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MESSAGES, CUSTOM_LOGIC_ERROR_CODE } from '../common/constants';
 import { ValidationErrorObjectType } from '../extension-modules/common/interfaces';
 import { ServerException } from '../common/filters/server-exception';
-import { IsNull, Not } from 'typeorm';
+import { ILike, IsNull, Not } from 'typeorm';
 
 @Injectable()
 export class UtilsService {
@@ -50,22 +50,75 @@ export class UtilsService {
     }
   }
 
+  handleQueryParams($filter: string, $search: string) {
+    if ($search) {
+      return this.processSearchQuery($search);
+    }
+    if ($filter) {
+      return this.processFilterQuery($filter);
+    }
+    return {};
+  }
+
+  processSearchQuery(sQuery: string) {
+    sQuery = sQuery.replace(/["']/g, '');
+    return [
+      { displayId: Number(sQuery) || -1 },
+      { vehicleNumber: ILike(`%${sQuery}%`) },
+      { model: ILike(`%${sQuery}%`) },
+      { status: ILike(`%${sQuery}%`) },
+    ];
+  }
+
+  processFilterQuery(sQuery: string) {
+    const oOrParts = sQuery.split('or').map((part: string) => part.trim());
+    if (oOrParts.length > 1) {
+      const oFinalQuery = [];
+      for (let i = 0; i < oOrParts.length; i++) {
+        oFinalQuery.push(this.parseFilterString(oOrParts[i]));
+      }
+      return oFinalQuery;
+    }
+
+    const oAndParts = sQuery.split('and').map((part: string) => part.trim());
+    if (oAndParts.length > 1) {
+      let oFinalQuery = {};
+      for (let i = 0; i < oAndParts.length; i++) {
+        oFinalQuery = Object.assign(
+          oFinalQuery,
+          this.parseFilterString(oAndParts[i]),
+        );
+      }
+      return oFinalQuery;
+    }
+
+    return this.parseFilterString(sQuery);
+  }
+
   /**
    * Currently supporting only "eq" and "ne" operators
    */
-  parseFilterString(filterString) {
+  parseFilterString(filterString: string) {
     try {
-      if (!filterString) {
-        return {};
-      }
       // Split the string by "eq"/"ne" and trim spaces
-      const EqParts = filterString.split('eq').map((part) => part.trim());
-      const NeParts = filterString.split('ne').map((part) => part.trim());
+      const EqParts = filterString
+        .split('eq')
+        .map((part: string) => part.trim());
+      const NeParts = filterString
+        .split('ne')
+        .map((part: string) => part.trim());
+
+      const cTParts = filterString
+        .split('ct')
+        .map((part: string) => part.trim());
 
       const result = {};
 
       // Check if the split resulted in two parts
       if (EqParts.length === 2) {
+        if (EqParts[0].includes('.')) {
+          return this.processNestedField(EqParts[0], EqParts[1]);
+        }
         const { field, value } = this.processValue(EqParts);
         // Create and return the object
         result[field] = value;
@@ -73,6 +126,10 @@ export class UtilsService {
         const { field, value } = this.processValue(NeParts);
         // Create and return the object
         result[field] = Not(value);
+      } else if (cTParts.length == 2) {
+        const { field, value } = this.processValue(cTParts);
+        // Create and return the object
+        result[field] = ILike(`%${value}%`);
       }
       return result;
     } catch (error) {
@@ -97,5 +154,22 @@ export class UtilsService {
       value = IsNull();
     }
     return { field, value };
+  }
+
+  processNestedField(field, value) {
+    const fieldParts = field.split('.').map((part: string) => part.trim());
+    value = value.replace(/[']/g, ''); // Remove surrounding single quotes
+    let originalObj = {};
+    let obj = {};
+    originalObj = obj;
+    for (let i = 0; i < fieldParts.length; i++) {
+      if (i === fieldParts.length - 1) {
+        obj[fieldParts[i]] = value;
+      } else {
+        obj[fieldParts[i]] = {};
+      }
+      obj = obj[fieldParts[i]];
+    }
+    return originalObj;
   }
 }

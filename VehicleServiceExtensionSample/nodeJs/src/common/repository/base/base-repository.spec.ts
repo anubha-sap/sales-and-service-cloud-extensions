@@ -10,6 +10,7 @@ const oDummyEntityInstance = {
   find: jest.fn(),
   delete: jest.fn(),
   update: jest.fn(),
+  findAndCount: jest.fn(),
   target: {
     name: 'dummy',
   },
@@ -55,8 +56,16 @@ describe('BaseRepository', () => {
 
   it('should findAll', async () => {
     jest.spyOn(oDummyEntityInstance, 'find').mockResolvedValue([oDummyData]);
-    const oVal = await oBaseRepo.findAll();
+    const oVal = await oBaseRepo.findAll({});
     expect(oVal).toEqual([oDummyData]);
+  });
+
+  it('should findAndCount', async () => {
+    jest
+      .spyOn(oDummyEntityInstance, 'findAndCount')
+      .mockResolvedValue([[oDummyData], 1]);
+    const oVal = await oBaseRepo.findAndCount({});
+    expect(oVal).toEqual([[oDummyData], 1]);
   });
 
   describe('delete', () => {

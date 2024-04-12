@@ -294,4 +294,63 @@ describe('CasesService', () => {
       }
     });
   });
+
+  describe('getCase', () => {
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+    it('should get all case', async () => {
+      try {
+        const oCaseApiMock = jest.fn().mockReturnValue({
+          addCustomHeaders: jest.fn().mockReturnThis(),
+          execute: jest.fn().mockResolvedValue({ value: [oCase] }),
+        });
+        (CaseApi.querycaseserviceCase as jest.Mock).mockImplementation(
+          oCaseApiMock,
+        );
+        const oResult = await service.getCase({});
+        expect(oResult).toStrictEqual([oCase]);
+      } catch (error) {
+        expect(error).toBe(undefined);
+      }
+    });
+
+    it('should handle error', async () => {
+      const oErr = {
+        response: { data: { error: { message: 'Error in Case API' } } },
+      };
+      try {
+        const oCaseApiMock = jest.fn().mockReturnValue({
+          addCustomHeaders: jest.fn().mockReturnThis(),
+          execute: jest.fn().mockRejectedValue(oErr),
+        });
+        (CaseApi.querycaseserviceCase as jest.Mock).mockImplementation(
+          oCaseApiMock,
+        );
+        await service.getCase({});
+      } catch (error) {
+        expect(error).toBeInstanceOf(ServerException);
+        expect(error.getErrorMessage()).toBe(oErr.response.data.error.message);
+      }
+    });
+
+    it(`should handle when there's error.message`, async () => {
+      const oErr = {
+        message: 'upstream error',
+      };
+      try {
+        const oCaseApiMock = jest.fn().mockReturnValue({
+          addCustomHeaders: jest.fn().mockReturnThis(),
+          execute: jest.fn().mockRejectedValue(oErr),
+        });
+        (CaseApi.querycaseserviceCase as jest.Mock).mockImplementation(
+          oCaseApiMock,
+        );
+        await service.getCase({});
+      } catch (error) {
+        expect(error).toBeInstanceOf(ServerException);
+        expect(error.getErrorMessage()).toBe(oErr.message);
+      }
+    });
+  });
 });

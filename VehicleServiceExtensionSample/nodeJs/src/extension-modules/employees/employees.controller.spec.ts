@@ -16,6 +16,7 @@ describe('EmployeesController', () => {
     update: jest.fn(),
     replace: jest.fn(),
     remove: jest.fn(),
+    getCurrentUserInfo: jest.fn(),
   };
 
   const mockUtilsService = {
@@ -75,6 +76,12 @@ describe('EmployeesController', () => {
     const sId = 'b9a0af7c-8114-48fb-88eb-f463b0070934';
     const spy = jest.spyOn(mockEmployeesService, 'remove');
     await controller.remove(sId);
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should be able to get current user info', async () => {
+    const spy = jest.spyOn(mockEmployeesService, 'getCurrentUserInfo');
+    await controller.findCurrentUser();
     expect(spy).toHaveBeenCalledTimes(1);
   });
 });

@@ -20,6 +20,8 @@ export class JobCardResponseDto extends JobCardDto {
       caseDisplayId: oJobCard.caseDisplayId,
       registeredProduct: JSON.parse(oJobCard.registeredProduct),
       customerComplaints: JSON.parse(oJobCard.customerComplaints),
+      vehicleNumber: oJobCard.vehicleNumber,
+      model: oJobCard.model,
       milometer: oJobCard.milometer,
       servicesSelected: this.parseJobCardService(oJobCard),
       status: oJobCard.status,

@@ -24,6 +24,12 @@ export class JobCard extends CommonColumns {
   @Column()
   status: JCStatus;
 
+  @Column({ default: '' })
+  vehicleNumber: string;
+
+  @Column({ default: '' })
+  model: string;
+
   @OneToOne(() => ServiceForm, (serviceForm) => serviceForm.jobCard)
   serviceForm: ServiceForm;
 
@@ -32,6 +38,8 @@ export class JobCard extends CommonColumns {
       caseId: oJobCard.caseId,
       caseDisplayId: oJobCard.caseDisplayId,
       status: oJobCard.status,
+      vehicleNumber: oJobCard.vehicleNumber,
+      model: oJobCard.model,
       registeredProduct: JSON.stringify(oJobCard.registeredProduct),
       customerComplaints: JSON.stringify(oJobCard.customerComplaints),
       servicesSelected: oJobCard.servicesSelected,

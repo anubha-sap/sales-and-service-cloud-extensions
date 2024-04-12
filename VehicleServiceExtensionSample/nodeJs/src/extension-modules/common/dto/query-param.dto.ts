@@ -8,4 +8,25 @@ export class QueryParamsDTO {
   @IsOptional()
   @IsString()
   $filter?: string;
+
+  @ApiPropertyOptional({
+    description: `The criteria to search the items eg. $search=nexonev`,
+  })
+  @IsOptional()
+  @IsString()
+  $search?: string;
+
+  @ApiPropertyOptional({
+    description: `Indicates page size.`,
+  })
+  @IsOptional()
+  @IsString()
+  $top?: string;
+
+  @ApiPropertyOptional({
+    description: `Indicates offset (number of items). For e.g. if page size is 100 and the user is navigating to 10th page, then offset ($skip) would be 900 (9 * 100)`,
+  })
+  @IsOptional()
+  @IsString()
+  $skip?: string;
 }

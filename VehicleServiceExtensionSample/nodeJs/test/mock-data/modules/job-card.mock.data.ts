@@ -96,6 +96,11 @@ export const JobCardResponseDTO = {
   adminData: AdminData,
 };
 
+export const JobCardCountResponseDTO = {
+  value: [JobCardResponseDTO],
+  count: 1,
+};
+
 export const JobCardResponseDTOWithoutCNSData = {
   id: '93ae7eee-dbc8-43bc-83c5-3f5dba858911',
   displayId: 2,
@@ -145,6 +150,11 @@ export const JobCardResponseDTOWithoutCNSData = {
   estimatedCompletionDate: '2023-12-19T08:56:00.000Z',
   adminData: AdminData,
   statusDescription: sTranslatedText,
+};
+
+export const JobCardCountResponseDTOWithoutCNSData = {
+  value: [JobCardResponseDTOWithoutCNSData],
+  count: 1,
 };
 
 export const JobCardResponseDTOWithCNSData = {
@@ -198,6 +208,11 @@ export const JobCardResponseDTOWithCNSData = {
   estimatedCompletionDate: '2023-12-19T08:56:00.000Z',
   adminData: AdminData,
   statusDescription: sTranslatedText,
+};
+
+export const JobCardCountResponseDTOWithCNSData = {
+  value: [JobCardResponseDTOWithCNSData],
+  count: 1,
 };
 
 /* export const JobCardResponseDTO = {

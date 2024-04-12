@@ -12,10 +12,7 @@ import { REQUEST } from '@nestjs/core';
 import { RequestMock } from '../../../test/mock-data/common.mock.data';
 import { oCase } from '../../../test/mock-data/modules/case.mock.data';
 import { oDocument } from '../../../test/mock-data/modules/invoice-service.mock.data';
-import {
-  JobCardResponseDTO,
-  JobCardResponseDTOWithCNSData,
-} from '../../../test/mock-data/modules/job-card.mock.data';
+import { JobCardCountResponseDTOWithCNSData } from '../../../test/mock-data/modules/job-card.mock.data';
 jest.mock('../common/open-api/client/document-service/document-service-api');
 
 describe('InvoiceService', () => {
@@ -205,7 +202,7 @@ describe('InvoiceService', () => {
       try {
         jest
           .spyOn(mockJobCardService, 'findAll')
-          .mockResolvedValue([JobCardResponseDTOWithCNSData]);
+          .mockResolvedValue(JobCardCountResponseDTOWithCNSData);
         const result = await invoiceService.generateInvoice(query);
         expect(result).toBeInstanceOf(Buffer);
       } catch (error) {
@@ -215,16 +212,20 @@ describe('InvoiceService', () => {
 
     it('should handle when serviceSelected does not have service/name/status/price ', async () => {
       const oJobCardResponseDTOWithCNSData = JSON.parse(
-        JSON.stringify(JobCardResponseDTOWithCNSData),
+        JSON.stringify(JobCardCountResponseDTOWithCNSData),
       );
-      oJobCardResponseDTOWithCNSData.servicesSelected[0].service = undefined;
-      oJobCardResponseDTOWithCNSData.servicesSelected[0].technician = undefined;
-      oJobCardResponseDTOWithCNSData.servicesSelected[0].status = undefined;
-      oJobCardResponseDTOWithCNSData.servicesSelected[0].price = undefined;
+      oJobCardResponseDTOWithCNSData.value[0].servicesSelected[0].service =
+        undefined;
+      oJobCardResponseDTOWithCNSData.value[0].servicesSelected[0].technician =
+        undefined;
+      oJobCardResponseDTOWithCNSData.value[0].servicesSelected[0].status =
+        undefined;
+      oJobCardResponseDTOWithCNSData.value[0].servicesSelected[0].price =
+        undefined;
       try {
         jest
           .spyOn(mockJobCardService, 'findAll')
-          .mockResolvedValue([oJobCardResponseDTOWithCNSData]);
+          .mockResolvedValue(oJobCardResponseDTOWithCNSData);
         const result = await invoiceService.generateInvoice(query);
         expect(result).toBeInstanceOf(Buffer);
       } catch (error) {
@@ -234,7 +235,9 @@ describe('InvoiceService', () => {
 
     it('should handle error when generate invoice', async () => {
       try {
-        jest.spyOn(mockJobCardService, 'findAll').mockResolvedValue(null);
+        jest
+          .spyOn(mockJobCardService, 'findAll')
+          .mockResolvedValue({ value: [], count: 0 });
         await invoiceService.generateInvoice(query);
       } catch (error) {
         expect(error.message).toBe(MESSAGES.JOBCARD_NOT_FOUND);
@@ -262,7 +265,7 @@ describe('InvoiceService', () => {
       try {
         jest
           .spyOn(mockJobCardService, 'findAll')
-          .mockResolvedValue([JobCardResponseDTOWithCNSData]);
+          .mockResolvedValue(JobCardCountResponseDTOWithCNSData);
         const documentServiceApiMock = jest.fn().mockReturnValue({
           addCustomHeaders: jest.fn().mockReturnThis(),
           execute: jest.fn().mockResolvedValue({ value: oDocument }),
@@ -287,7 +290,7 @@ describe('InvoiceService', () => {
       try {
         jest
           .spyOn(mockJobCardService, 'findAll')
-          .mockResolvedValue([JobCardResponseDTOWithCNSData]);
+          .mockResolvedValue(JobCardCountResponseDTOWithCNSData);
         const documentServiceApiMock = jest.fn().mockReturnValue({
           addCustomHeaders: jest.fn().mockReturnThis(),
           execute: jest.fn().mockResolvedValue({ value: oDocument }),
@@ -310,7 +313,7 @@ describe('InvoiceService', () => {
       try {
         jest
           .spyOn(mockJobCardService, 'findAll')
-          .mockResolvedValue([JobCardResponseDTOWithCNSData]);
+          .mockResolvedValue(JobCardCountResponseDTOWithCNSData);
         const documentServiceApiMock = jest.fn().mockReturnValue({
           addCustomHeaders: jest.fn().mockReturnThis(),
           execute: jest.fn().mockResolvedValue({}),
@@ -335,7 +338,7 @@ describe('InvoiceService', () => {
       try {
         jest
           .spyOn(mockJobCardService, 'findAll')
-          .mockResolvedValue([JobCardResponseDTOWithCNSData]);
+          .mockResolvedValue(JobCardCountResponseDTOWithCNSData);
         const documentServiceApiMock = jest.fn().mockReturnValue({
           addCustomHeaders: jest.fn().mockReturnThis(),
           execute: jest.fn().mockResolvedValue({ value: oDocument }),

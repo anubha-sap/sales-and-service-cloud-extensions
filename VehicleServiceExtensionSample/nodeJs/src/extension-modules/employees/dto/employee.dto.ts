@@ -1,5 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
-import { RoleCodes } from '../../common/enums';
+import { IsEmail, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class EmployeeDto {
   constructor(partial: Partial<EmployeeDto>) {
@@ -17,11 +16,4 @@ export class EmployeeDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
-
-  @IsEnum(RoleCodes, {
-    message: `Invalid role. Valid values are: ${Object.values(RoleCodes)}`,
-  })
-  @IsString()
-  @IsNotEmpty()
-  roleCode: RoleCodes;
 }

@@ -176,4 +176,20 @@ describe('EmployeesService', () => {
       }
     });
   });
+
+  describe('getCurrentUserInfo', () => {
+    it('should be able to get logged in users info', async () => {
+      const oUserInfo = await service.getCurrentUserInfo();
+      expect(oUserInfo).toHaveProperty('userName');
+      expect(oUserInfo).toHaveProperty('scopes');
+    });
+    it('should be able to handle error when getting logged in user info', async () => {
+      try {
+        delete RequestMock.session;
+        await service.getCurrentUserInfo();
+      } catch (error) {
+        expect(error).toBeInstanceOf(ServerException);
+      }
+    });
+  });
 });

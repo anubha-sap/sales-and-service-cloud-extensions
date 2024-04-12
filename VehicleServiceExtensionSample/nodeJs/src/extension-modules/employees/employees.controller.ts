@@ -33,10 +33,14 @@ export class EmployeesController {
   }
 
   @Get()
-  @UseGuards(AuthGuard)
   findAll(@Query() { $filter }: QueryParamsDTO) {
     const oQuery = this.utilService.parseFilterString($filter);
     return this.employeesService.findAll(oQuery);
+  }
+
+  @Get('/currentUserInfo')
+  findCurrentUser() {
+    return this.employeesService.getCurrentUserInfo();
   }
 
   @Get(':id')

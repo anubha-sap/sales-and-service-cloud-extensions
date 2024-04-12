@@ -38,9 +38,14 @@ export class JobCardController {
   @Get()
   @Scopes(Scope.ViewJobCard)
   @UseGuards(AuthGuard)
-  findAll(@Query() { $filter }: QueryParamsDTO) {
-    const oQuery = this.utilService.parseFilterString($filter);
-    return this.jobCardService.findAll(oQuery);
+  async findAll(@Query() { $filter, $search, $top, $skip }: QueryParamsDTO) {
+    const oQuery = this.utilService.handleQueryParams($filter, $search);
+    return this.jobCardService.findAll(
+      oQuery,
+      false,
+      parseInt($top),
+      parseInt($skip),
+    );
   }
 
   @Post('/validations')
