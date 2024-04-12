@@ -200,6 +200,7 @@ Here's a general overview of how you can implement authorization using XSUAA:
   - "Service Advisor": The Service Advisor will be able to create, view, update, and delete service forms, view and delete Job Cards, and generate Invoices.
   - "Service Manager": The Service Manager will be able to: view Job Cards, view Job Card Services, update Job Card Services, perform CRUD operations on Inspection Items, Services, and Employees.
   - "Service Technician": The Service Technician will be able to view Job Cards and edit their own Job Card Service. A Technician is only authorized to edit specific fields.
+  - "Vehicle Service Super User": Combination of all users.
 
 4. Add `xs-security.json` file contents as `Instance Parameters` in the xsuua instance. To add instance-parameters:
       - Go to service instances under Service Management(in dev namespace), click on Edit:
@@ -223,6 +224,8 @@ This Employee master data is used in the buildApps to determine if the logged in
 7. **Protect Resources**: In your application code or configuration, you specify which resources require specific roles or scopes for access. This is typically done using authorization mechanisms provided by your application framework or libraries. For more information on how to protect APIs using Guards in Nestjs, check [this](https://docs.nestjs.com/guards).
 
 ## Running backend API using postman
+`Important Note`: Since Authorization is enabled for the application, if proper roles are not assigned to the user, the application will throw error. For testing the application, please assign the role collection "Vehicle Service Super User" which has access to all the application APIs. To see how to assign role collection, check point 5 under [Add Authorization](#add-authorization) 
+
 Please follow below steps to run the APIs
  * Before testing the APIs, a case of type "Vehicle Service Case Type" needs to be created. In this case, a registered product needs to be added. Also, the extension field "Milometer" should be filled. This is mandatory else the ServiceForm API will fail.\
  Once this case is created, get the Case ID. To get the Case ID:
