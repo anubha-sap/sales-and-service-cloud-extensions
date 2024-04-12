@@ -1314,7 +1314,7 @@
 								"job-cards",
 								"{{jcId}}",
 								"services",
-								"{{jcsId}}"
+								"689d58ba-fc8f-447b-840a-d24e744d3f61"
 							]
 						}
 					},
@@ -1376,13 +1376,6 @@
 							"path": [
 								"vehicle-service",
 								"employees"
-							],
-							"query": [
-								{
-									"key": "$filter",
-									"value": "roleCode eq R23",
-									"disabled": true
-								}
 							]
 						}
 					},
@@ -1395,7 +1388,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Employee Name\",\n    \"email\": \"employee.name@company.com\",\n    \"roleCode\": \"R22\",\n    \"btpUserId\": \"a734defd-020a-4c91-b9af-4f9a10b7dc7f\"\n}",
+							"raw": "{\n    \"name\": \"Employee name\",\n    \"email\": \"employee.name@company.com\",\n    \"btpUserId\": \"891d4391-0ff9-48ca-ac7e-70e899ac5d85\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1421,14 +1414,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/vehicle-service/employees/7cdb8762-80a4-4e42-b319-727e88e456ee",
+							"raw": "{{host}}/vehicle-service/employees/7cdb8762-80a4-4e42-b319-727e88e456ef",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"vehicle-service",
 								"employees",
-								"7cdb8762-80a4-4e42-b319-727e88e456ee"
+								"7cdb8762-80a4-4e42-b319-727e88e456ef"
 							]
 						}
 					},
@@ -1441,7 +1434,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"roleCode\": \"R23\"\n}",
+							"raw": "{\n    \"name\": \"emp name\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1468,14 +1461,33 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/vehicle-service/employees/001f6839-82d0-44b8-b1db-83c3830598d6",
+							"raw": "{{host}}/vehicle-service/employees/fba0f015-ca6f-47f7-8ba1-5a0ca82bf567",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"vehicle-service",
 								"employees",
-								"001f6839-82d0-44b8-b1db-83c3830598d6"
+								"fba0f015-ca6f-47f7-8ba1-5a0ca82bf567"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "currentUserInfo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/vehicle-service/employees/currentUserInfo",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"vehicle-service",
+								"employees",
+								"currentUserInfo"
 							]
 						}
 					},
