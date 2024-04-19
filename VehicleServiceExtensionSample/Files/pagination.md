@@ -15,3 +15,5 @@ GET /job-cards?$top=20
 Retrieve 10 page of JobCards
 GET /job-cards?$top=20&$skip=180
 ```
+
+To see the pagination implementation, please see the findAll() method in "src/extension-modules/job-card/job-card.controller.ts". "$top", "$skip" query params are passed to the service layer, from where, the same gets passed to the db as a query.
