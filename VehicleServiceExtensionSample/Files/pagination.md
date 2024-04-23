@@ -18,6 +18,7 @@ GET /job-cards?$top=20&$skip=180
 
 To see the pagination implementation, please see the findAll() method in "src/extension-modules/job-card/job-card.controller.ts". "$top", "$skip" query params are passed to the service layer, from where, the same gets passed to the db as a query.
 
+## Build apps - Pagination
 In Build apps, when the user clicks the "Next" button, the "skip" value is incremented by the value of "top". For example, if "top" is set to 10, the initial "skip" value is 0, and the first page with the first 10 records will be displayed. By clicking the "Next" button, the "skip" value is increased by 10, so the next 10 records will appear.
 
 Similarly, when the user clicks the "Previous" button, the "skip" value is decremented by the value of "top". This will display the previous 10 records.
