@@ -142,3 +142,35 @@ Example: In the "Job portal" sample application, please refer to the Submit / St
 
 ![Case ExtensionField ](../Images/SBA4.png "Case fields")
  
+
+## Important Functionality
+
+In the following section, we will know about the search, filter, and pagination functionality of the job portal application.
+
+**Search** :
+
+By passing the search value as a parameter, we can find job cards based on the search criteria. The search value is a free text input.
+
+Request for searching job cards:
+``/destinations/0001_VehicleService_NODE/job-cards?$search=KH123&$top=10&$skip=0``
+
+![Search ](../../Images/SBA8.png "Search")
+
+
+**Advanced filter**:
+
+We can filter job cards based on one or multiple fields. By using the "and" condition in the filter parameter, we can further narrow down the job cards.
+
+Request for filtering job cards:
+``/destinations/0001_VehicleService_NODE/job-cards?$filter=vehicleNumber ct 'KA' and displayId ct '9' and true``
+
+![Filter ](../../Images/SBA9.png "Filter")
+
+**Pagination**:
+
+The $top and $skip parameters are used for pagination in job card list requests. $top specifies the number of items to retrieve, while $skip determines the number of items to skip before starting the retrieval.
+
+Request for pagination:
+``/destinations/0001_VehicleService_NODE/job-cards?$top=10&$skip=10``
+
+![Pagination ](../../Images/SBA10.png "Pagination")
