@@ -24,6 +24,7 @@ describe('JobCardController', () => {
 
   const mockUtilService = {
     parseFilterString: jest.fn(),
+    handleQueryParams: jest.fn(),
   };
 
   const caseEntity = {
@@ -71,6 +72,12 @@ describe('JobCardController', () => {
     translateJobCardServiceEntity: jest.fn(() => {
       return { ...JobCardServiceResponseDTO, statusDescription: 'Completed' };
     }),
+    handleSearchQuery: jest.fn(() => {
+      return [JobCardResponseDTO];
+    }),
+    handleFilterInCase: jest.fn(() => {
+      return [JobCardResponseDTO];
+    }),
   };
 
   beforeEach(async () => {
@@ -92,22 +99,25 @@ describe('JobCardController', () => {
 
     jobCardController = module.get<JobCardController>(JobCardController);
   });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('should be defined', () => {
     expect(jobCardController).toBeDefined();
   });
 
-  it('should return array of job cards', async () => {
-    const res = await jobCardController.findAll({
-      $filter: `caseId eq 'caseId'`,
+  describe('FindAll JobCards', () => {
+    it('should findall jobcards', async () => {
+      jest.spyOn(mockUtilService, 'handleQueryParams').mockReturnValue({});
+      await jobCardController.findAll({
+        $filter: undefined,
+        $search: undefined,
+        $top: '1',
+        $skip: '1',
+      });
+      expect(mockJobCardService.findAll).toHaveBeenCalledWith({}, false, 1, 1);
     });
-    const parseFilterStringSpy = jest.spyOn(
-      mockUtilService,
-      'parseFilterString',
-    );
-    expect(mockJobCardService.findAll).toHaveBeenCalled();
-    expect(res).toStrictEqual([JobCardResponseDTO]);
-    expect(parseFilterStringSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should return entity object', async () => {

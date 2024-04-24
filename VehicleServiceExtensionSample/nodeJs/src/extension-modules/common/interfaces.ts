@@ -1,3 +1,4 @@
+import { JobCardResponseDto } from '../job-card/dto/job-card/response-job-card.dto';
 import { JCStatus, SFStatus } from './enums';
 
 export interface RegisteredProduct {
@@ -41,6 +42,8 @@ export interface ServiceFormType extends CommonFields {
 }
 
 export interface JobCardType extends CommonFields {
+  vehicleNumber: string;
+  model: string;
   estimatedCompletionDate: Date;
   servicesSelected: any;
   customerComplaints: string[];
@@ -56,4 +59,9 @@ export interface ValidationErrorObjectType {
   code: string;
   message: string;
   target: string;
+}
+
+export interface JobCardCountResponseType {
+  value: JobCardResponseDto[];
+  count: number;
 }

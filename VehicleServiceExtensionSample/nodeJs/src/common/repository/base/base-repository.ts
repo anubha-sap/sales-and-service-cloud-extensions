@@ -40,7 +40,15 @@ export abstract class BaseRepository<T extends HasId>
   }
 
   public async findAll(options?: FindManyOptions<T>): Promise<T[]> {
+    options.order = { updatedOn: 'DESC' } as any;
     return await this.entity.find(options);
+  }
+
+  public async findAndCount(
+    options?: FindManyOptions<T>,
+  ): Promise<[T[], number]> {
+    options.order = { updatedOn: 'DESC' } as any;
+    return await this.entity.findAndCount(options);
   }
 
   public async delete(id: string): Promise<DeleteResult> {

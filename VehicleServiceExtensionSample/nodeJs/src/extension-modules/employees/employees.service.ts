@@ -74,11 +74,6 @@ export class EmployeesService {
       if (Object.keys(updateEmployeeDto).length === 0) {
         throw new InternalServerErrorException(MESSAGES.NO_UPDATE_DATA);
       }
-      if (updateEmployeeDto.roleCode) {
-        updateEmployeeDto['roleName'] = Employee.getRoleName(
-          updateEmployeeDto.roleCode,
-        );
-      }
       result = await this.employeesRepository.updateEmployee(
         id,
         updateEmployeeDto,
@@ -98,5 +93,21 @@ export class EmployeesService {
       throw new ServerException(error, EmployeesService.name, this.remove.name);
     }
     return result;
+  }
+
+  async getCurrentUserInfo() {
+    try {
+      return {
+        userName: this.request[SESSION].userName,
+        userId: this.request[SESSION].userId,
+        scopes: this.request[SESSION].scopes,
+      };
+    } catch (error) {
+      throw new ServerException(
+        error,
+        EmployeesService.name,
+        this.getCurrentUserInfo.name,
+      );
+    }
   }
 }

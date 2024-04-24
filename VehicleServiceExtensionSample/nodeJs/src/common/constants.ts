@@ -7,6 +7,7 @@ export const TRANSLATION_JSON_FILE = 'vehicleService';
 export const ETAG = 'ETag';
 export const ETAG_HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
 export const AUTHORIZED_FIELDS = ['status', 'observation'];
+export const DEFAULT_TOP = 30;
 export const MESSAGES = {
   //Recommended approach is to move to properties file for translation
   DB_ERROR: 'DB Error',

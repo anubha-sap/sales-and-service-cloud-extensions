@@ -61,6 +61,15 @@
       "role-template-references": [
         "$XSAPPNAME.ServiceTechnicianRole"
       ]
+    },
+    {
+      "name": "Vehicle Service Super User",
+      "description": "Has all scopes, created only for testing.",
+      "role-template-references": [
+        "$XSAPPNAME.ServiceTechnicianRole",
+        "$XSAPPNAME.ServiceManagerRole",
+        "$XSAPPNAME.ServiceAdvisorRole"
+      ]
     }
   ],
   "scopes": [

@@ -138,10 +138,10 @@ describe('UtilsService', () => {
       expect(oQuery['caseId']._type).toBe('not');
     });
 
-    it(`should handle when no filterString is passed`, () => {
-      const oFilter = undefined;
+    it(`should be able to parse filters like 'vehicleNumber ct 'kh'`, () => {
+      const oFilter = `vehicleNumber ct 'kh'`;
       const oQuery = service.parseFilterString(oFilter);
-      expect(oQuery).toStrictEqual({});
+      expect(oQuery['vehicleNumber']._type).toBe('ilike');
     });
 
     it(`should handle when number is passed`, () => {
@@ -159,12 +159,96 @@ describe('UtilsService', () => {
     });
 
     it(`should throw error when invalid filterString is passed`, () => {
-      const oFilter = 12;
       try {
-        service.parseFilterString(oFilter);
+        service.parseFilterString({} as string);
       } catch (error) {
         expect(error).toBeInstanceOf(ServerException);
       }
+    });
+
+    it('should call processNestedField() function', () => {
+      const oFilter = `servicesSelected.technician eq '{"name":"Technician name","btpUserId":"28dc29c9-266a-4711-ae07-eea807d0a89f"}'`;
+      const oQuery = service.parseFilterString(oFilter);
+      expect(oQuery).toEqual({
+        servicesSelected: {
+          technician:
+            '{"name":"Technician name","btpUserId":"28dc29c9-266a-4711-ae07-eea807d0a89f"}',
+        },
+      });
+    });
+  });
+
+  describe('processNestedField', () => {
+    it('should create a nested object', () => {
+      const field = 'servicesSelected.technician';
+      const value = JSON.stringify({
+        name: 'Technician name',
+        btpUserId: '28dc29c9-266a-4711-ae07-eea807d0a89f',
+      });
+      const oNestedObject = service.processNestedField(field, value);
+      expect(oNestedObject).toStrictEqual({
+        servicesSelected: {
+          technician:
+            '{"name":"Technician name","btpUserId":"28dc29c9-266a-4711-ae07-eea807d0a89f"}',
+        },
+      });
+    });
+  });
+
+  describe('handleQueryParams', () => {
+    it('should handle $filter ', () => {
+      const oQuery = service.handleQueryParams(
+        `caseId eq '0b38d95f-88e4-11ee-aa19-0f8a5b4f1b74'`,
+        undefined,
+      );
+      expect(oQuery).toStrictEqual({
+        caseId: `0b38d95f-88e4-11ee-aa19-0f8a5b4f1b74`,
+      });
+    });
+
+    it('should handle $search ', () => {
+      const oQuery = service.handleQueryParams(undefined, `kh`);
+      expect(oQuery).toBeInstanceOf(Array);
+      expect(oQuery[0]).toHaveProperty('displayId');
+      expect(oQuery[1]).toHaveProperty('vehicleNumber');
+      expect(oQuery[2]).toHaveProperty('model');
+      expect(oQuery[3]).toHaveProperty('status');
+    });
+
+    it('should handle when $filter and $search is empty', () => {
+      const oQuery = service.handleQueryParams(undefined, undefined);
+      expect(oQuery).toStrictEqual({});
+    });
+  });
+
+  describe('processSearchQuery', () => {
+    it(`should handle $search query`, () => {
+      const oQuery = service.processSearchQuery(`kh`);
+      expect(oQuery).toBeInstanceOf(Array);
+      expect(oQuery[0]).toHaveProperty('displayId');
+      expect(oQuery[1]).toHaveProperty('vehicleNumber');
+      expect(oQuery[2]).toHaveProperty('model');
+      expect(oQuery[3]).toHaveProperty('status');
+    });
+  });
+
+  describe('processFilterQuery', () => {
+    it(`should handle or in query`, () => {
+      const oQuery = service.processFilterQuery(
+        `name ct 'exfs' or address ct 'exfs'`,
+      );
+      expect(oQuery).toBeInstanceOf(Array);
+      expect(oQuery[0]).toHaveProperty(`name`);
+      expect(oQuery[1]).toHaveProperty(`address`);
+    });
+
+    it(`should handle and in query`, () => {
+      const oQuery = service.processFilterQuery(
+        `name ct 'exfs' and address ct 'exfs'`,
+      );
+      expect(oQuery).toBeInstanceOf(Object);
+      expect(oQuery).toHaveProperty(`name`);
+      expect(oQuery).toHaveProperty(`address`);
     });
   });
 });

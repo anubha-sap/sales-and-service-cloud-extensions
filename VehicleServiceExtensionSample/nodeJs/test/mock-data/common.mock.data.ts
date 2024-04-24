@@ -37,6 +37,8 @@ export const RequestMock = {
       `${process.env.xsappname}.${Scope.EditTask}`,
       `${process.env.xsappname}.${Scope.EditJobCardService}`,
     ],
+    userName: `User Name`,
+    top: '30',
   },
 };
 

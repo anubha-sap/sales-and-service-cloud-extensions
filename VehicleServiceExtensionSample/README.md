@@ -62,6 +62,10 @@ Please follow below mentioned steps to run this application.
 * [Run SAP Build Apps application](./Files/buildapps.md)
 * [Embed external UI application via mashup](./Files/EmbedMashup.md)
 * [Custom logic implementation using external hooks](./Files/externalHooks.md)
+* Additional Features:
+   * [Pagination](./Files/pagination.md)
+   * [Search & Filter](./Files/searchAndFilter.md)
+
 
 
 

@@ -4,6 +4,8 @@ import { JCStatus } from '../../../common/enums';
 import { CustomerDetails } from '../../../common/interfaces';
 
 export class JobCardDto extends BaseObjectDto {
+  model: string;
+  vehicleNumber: string;
   serviceAdvisor: string;
   customerDetails: CustomerDetails;
   estimatedCompletionDate: Date;

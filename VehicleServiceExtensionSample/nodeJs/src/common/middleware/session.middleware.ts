@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { SESSION } from '../constants';
+import { DEFAULT_TOP, SESSION } from '../constants';
 import { retrieveJwt, decodeJwt } from '@sap-cloud-sdk/connectivity';
 import { CustomLogger } from '../../logger/logger.service';
 import { ConfigService } from '@nestjs/config';
@@ -58,7 +58,9 @@ export class SessionMiddleware implements NestMiddleware {
       userToken,
       userId: decodedToken.user_id,
       scopes: decodedToken.scope,
+      userName: `${decodedToken.given_name} ${decodedToken.family_name}`,
       log: this.configService.get('logLevel'),
+      top: parseInt(this.configService.get('top')) || DEFAULT_TOP,
       sscDestination: this.configService.get('destination'),
       caseStatuses,
       extensionFields,

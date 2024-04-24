@@ -20,6 +20,7 @@ describe('JobCardRepository', () => {
   let oJobCardRepo: JobCardRepository;
   const mockJobCardRepo = {
     findOne: jest.fn(),
+    findAndCount: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -62,10 +63,13 @@ describe('JobCardRepository', () => {
   describe('findAllJobCards', () => {
     it('should findAllJobCards', async () => {
       jest
-        .spyOn(oJobCardRepo, 'findAll')
-        .mockResolvedValue([oJobCardMock] as unknown as JobCard[]);
+        .spyOn(oJobCardRepo, 'findAndCount')
+        .mockResolvedValue([[oJobCardMock], 1] as unknown as [
+          JobCard[],
+          number,
+        ]);
       const res = await oJobCardRepo.findAllJobCards({});
-      expect(res[0]).toBeInstanceOf(JobCardResponseDto);
+      expect(res.value[0]).toBeInstanceOf(JobCardResponseDto);
     });
   });
 

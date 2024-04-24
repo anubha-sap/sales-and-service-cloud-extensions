@@ -48,6 +48,7 @@ export class JobCardService {
   private caseStatusCompleted: string;
   private requestId: string;
   private scopes: string;
+  private top: number;
 
   constructor(
     private readonly logger: CustomLogger,
@@ -60,6 +61,7 @@ export class JobCardService {
     private readonly i18n: I18nService,
     private readonly utilService: UtilsService,
     private readonly employeesService: EmployeesService,
+    private readonly caseService: CasesService,
     @Inject(REQUEST) private readonly request: Request,
   ) {
     this.logger.setClassName(JobCardService.name);
@@ -76,6 +78,7 @@ export class JobCardService {
     this.caseStatusCompleted = this.request[SESSION].caseStatuses.completed;
     this.requestId = this.request[SESSION].reqId;
     this.scopes = this.request[SESSION].scopes;
+    this.top = this.request[SESSION].top;
   }
 
   async create(oJobCardCreateDto: CreateJobCardQueryDto) {
@@ -126,6 +129,8 @@ export class JobCardService {
         status: JCStatus.Z11,
         milometer: oServiceForm.milometer,
         estimatedCompletionDate: oCaseData.sEstimatedCompletionDate,
+        vehicleNumber: oServiceForm.registeredProduct?.vehicleNumber,
+        model: oServiceForm.registeredProduct?.model,
         registeredProduct: oServiceForm.registeredProduct,
         servicesSelected: oJobCardServices,
         customerComplaints: oServiceForm.customerComplaints,
@@ -177,16 +182,20 @@ export class JobCardService {
   async findAll(
     query: FindOptionsWhere<JobCard>[] | FindOptionsWhere<JobCard>,
     getCustomerDetails = false,
+    top?: number,
+    skip?: number,
   ) {
     try {
       const oQuery: FindManyOptions<JobCard> = {
         where: query,
+        take: top || this.top,
+        skip: skip || 0,
       };
       const oJobCardEntities = await this.jobCardRepository.findAllJobCards(
         oQuery,
       );
       const oJobCards = new Array<JobCardResponseDto>();
-      for (const oEntity of oJobCardEntities) {
+      for (const oEntity of oJobCardEntities.value) {
         if (getCustomerDetails) {
           const oCustomerDetails = await this.getCustomerDetailsFromCase(
             oEntity.caseId,
@@ -203,7 +212,7 @@ export class JobCardService {
         }
         oJobCards.push(await this.translateJobCardEntity(oEntity));
       }
-      return oJobCards;
+      return { value: oJobCards, count: oJobCardEntities.count };
     } catch (error) {
       throw new ServerException(error, JobCardService.name, this.findAll.name);
     }
@@ -494,7 +503,7 @@ export class JobCardService {
           caseDetails.caseStatus === this.caseStatusClosed ||
           caseDetails.caseStatus === this.caseStatusServiceCompleted)
       ) {
-        const result = await this.findAll(query, false);
+        const result = (await this.findAll(query, false)).value;
         if (!result || result.length === 0) {
           // Check if case id exists or case ID has any job cards
           error = this.utilService.getCustomLogicErrorDetails(

@@ -9,6 +9,7 @@ import { UpdateJobCardDto } from '../dto/job-card/update-job-card.dto';
 import { CustomLogger } from '../../../logger/logger.service';
 import { REQUEST } from '@nestjs/core';
 import { SESSION } from '../../../common/constants';
+import { JobCardCountResponseType } from '../../common/interfaces';
 
 @Injectable()
 export class JobCardRepository
@@ -45,9 +46,11 @@ export class JobCardRepository
 
   public async findAllJobCards(
     options?: FindManyOptions<JobCard>,
-  ): Promise<JobCardResponseDto[]> {
+  ): Promise<JobCardCountResponseType> {
     const startTime = new Date().getTime();
-    const oJobCardArray = await this.findAll(options);
+    const oJobCardCountResponse = await this.findAndCount(options);
+    const nCount = oJobCardCountResponse[1];
+    const oJobCardArray = oJobCardCountResponse[0];
     const endTime = new Date().getTime();
     this.logger.debug(
       `Time taken by request ${this.requestId} to get all job-cards from DB ${
@@ -58,7 +61,7 @@ export class JobCardRepository
     for (const oJobCard of oJobCardArray) {
       oParsedJobCardArray.push(JobCardResponseDto.toDto(oJobCard));
     }
-    return oParsedJobCardArray;
+    return { value: oParsedJobCardArray, count: nCount };
   }
 
   public async updateJobCard(
