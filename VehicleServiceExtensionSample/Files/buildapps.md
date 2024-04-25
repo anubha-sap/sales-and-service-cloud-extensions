@@ -121,7 +121,7 @@ Here, for the data entity, we can choose from various destinations configured wi
  
 In this step, users are guided through the process of building and deploying their application. By following these instructions, users can choose different runtime versions and specify the application version (e.g., "1.0.1"). Importantly, users have the flexibility to build their application multiple times with different versions as needed. This step empowers users to prepare their applications for deployment and further usage. 
 
-![Case ExtensionField ](../Images/SBA2.pnG "Case fields")
+![Case ExtensionField ](../Images/SBA2.png "Case fields")
 
 
 **Step 6:** After some time, on the same page, once the status changes to "Delivered," click "Deploy MTA.". Follow the popup window and deploy the application. 
