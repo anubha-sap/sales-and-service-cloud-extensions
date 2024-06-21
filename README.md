@@ -7,7 +7,7 @@ This project contains sample applications for building extensions in Sales and S
 These samples are implemented in multiple languages and demonstrate various extension capabilities of Sales and Service Cloud.
 
 ## Requirements
-Running various samples requires specific requirements which are mentioned in the *Prerequisites* section of each sample.
+Running various samples requires specific requirements which are mentioned in the *Prerequisites* section of each sample
 
 ## Samples
  [Vehicle Service Extension Sample](./VehicleServiceExtensionSample)
